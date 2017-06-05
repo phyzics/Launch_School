@@ -24,7 +24,7 @@ def prompt(message)
 end
 
 puts ''
-2.times {|time| puts MESSAGES["welcome#{time}"].center(65)}
+2.times { |time| puts MESSAGES["welcome#{time}"].center(65) }
 
 loop do
   prompt(MESSAGES['loan_amount_1'])
