@@ -1,0 +1,28 @@
+# calculator_messages.yml
+
+en:
+  welcome: "Welcome to Calculator! Enter your name:"
+  valid_name: "Make sure to enter a valid name."
+  hi_name: "Hi"
+  first_number: "What's the first number?"
+  second_number: "What's the second number?"
+  invalid_number: "Hmm... that doesn't look like a valid number"
+  operator_invalid: "Must choose 1, 2, 3, or 4"
+  performing_operation: " the two numbers..."
+  result: "The result is "
+  calculate_again?: "Do you want to perform another Calculation? (Y to calculate
+  again)"
+  good_bye: "Thank you for using the calculator. Good bye!"
+jp:
+  welcome: "よこそう！名前は何ですか:"
+  valid_name: "ヴぁりどの名前を使いて下さい."
+  hi_name: "こんいちは、"
+  first_number: "1つの番号？"
+  second_number: "2つの番号？"
+  invalid_number: "あの。。。それはいんヴぁりどの番号。"
+  operator_invalid: "Must choose 1, 2, 3, or 4"
+  performing_operation: " the two numbers..."
+  result: "結果は： "
+  calculate_again?: "もう一度？ (Y to calculate
+  again)"
+  good_bye: "カルコラターを使ったありがとうございました。さよなら"

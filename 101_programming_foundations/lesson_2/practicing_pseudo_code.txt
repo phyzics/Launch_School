@@ -1,0 +1,70 @@
+casual
+
+ask for first integer
+  verify that it is a valid integer
+  set it to a variable
+repeat the same for second integer
+convert both integers into integers (from string) and add them together
+  save answer into a new variable
+return answer
+
+formal
+
+START
+
+prompts user for first integer
+  GETS first integer
+  SET variable1 to input
+
+prompts user for second integer
+  GETS second integer
+  SET variable2 to input
+
+SET answer-variable to sum of variable1 and variable2
+
+PRINT answer-variable
+
+***
+
+casual
+
+ask for array of strings
+  create a new empty variable
+  iterate over the array, adding each element into the empty variable
+  return the variable to the user
+
+formal
+
+START
+
+# Given an array of strings called "strings"
+
+SET final result variable (x) to an empty string
+
+iterate over the array
+  for each iteration, SET 'x' to 'x' + element
+
+PRINT 'x'
+
+***
+
+given an array of integers:
+  iterate over the array but only take every other value
+  put every other value into a new array
+  print the new array to the user
+
+# Given an array of integers called 'numbers'
+
+SET iterator = 1
+SET new_array = a blank array which will store the numbers
+
+UNTIL iterator > length of the array
+  iterate over the array
+  IF iterator is odd
+    store the value in new_array
+  ELSE
+    skip to the next iteration
+
+  iterator += 1
+
+PRINT new_array to user

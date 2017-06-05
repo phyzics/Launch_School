@@ -1,0 +1,16 @@
+# mortgage_calculator_messages.yml
+
+welcome0: '~*~ Welcome to the Launch School Mortgage Calculator ~*~'
+welcome1: '----------------------------------------------------------'
+loan_amount_1: 'First, please enter the amount of your loan and press [Enter]'
+loan_amount_2: "(Please omit '$' and ',' in your dollar amount)"
+apr_1: 'Great! Now, please enter your APR (annual percentage rate).'
+apr_2: "(Please enter percentages as such: 3.7% --> 3.7)"
+years: 'Thank you! Lastly, enter how long your loan is in years.'
+positive_number: 'Please enter a positive number and try again.'
+valid_number: 'Please enter a valid number and try again.'
+non_negative: 'Please enter a non-negative number and try again.'
+monthly_payment: 'Your monthly payment is $'
+again_1: 'Would you like to calculate another monthly payment?'
+again_2: '(Enter [y] to calculate a new value. Enter anything else to exit.)'
+good_bye: 'Thanks for using the Launch School Mortage Calculator. Good bye!'
