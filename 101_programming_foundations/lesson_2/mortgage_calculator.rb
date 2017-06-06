@@ -78,10 +78,11 @@ loop do
 
   monthly_duration = yearly_duration.to_f * 12
 
-  if apr_exist == true
-    mpr = apr.to_f / 100 / 12 # monthly percentage rate
-    monthly_payment = loan_amount.to_f * (mpr /
-                                         (1 - (1 + mpr)**-monthly_duration))
+  if apr_exist
+    monthly_rate = apr.to_f / 100 / 12
+    monthly_payment =
+      loan_amount.to_f * (monthly_rate /
+                         (1 - (1 + monthly_rate)**-monthly_duration))
   else
     monthly_payment = loan_amount.to_f / monthly_duration
   end
@@ -91,7 +92,7 @@ loop do
   prompt(MESSAGES['again_1'])
   prompt(MESSAGES['again_2'])
   answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  break unless answer.downcase == 'yes'
 end
 
 prompt(MESSAGES['good_bye'])

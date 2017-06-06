@@ -12,5 +12,5 @@ valid_number: 'Please enter a valid number and try again.'
 non_negative: 'Please enter a non-negative number and try again.'
 monthly_payment: 'Your monthly payment is $'
 again_1: 'Would you like to calculate another monthly payment?'
-again_2: '(Enter [y] to calculate a new value. Enter anything else to exit.)'
+again_2: "(Enter 'yes' to calculate a new value. Enter anything else to exit.)"
 good_bye: 'Thanks for using the Launch School Mortage Calculator. Good bye!'
