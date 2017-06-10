@@ -1,0 +1,35 @@
+welcome_title: '~*~ Welcome to Rock, Paper, Scissors, Lizard, Spock! ~*~'
+welcome: |
+  In this game, you will vie against a computer opponent in Sam Kass's
+     re-imagining of the classic 'Rock, Paper, Scissors'."
+
+  => The first to reach 5 points will be the GRAND CHAMPION!
+instructions: |
+  When selecting your move, you may use either the keyword or the word itself.
+     You may view these options again at any time by entering 'help'.
+     You may also quit at any time by entering 'exit'.
+choose_move: 'Choose your move:'
+invalid_choice: "I'm sorry, but that's not a valid choice. Please try again."
+round_complete: ~*~ Round %{round_number} Results ~*~
+current_score: |
+
+  ------------- Current Score -------------
+    Player - %{player_score}
+    Computer - %{computer_score}
+victory: 'Congratulations! You are the GRAND CHAMPION!'
+defeat: 'Oh no! The Computer is the GRAND CHAMPION!'
+new_set?: "Would you like to play another set? (Enter 'y' or 'n')"
+y_or_n: "Please enter either 'y' or 'n'."
+good_bye: 'Thanks for playing. Good bye!'
+
+trumps:
+  ['rock', 'scissors']: 'Rock CRUSHES scissors!'
+  ['rock', 'lizard']: 'Rock CRUSHES lizard!'
+  ['paper', 'rock']: 'Paper COVERS rock!'
+  ['paper', 'spock']: 'Paper DISPROVES Spock!'
+  ['scissors', 'paper']: 'Scissors CUTS paper!'
+  ['scissors', 'lizard']: 'Scissors DECAPITATES lizard!'
+  ['lizard', 'paper']: 'Lizard EATS paper!'
+  ['lizard', 'spock']: 'Lizard POISONS Spock!'
+  ['spock', 'rock']: 'Spock VAPORIZES rock!'
+  ['spock', 'scissors']: 'Spock SMASHES scissors!'

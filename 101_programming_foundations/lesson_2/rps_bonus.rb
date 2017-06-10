@@ -1,3 +1,8 @@
+# rps_bonus.rb
+
+require 'yaml'
+MESSAGES = YAML.load_file('rps_bonus.yml')
+
 VALID_CHOICES = {'r'  => 'rock',
                  'p'  => 'paper',
                  'sc' => 'scissors',
@@ -5,11 +10,11 @@ VALID_CHOICES = {'r'  => 'rock',
                  'sp' => 'spock'
                 }
 
-VICTORY_KEY = {rock: ['scissors', 'lizard'],
-               paper: ['rock', 'spock'],
-               scissors: ['paper', 'lizard'],
-               lizard: ['paper', 'spock'],
-               spock: ['rock', 'scissors']
+VICTORY_KEY = {'rock' => %w(scissors lizard),
+               'paper' => %w(rock spock),
+               'scissors' => %w(paper lizard),
+               'lizard' => %w(paper spock),
+               'spock' => %w(rock scissors)
               }
 
 def prompt(message)
@@ -17,14 +22,16 @@ def prompt(message)
 end
 
 def win?(player1, player2)
-  VICTORY_KEY[player1.to_sym].include?(player2)
+  VICTORY_KEY[player1].include?(player2)
 end
 
 def display_results(player1, player2)
   if win?(player1, player2)
+    puts(MESSAGES['trumps'][[player1, player2]].center(45))
     prompt('You won!')
     return 'player'
   elsif win?(player2, player1)
+    puts(MESSAGES['trumps'][[player2, player1]].center(45))
     prompt('Computer won!')
     return 'computer'
   else
@@ -36,34 +43,50 @@ def clear_screen
   system('clear') || system('cls')
 end
 
+def display_choices
+  puts ''
+  VALID_CHOICES.each_pair { |k, v| puts "#{v} = #{k}" }
+  puts ''
+end
+
 clear_screen
 
 player_score = 0
 computer_score = 0
 
+puts(MESSAGES['welcome_title'].center(80))
+prompt(MESSAGES['welcome'])
+puts ''
+prompt(MESSAGES['instructions'])
+display_choices
+
 loop do
+
+  round = 0
   until player_score == 5 || computer_score == 5 do
+    prompt(MESSAGES['choose_move'])
     choice = ''
+    round += 1
     loop do
-      prompt("Choose one: ")
       choice = gets.chomp.downcase
 
       if VALID_CHOICES.has_key?(choice) || VALID_CHOICES.has_value?(choice)
         choice = VALID_CHOICES[choice] if VALID_CHOICES.has_key?(choice)
         break
-        # add a 'see options' prompt
+      elsif choice == 'help'
+        display_choices
       elsif choice == 'exit'
-        prompt("Thanks for playing. Good bye!")
+        prompt(MESSAGES['good_bye'])
         exit
       else
-        prompt("That's not a valid choice.")
+        prompt(MESSAGES['invalid_choice'])
       end
     end
 
     clear_screen
 
     computer_choice = VALID_CHOICES.values.sample
-
+    puts format(MESSAGES['round_complete'].center(60), round_number: round.to_s)
     prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
 
     perform_round = display_results(choice, computer_choice)
@@ -71,19 +94,21 @@ loop do
     player_score += 1 if perform_round == 'player'
     computer_score += 1 if perform_round == 'computer'
 
-    puts player_score
-    puts computer_score
+    puts format(MESSAGES['current_score'], player_score: player_score.to_s,
+                                           computer_score: computer_score.to_s)
+    puts ''
   end
 
   if player_score == 5
-    puts "Congratulations! You are the GRAND CHAMPION!"
-    puts "----------------------------------".center(44)
+    puts MESSAGES['victory'].center(50)
+    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   else
-    puts "Oh no! The Computer is the GRAND CHAMPION!".center(40)
-    puts "----------------------------------"
+    puts MESSAGES['defeat'].center(50)
+    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   end
 
-  prompt("Would you like to play another set? (Enter 'y' or 'n')")
+  puts ''
+  prompt(MESSAGES['new_set?'])
   new_set = ''
   loop do
     new_set = gets.chomp.downcase
@@ -94,10 +119,10 @@ loop do
     elsif new_set.downcase == 'n'
       break
     else
-      prompt("Please enter either 'y' or 'n'.")
+      prompt(MESSAGES['y_or_n'])
     end
   end
 
   break unless new_set.downcase == 'y'
 end
-prompt('Thanks for playing. Good bye!')
+prompt(MESSAGES['good_bye'])
