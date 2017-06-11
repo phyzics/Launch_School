@@ -3,39 +3,29 @@
 require 'yaml'
 MESSAGES = YAML.load_file('rps_bonus.yml')
 
-VALID_CHOICES = {'r'  => 'rock',
-                 'p'  => 'paper',
-                 'sc' => 'scissors',
-                 'l'  => 'lizard',
-                 'sp' => 'spock'
-                }
+VALID_CHOICES = { 'r'  => 'rock',
+                  'p'  => 'paper',
+                  'sc' => 'scissors',
+                  'l'  => 'lizard',
+                  'sp' => 'spock' }
 
-VICTORY_KEY = {'rock' => %w(scissors lizard),
-               'paper' => %w(rock spock),
-               'scissors' => %w(paper lizard),
-               'lizard' => %w(paper spock),
-               'spock' => %w(rock scissors)
-              }
+VICTORY_KEY = { 'rock' => %w(scissors lizard),
+                'paper' => %w(rock spock),
+                'scissors' => %w(paper lizard),
+                'lizard' => %w(paper spock),
+                'spock' => %w(rock scissors) }
 
 def prompt(message)
   puts "=> #{message}"
 end
 
 def win?(player1, player2)
-  VICTORY_KEY[player1].include?(player2)
-end
-
-def display_results(player1, player2)
-  if win?(player1, player2)
-    puts(MESSAGES['trumps'][[player1, player2]].center(45))
-    prompt('You won!')
-    return 'player'
-  elsif win?(player2, player1)
-    puts(MESSAGES['trumps'][[player2, player1]].center(45))
-    prompt('Computer won!')
-    return 'computer'
+  if VICTORY_KEY[player1].include?(player2)
+    :player
+  elsif VICTORY_KEY[player2].include?(player1)
+    :computer
   else
-    prompt("It's a tie!")
+    :tie
   end
 end
 
@@ -61,17 +51,16 @@ prompt(MESSAGES['instructions'])
 display_choices
 
 loop do
-
   round = 0
-  until player_score == 5 || computer_score == 5 do
+  until player_score == 5 || computer_score == 5
     prompt(MESSAGES['choose_move'])
     choice = ''
     round += 1
     loop do
       choice = gets.chomp.downcase
 
-      if VALID_CHOICES.has_key?(choice) || VALID_CHOICES.has_value?(choice)
-        choice = VALID_CHOICES[choice] if VALID_CHOICES.has_key?(choice)
+      if VALID_CHOICES.key?(choice) || VALID_CHOICES.value?(choice)
+        choice = VALID_CHOICES[choice] if VALID_CHOICES.key?(choice)
         break
       elsif choice == 'help'
         display_choices
@@ -89,10 +78,18 @@ loop do
     puts format(MESSAGES['round_complete'].center(60), round_number: round.to_s)
     prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
 
-    perform_round = display_results(choice, computer_choice)
-
-    player_score += 1 if perform_round == 'player'
-    computer_score += 1 if perform_round == 'computer'
+    case win?(choice, computer_choice)
+    when :player
+      puts(MESSAGES['trumps'][[choice, computer_choice]].center(45))
+      prompt('You won!')
+      player_score += 1
+    when :computer
+      puts(MESSAGES['trumps'][[computer_choice, choice]].center(45))
+      prompt('Computer won!')
+      computer_score += 1
+    else
+      prompt("It's a tie!")
+    end
 
     puts format(MESSAGES['current_score'], player_score: player_score.to_s,
                                            computer_score: computer_score.to_s)
@@ -101,13 +98,12 @@ loop do
 
   if player_score == 5
     puts MESSAGES['victory'].center(50)
-    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   else
     puts MESSAGES['defeat'].center(50)
-    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   end
-
+  puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   puts ''
+
   prompt(MESSAGES['new_set?'])
   new_set = ''
   loop do
