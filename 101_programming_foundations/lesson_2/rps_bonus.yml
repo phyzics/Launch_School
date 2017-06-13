@@ -18,7 +18,7 @@ current_score: |
     Computer - %{computer_score}
 victory: 'Congratulations! You are the GRAND CHAMPION!'
 defeat: 'Oh no! The Computer is the GRAND CHAMPION!'
-new_set?: "Would you like to play another set? (Enter 'y' or 'n')"
+new_set: "Would you like to play another set? (Enter 'y' or 'n')"
 y_or_n: "Please enter either 'y' or 'n'."
 good_bye: 'Thanks for playing. Good bye!'
 

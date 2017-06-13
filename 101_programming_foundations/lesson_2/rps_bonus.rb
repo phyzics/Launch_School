@@ -19,13 +19,11 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def win?(player1, player2)
+def determine_victor(player1, player2)
   if VICTORY_KEY[player1].include?(player2)
     :player
   elsif VICTORY_KEY[player2].include?(player1)
     :computer
-  else
-    :tie
   end
 end
 
@@ -33,9 +31,16 @@ def clear_screen
   system('clear') || system('cls')
 end
 
-def display_choices
+def create_options_str
+  final_str = ''
+  VALID_CHOICES.each_pair { |k, v| final_str += "#{v} = #{k}, " }
+  final_str.slice!(-2..-1)
+  final_str
+end
+
+def display_choices(str)
   puts ''
-  VALID_CHOICES.each_pair { |k, v| puts "#{v} = #{k}" }
+  puts str.center(65)
   puts ''
 end
 
@@ -48,7 +53,7 @@ puts(MESSAGES['welcome_title'].center(80))
 prompt(MESSAGES['welcome'])
 puts ''
 prompt(MESSAGES['instructions'])
-display_choices
+display_choices(create_options_str)
 
 loop do
   round = 0
@@ -63,7 +68,7 @@ loop do
         choice = VALID_CHOICES[choice] if VALID_CHOICES.key?(choice)
         break
       elsif choice == 'help'
-        display_choices
+        display_choices(create_options_str)
       elsif choice == 'exit'
         prompt(MESSAGES['good_bye'])
         exit
@@ -78,7 +83,7 @@ loop do
     puts format(MESSAGES['round_complete'].center(60), round_number: round.to_s)
     prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
 
-    case win?(choice, computer_choice)
+    case determine_victor(choice, computer_choice)
     when :player
       puts(MESSAGES['trumps'][[choice, computer_choice]].center(45))
       prompt('You won!')
@@ -104,7 +109,7 @@ loop do
   puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~".center(50)
   puts ''
 
-  prompt(MESSAGES['new_set?'])
+  prompt(MESSAGES['new_set'])
   new_set = ''
   loop do
     new_set = gets.chomp.downcase
