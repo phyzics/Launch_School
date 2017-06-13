@@ -35,3 +35,18 @@ flintstones << "Dino"
 #7
 flintstones = %w(Fred Barney Wilma Betty BamBam Pebbles)
 flintstones.insert(-1, 'Dino', 'Hoppy')
+
+# 8
+advice = "Few things in life are as important as house training your pet dinosaur."
+advice.slice!(0..38)
+# or
+advice.slice!("Few things in life are as important as ")
+# using #slice would return the desired value but would not mutate the caller
+
+# 9
+statement = "The Flintstones Rock!"
+statement.scan('t').length
+
+# 10
+title = "Flintstone Family Members"
+title.center(40)
