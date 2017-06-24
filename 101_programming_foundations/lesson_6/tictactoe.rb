@@ -1,11 +1,19 @@
 # tictactoe.rb
 require 'pry'
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+#              ~*~ CONSTANTS ~*~
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # => rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # => columns
                 [[1, 5, 9], [3, 5, 7]] # => diagnals
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+#              ~*~ FUNCTIONS ~*~
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -68,11 +76,6 @@ def player_places_piece!(brd)
   brd[square.to_i] = PLAYER_MARKER
 end
 
-def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
-  brd[square] = COMPUTER_MARKER
-end
-
 def board_full?(brd)
   empty_squares(brd).empty?
 end
@@ -92,6 +95,43 @@ def detect_winner(brd)
   nil
 end
 
+def computer_places_piece!(brd)
+  square = nil
+  WINNING_LINES.each do |line|
+    square = detect_immediate_threat(brd, line, COMPUTER_MARKER)
+    break if square
+  end
+
+  if !square
+    WINNING_LINES.each do |line|
+      square = detect_immediate_threat(brd, line, PLAYER_MARKER)
+      break if square
+    end
+  end
+
+  if !square
+    if brd[5] == INITIAL_MARKER
+      square = 5
+    else
+      square = empty_squares(brd).sample
+    end
+  end
+
+  brd[square] = COMPUTER_MARKER
+end
+
+def detect_immediate_threat(brd, line, user_marker)
+  if brd.values_at(*line).count(user_marker) == 2
+    brd.select { |k,v| line.include?(k) && v == INITIAL_MARKER }.keys.first
+  else
+    nil
+  end
+end
+
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+#              ~*~ PROGRAM ~*~
+# /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
 loop do
   player_score = 0
   computer_score = 0
@@ -106,6 +146,7 @@ loop do
       break if someone_won?(board) || board_full?(board)
 
       computer_places_piece!(board)
+
       display_board(board)
       break if someone_won?(board) || board_full?(board)
     end
