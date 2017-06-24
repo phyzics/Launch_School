@@ -1,5 +1,6 @@
 # tictactoe.rb
 require 'pry'
+require 'YAML'
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 #              ~*~ CONSTANTS ~*~
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
@@ -45,6 +46,14 @@ def initialize_board
   new_board
 end
 
+def help_board
+  help_board = {}
+  (1..9).each { |num| help_board[num] = num }
+  display_board(help_board)
+  prompt "Enter any key when you are ready to continue."
+  answer = gets.chomp
+end
+
 def joinor(arr, conj1=', ', conj2='or')
   case arr.size
   when 1 then arr.first
@@ -59,19 +68,42 @@ def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
+def who_goes_first?(player_1='Player', player_2='Computer')
+  prompt "Who is going first, Player 1 or Player 2? (Enter '1' or '2')"
+  first = gets.chomp
+  loop do
+    case first
+    when '1' || 'one'
+      prompt "Player 1 will go first!"
+      sleep 1
+      return true
+    when '2' || 'two'
+      prompt "Player 2 will go first!"
+      sleep 1
+      return false
+    end
+    prompt "Please enter either '1' or '2' and press [ENTER]"
+  end
+end
+
 def player_places_piece!(brd)
   square = ''
   loop do
     prompt "Choose a square: #{joinor(empty_squares(brd))}"
     square = gets.chomp
 
-    if square.downcase == 'exit'
+    if empty_squares(brd).include?(square.to_i)
+      break
+    elsif square.downcase == 'exit'
       prompt "Thanks for playing Tic Tac Toe! See ya!"
       exit
+    elsif
+      square.downcase == 'help'
+      help_board
+      display_board(brd)
+    else
+      prompt "Sorry, that's not a valid choice."
     end
-
-    break if empty_squares(brd).include?(square.to_i)
-    prompt "Sorry, that's not a valid choice."
   end
   brd[square.to_i] = PLAYER_MARKER
 end
@@ -128,26 +160,61 @@ def detect_immediate_threat(brd, line, user_marker)
   end
 end
 
+def place_piece!(brd, player)
+  if player
+    player_places_piece!(brd)
+  else
+    computer_places_piece!(brd)
+  end
+end
+
+def alternate_player(player)
+  !player
+end
+
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 #              ~*~ PROGRAM ~*~
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
+# player select option
+# clean up the interface
+  # introductory instructions
+# export to YAML
+
+
+
 loop do
   player_score = 0
   computer_score = 0
+  second_player = false
+  first_move = true
+
+  prompt "How many people are playing? (1 or 2)"
+  players = gets.chomp.downcase
+  loop do
+    case players
+    when '1' || 'one'
+      first_move = who_goes_first?
+      binding.pry
+      break
+
+    when '2' || 'two'
+      second_player = true
+      first_move = who_goes_first?('Player 1', 'Player 2')
+      break
+    end
+
+    prompt "Please enter either '1' or '2' and press [ENTER]"
+  end
 
   until player_score == 2 || computer_score == 2
     board = initialize_board
+    current_player = first_move
 
     loop do
       display_board(board)
-
-      player_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
-
-      computer_places_piece!(board)
-
-      display_board(board)
+      place_piece!(board, current_player)
+      current_player = alternate_player(current_player)
       break if someone_won?(board) || board_full?(board)
     end
 
@@ -166,7 +233,6 @@ loop do
         prompt "It's a tie!"
       end
     end
-    #sleep(2)
 
   end
 
