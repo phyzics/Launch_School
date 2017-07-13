@@ -1,0 +1,20 @@
+welcome0:
+rules_title: ------------ Rules ------------
+rules: |
+  The goal of Twenty-One is to get a hand whose value is as close to 21 as possible
+  without going over (if you do, you 'bust'). Numbered cards are worth the amount
+  they display, while face cards (King, Queen, and Jack) are worth 10 points each.
+  Aces are worth either 1 or 11 points depending upon which favors you better.
+
+  => During your turn you may either 'hit', which means draw another card, or 'stay',
+  which means you are done adding to your hand. Next the dealer goes and does the
+  same process. Afterwards the totals are added up and compared, and whoever was
+  closer to 21 wins.
+
+  => You may enter 'help' during your turn to come back to this screen.
+
+  => Please enter any key to return to the game.
+totals_to: That totals to
+another_round: Would you like to play another round? (Y/N)
+invalid_choice: That's not a valid choice. Please enter either 'y' or 'n'.
+good_bye: Thanks for playing Twenty-One! Goodbye!

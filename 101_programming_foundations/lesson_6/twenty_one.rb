@@ -1,5 +1,8 @@
 #twenty_one.rb
 require 'pry'
+require 'YAML'
+
+MESSAGES = YAML.load_file('twenty_one.yml')
 
 FACE_NAMES = {
   'A' => 'Ace',
@@ -26,12 +29,29 @@ def initialize_deck
   SUITS.product(VALUES).shuffle
 end
 
-def busted?(hand)
-  if calculate_total(hand) > 21
-    return true
-  else
-    return false
+def display_rules
+  answer = ''
+  system 'clear' || 'cls'
+  puts MESSAGES['rules_title'].center(80)
+  prompt(MESSAGES['rules'])
+  answer = gets.chomp
+  system 'clear' || 'cls'
+end
+
+def play_again?
+  answer = ''
+  puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+  loop do
+    prompt(MESSAGES['another_round'])
+    answer = gets.chomp.downcase
+    break if answer == 'y' || answer == 'n'
+    prompt(MESSAGES['invalid_choice'])
   end
+  answer
+end
+
+def busted?(hand)
+  calculate_total(hand) > 21
 end
 
 def calculate_total(hand)
@@ -53,16 +73,43 @@ def calculate_total(hand)
   end
 
   hand_total
-  #binding.pry
 end
 
-def decide_victor(player1, player2)
-  return :player1 if player1 > player2
-  return :player2 if player2 > player1
-  return :tie if player1 == player2
+def determine_victor(player, dealer)
+  player_total = calculate_total(player)
+  dealer_total = calculate_total(dealer)
+
+  if player_total > 21
+    :player_busted
+  elsif dealer_total > 21
+    :dealer_busted
+  elsif player_total > dealer_total
+    :player
+  elsif player_total < dealer_total
+    :dealer
+  else
+    :tie
+  end
 end
 
-def display_hand(player, hand)
+def display_victor(player, dealer)
+  result = determine_victor(player, dealer)
+
+  case result
+  when :player_busted
+    prompt("Uh oh, looks like you've busted! The Dealer wins!")
+  when :dealer_busted
+    prompt("The Dealer busted! You win!")
+  when :player
+    prompt("Congratulations, you've won this round!")
+  when :dealer
+    prompt("Oh no! It seems the Dealer has won this round...")
+  when :tie
+    prompt("You and the Dealer tied this round...")
+  end
+end
+
+def display_hand(player, hand) #figure out a better name -- this doesn't actually display
   display_array = hand.map do |card|
   	if card[1].to_i.to_s == card[1]
   	  "#{card[1]} of #{SUIT_NAMES[card[0]]}"
@@ -71,13 +118,21 @@ def display_hand(player, hand)
   	end
   end
 
-  if player == 'Player'
-    display_string = join_array(display_array)
-  else
-    display_string = join_array_computer(display_array)
-  end
+  display_string = join_array(display_array)
   display_string = "#{player} has #{display_string}"
-  #binding.pry
+end
+
+def dealer_hand(hand)
+  display_array = hand.map do |card|
+  	if card[1].to_i.to_s == card[1]
+  	  "#{card[1]} of #{SUIT_NAMES[card[0]]}"
+  	else
+  	  "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
+  	end
+  end
+
+  display_string = join_array_computer(display_array)
+  display_string = "Dealer has #{display_string}"
 end
 
 def join_array(arr)
@@ -96,17 +151,15 @@ end
 
 loop do
   deck = initialize_deck
-  binding.pry
-
   players_hand = []
   dealers_hand = []
 
-  2.times { players_hand << deck.sample }
-  2.times { dealers_hand << deck.sample }
+  2.times { players_hand << deck.pop }
+  2.times { dealers_hand << deck.pop }
 
   prompt(display_hand("Player", players_hand))
-  prompt(display_hand("Dealer", dealers_hand))
-  calculate_total(players_hand)
+  prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
+  prompt(dealer_hand(dealers_hand))
 
   answer = nil
   loop do
@@ -116,59 +169,51 @@ loop do
 
     case answer
     when 'hit'
-      players_hand << deck.sample
-      prompt(display_hand("Player", players_hand))
+      players_hand << deck.pop
+      prompt("Now #{display_hand("Player", players_hand)}")
+      prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
     when 'stay'
       break
+    when 'help'
+      display_rules
     else
-      prompt("Please select either 'Hit' or 'Stay'")
+      prompt("Please enter either 'Hit' or 'Stay'")
     end
 
     break if busted?(players_hand)
   end
 
   if busted?(players_hand)
-    prompt ("Busted!")# play again?
-    break
+    display_victor(players_hand, dealers_hand)
+    play_again? ? next : break
   else
     prompt("You chose to stay!")
   end
+  sleep 1
+  puts ''
+  prompt("Now it's the Dealer's turn...")
+  sleep 1
+  puts ''
 
   loop do
-    if calculate_total(dealers_hand) < 17
-      prompt("Dealer hits!")
-      dealers_hand << deck.sample
-    elsif calculate_total(dealers_hand) >= 17
-      prompt("Dealer stays!")
-      break
-    end
-
-    break if busted?(dealers_hand)
+    break if calculate_total(dealers_hand) >= 17
+    prompt("Dealer hits!")
+    dealers_hand << deck.pop
+    sleep 1
   end
 
-  if busted?(dealers_hand)
-    prompt("The dealer busted! Congratulations, you've won!")
-  else
-    case decide_victor(calculate_total(players_hand),
-                       calculate_total(dealers_hand))
-    when :player1
-      prompt("Congratulations, you've won!")
-    when :player2
-      prompt("Oh, no! The Dealer has won this round...")
-    when :tie
-      prompt("It seems you and the Dealer tied this round...")
-    end
-  end
+  prompt("Dealer stays.") if busted?(dealers_hand) == false
+  sleep 1
 
-  prompt("Would you like to play again? (Y/N)")
-  rematch = ''
-  loop do
-    rematch = gets.chomp.downcase
-    if rematch == 'y' || rematch == 'n'
-    else
-      prompt("Please enter 'Y' or 'N'.")
-    end
-  end
+  display_victor(players_hand, dealers_hand)
+  puts ''
+  puts "======================="
+  prompt("#{display_hand('Player', players_hand)}")
+  prompt("#{display_hand('Dealer', dealers_hand)}")
+  puts "======================="
+  puts ''
 
+  rematch = play_again?
   break if rematch == 'n'
 end
+prompt(MESSAGES['good_bye'])
