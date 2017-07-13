@@ -63,7 +63,12 @@ def display_hand(player, hand)
   	  "#{FACE_NAMES[card[1]]} of #{SUITS[card[0]]}"
   	end
   end
-  display_string = join_array(display_array)
+
+  if player == 'Player'
+    display_string = join_array(display_array)
+  else
+    display_string = join_array_computer(display_array)
+  end
   display_string = "#{player} has #{display_string}"
   #binding.pry
 end
@@ -76,6 +81,10 @@ def join_array(arr)
     arr[-1] = "and #{arr[-1]}"
     arr.join(", ")
   end
+end
+
+def join_array_computer(arr)
+  display_string = arr[0] + " and another card."
 end
 
 loop do
@@ -101,7 +110,7 @@ loop do
 
   answer = nil
   loop do
-    puts ""
+    puts ''
     prompt('Hit or Stay?')
     answer = gets.chomp.downcase
 
@@ -116,7 +125,6 @@ loop do
     end
 
     break if busted?(players_hand)
-
   end
 
   if busted?(players_hand)
