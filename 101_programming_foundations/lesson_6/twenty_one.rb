@@ -8,15 +8,22 @@ FACE_NAMES = {
   'K' => 'King'
 }
 
-SUITS = {
+SUIT_NAMES = {
   'S' => 'Spades',
   'D' => 'Diamonds',
   'C' => 'Clubs',
   'H' => 'Hearts'
 }
 
+SUITS = ['H', 'D', 'S', 'C']
+VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+
 def prompt(msg)
   puts "=> #{msg}"
+end
+
+def initialize_deck
+  SUITS.product(VALUES).shuffle
 end
 
 def busted?(hand)
@@ -58,9 +65,9 @@ end
 def display_hand(player, hand)
   display_array = hand.map do |card|
   	if card[1].to_i.to_s == card[1]
-  	  "#{card[1]} of #{SUITS[card[0]]}"
+  	  "#{card[1]} of #{SUIT_NAMES[card[0]]}"
   	else
-  	  "#{FACE_NAMES[card[1]]} of #{SUITS[card[0]]}"
+  	  "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
   	end
   end
 
@@ -88,15 +95,8 @@ def join_array_computer(arr)
 end
 
 loop do
-  deck = [['H', '2'], ['H', '3'], ['H', '4'], ['H', '5'], ['H', '6'], ['H', '7'],
-          ['H', '8'], ['H', '9'], ['H', '10'],['H', 'J'], ['H', 'Q'], ['H', 'K'],
-          ['H', 'A'], ['D', '2'], ['D', '3'], ['D', '4'], ['D', '5'], ['D', '6'],
-          ['D', '7'], ['D', '8'], ['D', '9'], ['D', '10'],['D', 'J'], ['D', 'Q'],
-          ['D', 'K'], ['D', 'A'], ['S', '2'], ['S', '3'], ['S', '4'], ['S', '5'],
-          ['S', '6'], ['S', '7'], ['S', '8'], ['S', '9'], ['S', '10'],['S', 'J'],
-          ['S', 'Q'], ['S', 'K'], ['S', 'A'], ['C', '2'], ['C', '3'], ['C', '4'],
-          ['C', '5'], ['C', '6'], ['C', '7'], ['C', '8'], ['C', '9'], ['C', '10'],
-          ['C', 'J'], ['C', 'Q'], ['C', 'K'], ['C', 'A']]
+  deck = initialize_deck
+  binding.pry
 
   players_hand = []
   dealers_hand = []
@@ -164,13 +164,11 @@ loop do
   rematch = ''
   loop do
     rematch = gets.chomp.downcase
-    if rematch == 'y'
-      break
-    elsif rematch == 'n'
-      break
+    if rematch == 'y' || rematch == 'n'
     else
       prompt("Please enter 'Y' or 'N'.")
     end
   end
+
   break if rematch == 'n'
 end
