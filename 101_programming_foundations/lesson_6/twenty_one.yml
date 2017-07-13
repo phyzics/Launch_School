@@ -1,4 +1,4 @@
-welcome0:
+welcome_title: ------------ Twenty-One ------------
 rules_title: ------------ Rules ------------
 rules: |
   The goal of Twenty-One is to get a hand whose value is as close to 21 as possible
@@ -13,8 +13,22 @@ rules: |
 
   => You may enter 'help' during your turn to come back to this screen.
 
-  => Please enter any key to return to the game.
+  => Please enter any key to go to the game.
+hit_or_stay: Do you wish to 'hit' or to 'stay'?
+only_hit_or_stay: Please enter either 'hit' or 'stay'.
 totals_to: That totals to
+dealer_has: Dealer has
+another_card: and another card.
+you_stay: You chose to stay!
+dealers_turn: Now it's the Dealer's turn...
+dealer_hits: Dealer hits!
+dealer_stays: Dealer stays.
+show_hands: Both players show their hands...
+player_busted: Uh oh, looks like you've busted! The Dealer wins!
+dealer_busted: The Dealer busted! You win!
+player_wins: Congratulations, you've won this round!
+dealer_wins: Oh no! It seems the Dealer has won this round...
+match_tie: You and the Dealer tied this round...
 another_round: Would you like to play another round? (Y/N)
 invalid_choice: That's not a valid choice. Please enter either 'y' or 'n'.
 good_bye: Thanks for playing Twenty-One! Goodbye!

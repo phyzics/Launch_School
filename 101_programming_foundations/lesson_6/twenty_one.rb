@@ -25,14 +25,22 @@ def prompt(msg)
   puts "=> #{msg}"
 end
 
+def initialize_game
+  system 'clear' || 'cls'
+  puts MESSAGES['welcome_title'].center(80)
+  prompt(MESSAGES['rules'])
+  answer = gets.chomp
+  system
+end
+
 def initialize_deck
   SUITS.product(VALUES).shuffle
 end
 
-def display_rules
+def display_rules(title)
   answer = ''
   system 'clear' || 'cls'
-  puts MESSAGES['rules_title'].center(80)
+  puts MESSAGES[title].center(80)
   prompt(MESSAGES['rules'])
   answer = gets.chomp
   system 'clear' || 'cls'
@@ -97,15 +105,15 @@ def display_victor(player, dealer)
 
   case result
   when :player_busted
-    prompt("Uh oh, looks like you've busted! The Dealer wins!")
+    prompt(MESSAGES['player_busted'])
   when :dealer_busted
-    prompt("The Dealer busted! You win!")
+    prompt(MESSAGES['dealer_busted'])
   when :player
-    prompt("Congratulations, you've won this round!")
+    prompt(MESSAGES['player_wins'])
   when :dealer
-    prompt("Oh no! It seems the Dealer has won this round...")
+    prompt(MESSAGES['dealer_wins'])
   when :tie
-    prompt("You and the Dealer tied this round...")
+    prompt(MESSAGES['match_tie'])
   end
 end
 
@@ -119,7 +127,7 @@ def display_hand(player, hand) #figure out a better name -- this doesn't actuall
   end
 
   display_string = join_array(display_array)
-  display_string = "#{player} has #{display_string}"
+  display_string = "#{player} has #{display_string}."
 end
 
 def dealer_hand(hand)
@@ -132,7 +140,7 @@ def dealer_hand(hand)
   end
 
   display_string = join_array_computer(display_array)
-  display_string = "Dealer has #{display_string}"
+  display_string = "#{MESSAGES['dealer_has']} #{display_string}"
 end
 
 def join_array(arr)
@@ -146,8 +154,10 @@ def join_array(arr)
 end
 
 def join_array_computer(arr)
-  display_string = arr[0] + " and another card."
+  display_string = arr[0] + " #{MESSAGES['another_card']}"
 end
+
+display_rules('welcome_title')
 
 loop do
   deck = initialize_deck
@@ -164,7 +174,7 @@ loop do
   answer = nil
   loop do
     puts ''
-    prompt('Hit or Stay?')
+    prompt(MESSAGES['hit_or_stay'])
     answer = gets.chomp.downcase
 
     case answer
@@ -175,9 +185,9 @@ loop do
     when 'stay'
       break
     when 'help'
-      display_rules
+      display_rules('rules_title')
     else
-      prompt("Please enter either 'Hit' or 'Stay'")
+      prompt(MESSAGES['only_hit_or_stay'])
     end
 
     break if busted?(players_hand)
@@ -187,31 +197,38 @@ loop do
     display_victor(players_hand, dealers_hand)
     play_again? ? next : break
   else
-    prompt("You chose to stay!")
+    prompt(MESSAGES['you_stay'])
   end
   sleep 1
   puts ''
-  prompt("Now it's the Dealer's turn...")
+  prompt(MESSAGES['dealers_turn'])
   sleep 1
   puts ''
 
   loop do
     break if calculate_total(dealers_hand) >= 17
-    prompt("Dealer hits!")
+    prompt(MESSAGES['dealer_hits'])
     dealers_hand << deck.pop
     sleep 1
   end
 
-  prompt("Dealer stays.") if busted?(dealers_hand) == false
+  prompt(MESSAGES['dealer_stays']) if busted?(dealers_hand) == false
   sleep 1
 
-  display_victor(players_hand, dealers_hand)
+  prompt(MESSAGES['show_hands'])
+  sleep 1
+
   puts ''
   puts "======================="
   prompt("#{display_hand('Player', players_hand)}")
+  prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
   prompt("#{display_hand('Dealer', dealers_hand)}")
+  prompt(MESSAGES['totals_to'] + " #{calculate_total(dealers_hand)}")
   puts "======================="
   puts ''
+  sleep 1
+
+  display_victor(players_hand, dealers_hand)
 
   rematch = play_again?
   break if rematch == 'n'
