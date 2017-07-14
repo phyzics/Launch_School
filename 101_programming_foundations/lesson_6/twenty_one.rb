@@ -46,7 +46,8 @@ def play_again?
     break if answer == 'y' || answer == 'n'
     prompt(MESSAGES['invalid_choice'])
   end
-  answer
+  return true if answer == 'y'
+  return false if answer == 'n'
 end
 
 def busted?(hand)
@@ -108,7 +109,7 @@ def display_victor(player, dealer)
   end
 end
 
-def display_hand(player, hand) # figure out a better name -- this doesn't actually display
+def configure_hand(player, hand)
   display_array = hand.map do |card|
     if card[1].to_i.to_s == card[1]
       "#{card[1]} of #{SUIT_NAMES[card[0]]}"
@@ -151,6 +152,7 @@ end
 display_rules('welcome_title')
 
 loop do
+  system 'clear' || 'cls'
   deck = initialize_deck
   players_hand = []
   dealers_hand = []
@@ -158,7 +160,7 @@ loop do
   2.times { players_hand << deck.pop }
   2.times { dealers_hand << deck.pop }
 
-  prompt(display_hand("Player", players_hand))
+  prompt(configure_hand("Player", players_hand))
   prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
   prompt(dealer_hand(dealers_hand))
 
@@ -171,7 +173,7 @@ loop do
     case answer
     when 'hit'
       players_hand << deck.pop
-      prompt("Now #{display_hand('Player', players_hand)}")
+      prompt("Now #{configure_hand('Player', players_hand)}")
       prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
     when 'stay'
       break
@@ -203,17 +205,23 @@ loop do
     sleep 1
   end
 
-  prompt(MESSAGES['dealer_stays']) if busted?(dealers_hand) == false
-  sleep 1
+  case busted?(dealers_hand)
+  when true
+    display_victor(players_hand, dealers_hand)
+    play_again? ? next : break
+  when false
+    prompt(MESSAGES['dealer_stays'])
+    sleep 1
+  end
 
   prompt(MESSAGES['show_hands'])
   sleep 1
 
   puts ''
   puts "======================="
-  prompt(display_hand('Player', players_hand))
+  prompt(configure_hand('Player', players_hand))
   prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
-  prompt(display_hand('Dealer', dealers_hand))
+  prompt(configure_hand('Dealer', dealers_hand))
   prompt(MESSAGES['totals_to'] + " #{calculate_total(dealers_hand)}")
   puts "======================="
   puts ''
@@ -222,6 +230,6 @@ loop do
   display_victor(players_hand, dealers_hand)
 
   rematch = play_again?
-  break if rematch == 'n'
+  break if rematch == false
 end
 prompt(MESSAGES['good_bye'])
