@@ -3,23 +3,22 @@ require 'pry'
 require 'YAML'
 
 MESSAGES = YAML.load_file('twenty_one.yml')
-
 FACE_NAMES = {
   'A' => 'Ace',
   'J' => 'Jack',
   'Q' => 'Queen',
   'K' => 'King'
 }
-
 SUIT_NAMES = {
   'S' => 'Spades',
   'D' => 'Diamonds',
   'C' => 'Clubs',
   'H' => 'Hearts'
 }
-
 SUITS = ['H', 'D', 'S', 'C']
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+POINT_LIMIT = 21
+DEALER_LIMIT = 17
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -39,6 +38,7 @@ end
 
 def play_again?
   answer = ''
+  puts ''
   puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
   loop do
     prompt(MESSAGES['another_round'])
@@ -51,7 +51,7 @@ def play_again?
 end
 
 def busted?(hand)
-  calculate_total(hand) > 21
+  hand > POINT_LIMIT
 end
 
 def calculate_total(hand)
@@ -69,7 +69,7 @@ def calculate_total(hand)
   end
 
   values.select { |value| value == 'A' }.count.times do
-    hand_total -= 10 if hand_total > 21
+    hand_total -= 10 if hand_total > POINT_LIMIT
   end
 
   hand_total
@@ -79,9 +79,9 @@ def determine_victor(player, dealer)
   player_total = calculate_total(player)
   dealer_total = calculate_total(dealer)
 
-  if player_total > 21
+  if player_total > POINT_LIMIT
     :player_busted
-  elsif dealer_total > 21
+  elsif dealer_total > POINT_LIMIT
     :dealer_busted
   elsif player_total > dealer_total
     :player
@@ -102,8 +102,10 @@ def display_victor(player, dealer)
     prompt(MESSAGES['dealer_busted'])
   when :player
     prompt(MESSAGES['player_wins'])
+    :player
   when :dealer
     prompt(MESSAGES['dealer_wins'])
+    :dealer
   when :tie
     prompt(MESSAGES['match_tie'])
   end
@@ -149,7 +151,30 @@ def join_array_computer(arr)
   arr[0] + " #{MESSAGES['another_card']}"
 end
 
+def end_of_rount_output(p_hand, p_total, d_hand, d_total)
+  puts ''
+  puts '======================='
+  prompt(configure_hand('Player', p_hand))
+  prompt(MESSAGES['totals_to'] + " #{p_total}")
+  prompt(configure_hand('Dealer', d_hand))
+  prompt(MESSAGES['totals_to'] + " #{d_total}")
+  puts '======================='
+  puts ''
+end
+
+def display_score(player_score, dealer_score)
+  if player_score > dealer_score
+    puts "Currently you lead #{player_score} to #{dealer_score}"
+  elsif player_score < dealer_score
+    puts "Currently the Dealer leads #{dealer_score} to #{player_score}"
+  else
+    puts "Currently the score is tied at #{player_score}"
+  end
+end
+
 display_rules('welcome_title')
+player_score = 0
+dealer_score = 0
 
 loop do
   system 'clear' || 'cls'
@@ -160,8 +185,11 @@ loop do
   2.times { players_hand << deck.pop }
   2.times { dealers_hand << deck.pop }
 
+  player_total = calculate_total(players_hand)
+  dealer_total = calculate_total(dealers_hand)
+
   prompt(configure_hand("Player", players_hand))
-  prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
+  prompt(MESSAGES['totals_to'] + " #{player_total}")
   prompt(dealer_hand(dealers_hand))
 
   answer = nil
@@ -173,21 +201,28 @@ loop do
     case answer
     when 'hit'
       players_hand << deck.pop
+      player_total = calculate_total(players_hand)
       prompt("Now #{configure_hand('Player', players_hand)}")
-      prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
+      prompt(MESSAGES['totals_to'] + " #{player_total}")
     when 'stay'
       break
     when 'help'
       display_rules('rules_title')
+    when 'exit'
+      prompt(MESSAGES['good_bye'])
+      exit
     else
       prompt(MESSAGES['only_hit_or_stay'])
     end
 
-    break if busted?(players_hand)
+    break if busted?(player_total)
   end
 
-  if busted?(players_hand)
+  if busted?(player_total)
     display_victor(players_hand, dealers_hand)
+    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
+    dealer_score += 1
+    display_score(player_score, dealer_score)
     play_again? ? next : break
   else
     prompt(MESSAGES['you_stay'])
@@ -199,15 +234,19 @@ loop do
   puts ''
 
   loop do
-    break if calculate_total(dealers_hand) >= 17
+    break if calculate_total(dealers_hand) >= DEALER_LIMIT
     prompt(MESSAGES['dealer_hits'])
     dealers_hand << deck.pop
+    dealer_total = calculate_total(dealers_hand)
     sleep 1
   end
 
-  case busted?(dealers_hand)
+  case busted?(dealer_total)
   when true
     display_victor(players_hand, dealers_hand)
+    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
+    player_score += 1
+    display_score(player_score, dealer_score)
     play_again? ? next : break
   when false
     prompt(MESSAGES['dealer_stays'])
@@ -216,20 +255,17 @@ loop do
 
   prompt(MESSAGES['show_hands'])
   sleep 1
+  winner = display_victor(players_hand, dealers_hand)
+  binding.pry
+  case winner
+  when :player
+    player_score += 1
+  when :dealer
+    dealer_score += 1
+  end
 
-  puts ''
-  puts "======================="
-  prompt(configure_hand('Player', players_hand))
-  prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
-  prompt(configure_hand('Dealer', dealers_hand))
-  prompt(MESSAGES['totals_to'] + " #{calculate_total(dealers_hand)}")
-  puts "======================="
-  puts ''
-  sleep 1
-
-  display_victor(players_hand, dealers_hand)
-
-  rematch = play_again?
-  break if rematch == false
+  end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
+  display_score(player_score, dealer_score)
+  break unless play_again?
 end
 prompt(MESSAGES['good_bye'])
