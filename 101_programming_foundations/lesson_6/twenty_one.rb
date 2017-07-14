@@ -1,4 +1,4 @@
-#twenty_one.rb
+# twenty_one.rb
 require 'pry'
 require 'YAML'
 
@@ -25,24 +25,15 @@ def prompt(msg)
   puts "=> #{msg}"
 end
 
-def initialize_game
-  system 'clear' || 'cls'
-  puts MESSAGES['welcome_title'].center(80)
-  prompt(MESSAGES['rules'])
-  answer = gets.chomp
-  system
-end
-
 def initialize_deck
   SUITS.product(VALUES).shuffle
 end
 
 def display_rules(title)
-  answer = ''
   system 'clear' || 'cls'
   puts MESSAGES[title].center(80)
   prompt(MESSAGES['rules'])
-  answer = gets.chomp
+  gets.chomp
   system 'clear' || 'cls'
 end
 
@@ -77,7 +68,7 @@ def calculate_total(hand)
   end
 
   values.select { |value| value == 'A' }.count.times do
-    hand_total -=10 if hand_total > 21
+    hand_total -= 10 if hand_total > 21
   end
 
   hand_total
@@ -117,30 +108,30 @@ def display_victor(player, dealer)
   end
 end
 
-def display_hand(player, hand) #figure out a better name -- this doesn't actually display
+def display_hand(player, hand) # figure out a better name -- this doesn't actually display
   display_array = hand.map do |card|
-  	if card[1].to_i.to_s == card[1]
-  	  "#{card[1]} of #{SUIT_NAMES[card[0]]}"
-  	else
-  	  "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
-  	end
+    if card[1].to_i.to_s == card[1]
+      "#{card[1]} of #{SUIT_NAMES[card[0]]}"
+    else
+      "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
+    end
   end
 
   display_string = join_array(display_array)
-  display_string = "#{player} has #{display_string}."
+  "#{player} has #{display_string}."
 end
 
 def dealer_hand(hand)
   display_array = hand.map do |card|
-  	if card[1].to_i.to_s == card[1]
-  	  "#{card[1]} of #{SUIT_NAMES[card[0]]}"
-  	else
-  	  "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
-  	end
+    if card[1].to_i.to_s == card[1]
+      "#{card[1]} of #{SUIT_NAMES[card[0]]}"
+    else
+      "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
+    end
   end
 
   display_string = join_array_computer(display_array)
-  display_string = "#{MESSAGES['dealer_has']} #{display_string}"
+  "#{MESSAGES['dealer_has']} #{display_string}"
 end
 
 def join_array(arr)
@@ -154,7 +145,7 @@ def join_array(arr)
 end
 
 def join_array_computer(arr)
-  display_string = arr[0] + " #{MESSAGES['another_card']}"
+  arr[0] + " #{MESSAGES['another_card']}"
 end
 
 display_rules('welcome_title')
@@ -180,7 +171,7 @@ loop do
     case answer
     when 'hit'
       players_hand << deck.pop
-      prompt("Now #{display_hand("Player", players_hand)}")
+      prompt("Now #{display_hand('Player', players_hand)}")
       prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
     when 'stay'
       break
@@ -220,9 +211,9 @@ loop do
 
   puts ''
   puts "======================="
-  prompt("#{display_hand('Player', players_hand)}")
+  prompt(display_hand('Player', players_hand))
   prompt(MESSAGES['totals_to'] + " #{calculate_total(players_hand)}")
-  prompt("#{display_hand('Dealer', dealers_hand)}")
+  prompt(display_hand('Dealer', dealers_hand))
   prompt(MESSAGES['totals_to'] + " #{calculate_total(dealers_hand)}")
   puts "======================="
   puts ''
