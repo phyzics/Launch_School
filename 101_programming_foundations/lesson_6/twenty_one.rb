@@ -19,6 +19,7 @@ SUITS = ['H', 'D', 'S', 'C']
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 POINT_LIMIT = 21
 DEALER_LIMIT = 17
+CHAMPION_LIMIT = 5
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -31,7 +32,7 @@ end
 def display_rules(title)
   system 'clear' || 'cls'
   puts MESSAGES[title].center(80)
-  prompt(MESSAGES['rules'])
+  prompt format(MESSAGES['rules'], rounds: CHAMPION_LIMIT)
   gets.chomp
   system 'clear' || 'cls'
 end
@@ -44,10 +45,13 @@ def play_again?
     prompt(MESSAGES['another_round'])
     answer = gets.chomp.downcase
     break if answer == 'y' || answer == 'n'
-    prompt(MESSAGES['invalid_choice'])
+    prompt (MESSAGES['invalid_choice'])
   end
   return true if answer == 'y'
-  return false if answer == 'n'
+  if answer == 'n'
+    prompt(MESSAGES['good_bye'])
+    exit
+  end
 end
 
 def busted?(hand)
@@ -172,100 +176,121 @@ def display_score(player_score, dealer_score)
   end
 end
 
+def display_champion(player_score, dealer_score)
+  puts ''
+  if player_score >= 5
+    prompt(MESSAGES['player_gc'])
+  elsif dealer_score >= 5
+    prompt(MESSAGES['dealer_gc'])
+  end
+end
+
 display_rules('welcome_title')
-player_score = 0
-dealer_score = 0
 
 loop do
-  system 'clear' || 'cls'
-  deck = initialize_deck
-  players_hand = []
-  dealers_hand = []
+  player_score = 0
+  dealer_score = 0
 
-  2.times { players_hand << deck.pop }
-  2.times { dealers_hand << deck.pop }
-
-  player_total = calculate_total(players_hand)
-  dealer_total = calculate_total(dealers_hand)
-
-  prompt(configure_hand("Player", players_hand))
-  prompt(MESSAGES['totals_to'] + " #{player_total}")
-  prompt(dealer_hand(dealers_hand))
-
-  answer = nil
   loop do
-    puts ''
-    prompt(MESSAGES['hit_or_stay'])
-    answer = gets.chomp.downcase
+    system 'clear' || 'cls'
+    deck = initialize_deck
+    players_hand = []
+    dealers_hand = []
 
-    case answer
-    when 'hit'
-      players_hand << deck.pop
-      player_total = calculate_total(players_hand)
-      prompt("Now #{configure_hand('Player', players_hand)}")
-      prompt(MESSAGES['totals_to'] + " #{player_total}")
-    when 'stay'
-      break
-    when 'help'
-      display_rules('rules_title')
-    when 'exit'
-      prompt(MESSAGES['good_bye'])
-      exit
-    else
-      prompt(MESSAGES['only_hit_or_stay'])
+    2.times { players_hand << deck.pop }
+    2.times { dealers_hand << deck.pop }
+
+    player_total = calculate_total(players_hand)
+    dealer_total = calculate_total(dealers_hand)
+
+    prompt(configure_hand("Player", players_hand))
+    prompt(MESSAGES['totals_to'] + " #{player_total}")
+    prompt(dealer_hand(dealers_hand))
+
+    answer = nil
+    loop do
+      puts ''
+      prompt(MESSAGES['hit_or_stay'])
+      answer = gets.chomp.downcase
+
+      case answer
+      when 'hit'
+        players_hand << deck.pop
+        player_total = calculate_total(players_hand)
+        prompt("Now #{configure_hand('Player', players_hand)}")
+        prompt(MESSAGES['totals_to'] + " #{player_total}")
+      when 'stay'
+        break
+      when 'help'
+        display_rules('rules_title')
+      when 'exit'
+        prompt(MESSAGES['good_bye'])
+        exit
+      else
+        prompt(MESSAGES['only_hit_or_stay'])
+      end
+
+      break if busted?(player_total)
     end
 
-    break if busted?(player_total)
-  end
-
-  if busted?(player_total)
-    display_victor(players_hand, dealers_hand)
-    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
-    dealer_score += 1
-    display_score(player_score, dealer_score)
-    play_again? ? next : break
-  else
-    prompt(MESSAGES['you_stay'])
-  end
-  sleep 1
-  puts ''
-  prompt(MESSAGES['dealers_turn'])
-  sleep 1
-  puts ''
-
-  loop do
-    break if calculate_total(dealers_hand) >= DEALER_LIMIT
-    prompt(MESSAGES['dealer_hits'])
-    dealers_hand << deck.pop
-    dealer_total = calculate_total(dealers_hand)
+    if busted?(player_total)
+      display_victor(players_hand, dealers_hand)
+      end_of_rount_output(players_hand, player_total,
+                          dealers_hand, dealer_total)
+      dealer_score += 1
+      display_score(player_score, dealer_score)
+      break if dealer_score == 5
+      next if play_again?
+    else
+      prompt(MESSAGES['you_stay'])
+    end
     sleep 1
-  end
-
-  case busted?(dealer_total)
-  when true
-    display_victor(players_hand, dealers_hand)
-    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
-    player_score += 1
-    display_score(player_score, dealer_score)
-    play_again? ? next : break
-  when false
-    prompt(MESSAGES['dealer_stays'])
+    puts ''
+    prompt(MESSAGES['dealers_turn'])
     sleep 1
-  end
+    puts ''
 
-  prompt(MESSAGES['show_hands'])
-  sleep 1
-  winner = display_victor(players_hand, dealers_hand)
-  binding.pry
-  case winner
-  when :player
-    player_score += 1
-  when :dealer
-    dealer_score += 1
-  end
+    loop do
+      break if calculate_total(dealers_hand) >= DEALER_LIMIT
+      prompt(MESSAGES['dealer_hits'])
+      dealers_hand << deck.pop
+      dealer_total = calculate_total(dealers_hand)
+      sleep 1
+    end
 
-  end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
-  display_score(player_score, dealer_score)
-  break unless play_again?
+    case busted?(dealer_total)
+    when true
+      display_victor(players_hand, dealers_hand)
+      end_of_rount_output(players_hand, player_total,
+                          dealers_hand, dealer_total)
+      player_score += 1
+      display_score(player_score, dealer_score)
+      break if player_score == 5
+      next if play_again?
+    when false
+      prompt(MESSAGES['dealer_stays'])
+      sleep 1
+    end
+
+    prompt(MESSAGES['show_hands'])
+    sleep 1
+    winner = display_victor(players_hand, dealers_hand)
+    case winner
+    when :player
+      player_score += 1
+    when :dealer
+      dealer_score += 1
+    end
+
+    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
+    display_score(player_score, dealer_score)
+
+    if player_score == CHAMPION_LIMIT || dealer_score == CHAMPION_LIMIT
+      break
+    else
+      play_again?
+    end
+  end
+  display_champion(player_score, dealer_score)
+  play_again?
 end
-prompt(MESSAGES['good_bye'])

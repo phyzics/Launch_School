@@ -9,9 +9,10 @@ rules: |
   => During your turn you may either 'hit', which means draw another card, or 'stay',
   which means you are done adding to your hand. Next the dealer goes and does the
   same process. Afterwards the totals are added up and compared, and whoever was
-  closer to 21 wins.
+  closer to 21 wins. The first player to win %{rounds} matches is the Grand Champion!
 
-  => You may enter 'help' during your turn to come back to this screen.
+  => You may enter 'help' during your turn to come back to this screen. You may also
+  enter 'exit' to quit the program.
 
   => Please enter any key to go to the game.
 hit_or_stay: "Do you wish to 'hit' or to 'stay'?"
@@ -31,4 +32,6 @@ dealer_wins: "Oh no! It seems the Dealer has won this round..."
 match_tie: "You and the Dealer tied this round..."
 another_round: "Would you like to play another round? (Y/N)"
 invalid_choice: "That's not a valid choice. Please enter either 'y' or 'n'."
+player_gc: 'Congratulations, you are the Grand Champion!'
+dealer_gc: 'Fiddle-sticks! The Dealer is the Grand Champion!'
 good_bye: "Thanks for playing Twenty-One! Goodbye!"
