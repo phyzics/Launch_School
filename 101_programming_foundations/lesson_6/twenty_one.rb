@@ -80,16 +80,13 @@ def calculate_total(hand)
 end
 
 def determine_victor(player, dealer)
-  player_total = calculate_total(player)
-  dealer_total = calculate_total(dealer)
-
-  if player_total > POINT_LIMIT
+  if player > POINT_LIMIT
     :player_busted
-  elsif dealer_total > POINT_LIMIT
+  elsif dealer > POINT_LIMIT
     :dealer_busted
-  elsif player_total > dealer_total
+  elsif player > dealer
     :player
-  elsif player_total < dealer_total
+  elsif player < dealer
     :dealer
   else
     :tie
@@ -234,7 +231,7 @@ loop do
     end
 
     if busted?(player_total)
-      display_victor(players_hand, dealers_hand)
+      display_victor(player_total, dealer_total)
       end_of_rount_output(players_hand, player_total,
                           dealers_hand, dealer_total)
       dealer_score += 1
@@ -260,7 +257,7 @@ loop do
 
     case busted?(dealer_total)
     when true
-      display_victor(players_hand, dealers_hand)
+      display_victor(player_total, dealer_total)
       end_of_rount_output(players_hand, player_total,
                           dealers_hand, dealer_total)
       player_score += 1
@@ -274,7 +271,7 @@ loop do
 
     prompt(MESSAGES['show_hands'])
     sleep 1
-    winner = display_victor(players_hand, dealers_hand)
+    winner = display_victor(player_total, dealer_total)
     case winner
     when :player
       player_score += 1
