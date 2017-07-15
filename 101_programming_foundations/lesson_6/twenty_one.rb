@@ -45,7 +45,7 @@ def play_again?
     prompt(MESSAGES['another_round'])
     answer = gets.chomp.downcase
     break if answer == 'y' || answer == 'n'
-    prompt (MESSAGES['invalid_choice'])
+    prompt(MESSAGES['invalid_choice'])
   end
   return true if answer == 'y'
   if answer == 'n'
