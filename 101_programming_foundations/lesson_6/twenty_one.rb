@@ -63,13 +63,13 @@ def calculate_total(hand)
 
   hand_total = 0
   values.each do |card|
-    if card == 'A'
-      hand_total += 11
-    elsif card.to_i == 0
-      hand_total += 10
-    else
-      hand_total += card.to_i
-    end
+    hand_total += if card == 'A'
+                    11
+                  elsif card.to_i == 0
+                    10
+                  else
+                    card.to_i
+                  end
   end
 
   values.select { |value| value == 'A' }.count.times do
@@ -103,16 +103,14 @@ def display_victor(player, dealer)
     prompt(MESSAGES['dealer_busted'])
   when :player
     prompt(MESSAGES['player_wins'])
-    :player
   when :dealer
     prompt(MESSAGES['dealer_wins'])
-    :dealer
   when :tie
     prompt(MESSAGES['match_tie'])
   end
 end
 
-def configure_hand(player, hand)
+def contents_of_hand(player, hand)
   display_array = hand.map do |card|
     if card[1].to_i.to_s == card[1]
       "#{card[1]} of #{SUIT_NAMES[card[0]]}"
@@ -121,21 +119,14 @@ def configure_hand(player, hand)
     end
   end
 
-  display_string = join_array(display_array)
-  "#{player} has #{display_string}."
-end
-
-def dealer_hand(hand)
-  display_array = hand.map do |card|
-    if card[1].to_i.to_s == card[1]
-      "#{card[1]} of #{SUIT_NAMES[card[0]]}"
-    else
-      "#{FACE_NAMES[card[1]]} of #{SUIT_NAMES[card[0]]}"
-    end
+  if player == 'Player' || player == 'Dealer'
+    display_string = join_array(display_array)
+    "#{player} has #{display_string}."
+  else
+    display_string = join_array_computer(display_array)
+    "#{MESSAGES['dealer_has']} #{display_string}"
   end
 
-  display_string = join_array_computer(display_array)
-  "#{MESSAGES['dealer_has']} #{display_string}"
 end
 
 def join_array(arr)
@@ -152,25 +143,34 @@ def join_array_computer(arr)
   arr[0] + " #{MESSAGES['another_card']}"
 end
 
-def end_of_rount_output(p_hand, p_total, d_hand, d_total)
+def display_hands(player_hand, player_total, dealer_hand, dealer_total)
   puts ''
   puts '======================='
-  prompt(configure_hand('Player', p_hand))
-  prompt(MESSAGES['totals_to'] + " #{p_total}")
-  prompt(configure_hand('Dealer', d_hand))
-  prompt(MESSAGES['totals_to'] + " #{d_total}")
+  prompt(contents_of_hand('Player', player_hand))
+  prompt(MESSAGES['totals_to'] + " #{player_total}")
+  prompt(contents_of_hand('Dealer', dealer_hand))
+  prompt(MESSAGES['totals_to'] + " #{dealer_total}")
   puts '======================='
   puts ''
 end
 
 def display_score(player_score, dealer_score)
   if player_score > dealer_score
-    puts "Currently you lead #{player_score} to #{dealer_score}"
+    prompt format(MESSAGES['player_leads'],
+                  p_score: player_score, d_score: dealer_score)
   elsif player_score < dealer_score
-    puts "Currently the Dealer leads #{dealer_score} to #{player_score}"
+    prompt format(MESSAGES['dealer_leads'],
+                  d_score: dealer_score, p_score: player_score)
   else
-    puts "Currently the score is tied at #{player_score}"
+    prompt format(MESSAGES['currently_tied'], p_score: player_score)
   end
+end
+
+def end_of_round_output(player_total, dealer_total, player_hand, dealer_hand,
+                        player_score, dealer_score)
+  display_victor(player_total, dealer_total)
+  display_hands(player_hand, player_total, dealer_hand, dealer_total)
+  display_score(player_score, dealer_score)
 end
 
 def display_champion(player_score, dealer_score)
@@ -191,18 +191,19 @@ loop do
   loop do
     system 'clear' || 'cls'
     deck = initialize_deck
-    players_hand = []
-    dealers_hand = []
+    player_hand = []
+    dealer_hand = []
 
-    2.times { players_hand << deck.pop }
-    2.times { dealers_hand << deck.pop }
+    2.times { player_hand << deck.pop }
+    2.times { dealer_hand << deck.pop }
 
-    player_total = calculate_total(players_hand)
-    dealer_total = calculate_total(dealers_hand)
+    player_total = calculate_total(player_hand)
+    dealer_total = calculate_total(dealer_hand)
 
-    prompt(configure_hand("Player", players_hand))
+    prompt(contents_of_hand('Player', player_hand))
     prompt(MESSAGES['totals_to'] + " #{player_total}")
-    prompt(dealer_hand(dealers_hand))
+    puts ''
+    prompt(contents_of_hand('', dealer_hand))
 
     answer = nil
     loop do
@@ -212,11 +213,13 @@ loop do
 
       case answer
       when 'hit'
-        players_hand << deck.pop
-        player_total = calculate_total(players_hand)
-        prompt("Now #{configure_hand('Player', players_hand)}")
+        player_hand << deck.pop
+        player_total = calculate_total(player_hand)
+        puts ''
+        prompt("Now #{contents_of_hand('Player', player_hand)}")
         prompt(MESSAGES['totals_to'] + " #{player_total}")
       when 'stay'
+        puts ''
         break
       when 'help'
         display_rules('rules_title')
@@ -231,11 +234,9 @@ loop do
     end
 
     if busted?(player_total)
-      display_victor(player_total, dealer_total)
-      end_of_rount_output(players_hand, player_total,
-                          dealers_hand, dealer_total)
       dealer_score += 1
-      display_score(player_score, dealer_score)
+      end_of_round_output(player_total, dealer_total, player_hand, dealer_hand,
+                          player_score, dealer_score)
       break if dealer_score == 5
       next if play_again?
     else
@@ -248,39 +249,36 @@ loop do
     puts ''
 
     loop do
-      break if calculate_total(dealers_hand) >= DEALER_LIMIT
+      break if calculate_total(dealer_hand) >= DEALER_LIMIT
       prompt(MESSAGES['dealer_hits'])
-      dealers_hand << deck.pop
-      dealer_total = calculate_total(dealers_hand)
+      dealer_hand << deck.pop
+      dealer_total = calculate_total(dealer_hand)
       sleep 1
     end
 
-    case busted?(dealer_total)
-    when true
-      display_victor(player_total, dealer_total)
-      end_of_rount_output(players_hand, player_total,
-                          dealers_hand, dealer_total)
+    if busted?(dealer_total)
       player_score += 1
-      display_score(player_score, dealer_score)
+      end_of_round_output(player_total, dealer_total, player_hand, dealer_hand,
+                          player_score, dealer_score)
       break if player_score == 5
       next if play_again?
-    when false
+    else
       prompt(MESSAGES['dealer_stays'])
       sleep 1
     end
 
     prompt(MESSAGES['show_hands'])
     sleep 1
-    winner = display_victor(player_total, dealer_total)
+
+    winner = determine_victor(player_total, dealer_total)
     case winner
     when :player
       player_score += 1
     when :dealer
       dealer_score += 1
     end
-
-    end_of_rount_output(players_hand, player_total, dealers_hand, dealer_total)
-    display_score(player_score, dealer_score)
+    end_of_round_output(player_total, dealer_total, player_hand, dealer_hand,
+                        player_score, dealer_score)
 
     if player_score == CHAMPION_LIMIT || dealer_score == CHAMPION_LIMIT
       break

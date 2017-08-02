@@ -32,6 +32,9 @@ dealer_wins: "Oh no! It seems the Dealer has won this round..."
 match_tie: "You and the Dealer tied this round..."
 another_round: "Would you like to play another round? (Y/N)"
 invalid_choice: "That's not a valid choice. Please enter either 'y' or 'n'."
+player_leads: "Currently you lead %{p_score} to %{d_score}"
+dealer_leads: "Currently the Dealer leads %{d_score} to %{p_score}"
+currently_tied: "Currently the score is tied at %{p_score}"
 player_gc: 'Congratulations, you are the Grand Champion!'
 dealer_gc: 'Fiddle-sticks! The Dealer is the Grand Champion!'
 good_bye: "Thanks for playing Twenty-One! Goodbye!"
