@@ -1,4 +1,4 @@
-# easy_705.rb - Staggered Caps (Part 1)
+# easy_706.rb - Staggered Caps (Part 2)
 def staggered_case(str)
   index = -1
   str_arr = str.chars.map do |char|
