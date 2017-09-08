@@ -15,12 +15,17 @@ WORD_DIGIT_KEY = {
 def word_to_digit(str)
   str_arr = str.split
   return_arr = str_arr.map do |char|
-    if WORD_DIGIT_KEY.keys.include?(char - )
+    if WORD_DIGIT_KEY.keys.include?(char)
       WORD_DIGIT_KEY[char]
+    elsif char.include?('.')
+      punctuation = char.slice!(-1)
+      char = WORD_DIGIT_KEY[char] if WORD_DIGIT_KEY.keys.include?(char)
+      char = char + punctuation
     else
       char
     end
   end
+  return_arr.join(' ')
 end
 
 p word_to_digit('Please call me at five five five one two three four. Thanks.')
