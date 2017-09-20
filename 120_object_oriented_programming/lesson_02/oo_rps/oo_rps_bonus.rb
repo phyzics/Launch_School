@@ -1,6 +1,7 @@
 # oo_rps.rb - Object Oriented Rock, Paper, Scisssors
+require 'pry'
 class Move
-  VALUES = ['rock', 'paper', 'scissors']
+  VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
   def initialize(value)
     @value = value
@@ -18,16 +19,28 @@ class Move
     @value == 'paper'
   end
 
+  def spock?
+    @value == 'spock'
+  end
+
+  def lizard?
+    @value == 'lizard'
+  end
+
   def >(other_move)
-    (rock? && other_move.scissors?)   ||
-      (paper? && other_move.rock?)    ||
-      (scissors? && other_move.paper?)
+    (rock? && (other_move.scissors? || other_move.lizard?))    ||
+      (paper? && (other_move.rock? || other_move.spock?))      ||
+      (scissors? && (other_move.paper? || other_move.lizard?)) ||
+      (lizard? && (other_move.paper? || other_move.spock?))    ||
+      (spock? && (other_move.rock? || other_move.scissors?))
   end
 
   def <(other_move)
-    (rock? && other_move.paper?)       ||
-      (paper? && other_move.scissors?) ||
-      (scissors? && other_move.rock?)
+    (rock? && (other_move.spock? || other_move.paper?))        ||
+      (paper? && (other_move.scissors? || other_move.lizard?)) ||
+      (scissors? && (other_move.rock? || other_move.spock?))   ||
+      (lizard? && (other_move.scissors? || other_move.rock?))  ||
+      (spock? && (other_move.lizard? || other_move.paper?))
   end
 
   def to_s
@@ -62,7 +75,7 @@ class Human < Player
   def choose
     choice = nil
     loop do
-      puts "Please choose rock, paper, or scissors"
+      puts "Please choose rock, paper, scissors, lizard, or spock"
       choice = gets.chomp
       break if Move::VALUES.include?(choice)
       puts "Sorry, invalid choice."
@@ -91,7 +104,7 @@ class RPSGame
   end
 
   def display_welcome_message
-    puts "Welcome to Rock, Paper, Scissors!"
+    puts "Welcome to Rock, Paper, Scissors, Lizard, Spock!"
   end
 
   def display_goodbye_message
@@ -164,7 +177,7 @@ class RPSGame
         display_winner
         iterate_scores
         display_scores
-        break if (human.score || computer.score) == 3
+        break if human.score == 3 || computer.score == 3
       end
       break unless play_again?
     end
