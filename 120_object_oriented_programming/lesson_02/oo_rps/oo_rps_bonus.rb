@@ -1,16 +1,28 @@
 # oo_rps.rb - Object Oriented Rock, Paper, Scisssors
 require 'pry'
 
+def prompt(msg)
+  puts ">>#{msg}"
+end
+
 class Move
   attr_accessor :value
 
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
-  WINNING_MOVES = { 'rock' => %w(scissors lizard),
-                  'paper' => %w(rock spock),
-                  'scissors' => %w(paper lizard),
-                  'lizard' => %w(paper spock),
-                  'spock' => %w(rock scissors)
-                }
+  WINNING_MOVES = {
+    'rock' => %w(scissors lizard),
+    'paper' => %w(rock spock),
+    'scissors' => %w(paper lizard),
+    'lizard' => %w(paper spock),
+    'spock' => %w(rock scissors)
+    }
+  LOSING_MOVES = {
+    'rock' => %w(spock paper),
+    'paper' => %w(scissors lizard),
+    'scissors' => %w(rock spock),
+    'lizard' => %w(scissors rock),
+    'spock' => %w(paper lizard)
+    }
 
   def initialize(choice)
     self.value = choice
@@ -28,37 +40,6 @@ class Move
     @value
   end
 end
-
-class History
-  attr_accessor :hu_name, :cpu_name, :hu_moves, :cpu_moves, :cpu_bad_moves
-
-  LOSING_MOVES = { 'rock' => %w(spock paper),
-                  'paper' => %w(scissors lizard),
-                  'scissors' => %w(rock spock),
-                  'lizard' => %w(scissors rock),
-                  'spock' => %w(paper lizard)
-                }
-
-  def initialize(human, computer)
-    self.hu_name = human
-    self.cpu_name = computer
-    self.hu_moves, self.cpu_moves = [], []
-    self.cpu_bad_moves = []
-  end
-
-  def display_history
-    self.hu_moves.each_with_index do |m, i|
-      puts "In round #{i + 1}, #{hu_name} chose #{m}."
-    end
-
-    puts ''
-
-    self.cpu_moves.each_with_index do |m, i|
-      puts "In round #{i + 1}, #{cpu_name} chose #{m}."
-    end
-  end
-end
-
 #~~~~~~~~~~~~~~~~~~~~~~~~#
 # Player with subclasses #
 #~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -67,10 +48,35 @@ class Player
 
   def initialize
     set_name
+    self.history = []
   end
 
   def reset_score
     self.score = 0
+  end
+
+  def verify_choice(options)
+    choice = nil
+    loop do
+      choice = gets.chomp.strip.downcase
+      if options.include?(choice)
+        return choice
+      elsif choice == 'exit'
+        exit # MAKE A TRUE EXIT FUNCTION
+      elsif choice == 'rules'
+        # MAKE A DISPLAY RULES FUNCTION
+      elsif choice.empty?
+        prompt("You must enter a value and then press [Enter].")
+      else
+        prompt("Please make a valid selection and then press [Enter].")
+      end
+    end
+  end
+
+  def display_history
+    history.each_with_index do |m, i|
+      puts "In round #{i + 1}, #{name} chose #{m}."
+    end
   end
 end
 
@@ -106,43 +112,55 @@ class Human < Player
 end
 
 class Computer < Player
+  attr_accessor :previous_losses
+  OPPONENTS = ['R2D2', 'Johnny Number 5', 'Robo', 'HAL', 'W.D. Gaster']
+
+  def initialize
+    super
+    self.previous_losses = []
+  end
+
   def set_name
-    self.name = Hal.new
+    opponent = select_opponent
 
-    #[R2D2.new, NumberFive.new, Robo.new, Hal.new, Gaster.new].sample
+    case opponent
+    when '1' then self.name = 'R2D2'
+    when '2' then self.name = 'Johnny Number 5'
+    when '3' then self.name = 'Robo'
+    when '4' then self.name = 'HAL'
+    when '5' then self.name = 'W.D. Gaster'
+    end
   end
 
-  def choose
-    choice = Move::VALUES.sample
-    self.move = Move.new(choice)
-  end
-end
-#~~~~~~~~~~~~~~~~~~~~~#
-# Computer subclasses #
-#~~~~~~~~~~~~~~~~~~~~~#
-class R2D2 < Computer
-  def set_name
-    self.name = 'R2D2'
+  def display_opponents
+    puts ''
+    prompt("Please use the corresponding digit to select your opponent:")
+    OPPONENTS.each_with_index do |n, i|
+      puts("#{i+1}) #{n}".ljust(50))
+    end
   end
 
-  def choose
+  def select_opponent
+    display_opponents
+    verify_choice(%w(1 2 3 4 5))
+  end
+
+  def choose(human_choice=nil)
+    case name
+    when 'R2D2'            then r2d2_choices
+    when 'Johnny Number 5' then jn5_choices(human_choice)
+    when 'Robo'            then robo_choices
+    when 'HAL'             then hal_choices(previous_losses)
+    when 'W.D. Gaster'     then gaster_choices(human_choice)
+    end
+  end
+
+  def r2d2_choices
     choice = 'rock'
     self.move = Move.new(choice)
   end
-end
 
-class NumberFive < Computer
-  def set_name
-    self.name = 'Johnny Number 5'
-  end
-
-  def short_circut?
-    roll = rand(1..100)
-    return true if (90..100).include?(roll)
-    false
-  end
-
-  def choose(human_choice)
+  def jn5_choices(human_choice)
     if short_circut?
       choice = Move::WINNING_MOVES[human_choice].sample
       self.move = Move.new(choice)
@@ -151,59 +169,52 @@ class NumberFive < Computer
       self.move = Move.new(choice)
     end
   end
-end
 
-class Robo < Computer
-  def set_name
-    self.name = 'Robo'
-  end
-end
-
-class Hal < Computer
-  def set_name
-    self.name = 'HAL'
-  end
-
-  def choose(history)
-    bad_moves = scan_losing_moves(history)
-    if bad_moves
-      choice = (Move::VALUES - [bad_moves]).sample
-    else
-      choice = Move::VALUES.sample
-    end
+  def robo_choices
+    choice = Move::VALUES.sample
     self.move = Move.new(choice)
   end
 
-  def scan_losing_moves(history)
-    moves = history.cpu_bad_moves
+  def hal_choices(previous_losses)
+    bad_moves = scan_losing_moves(previous_losses)
+    choice = if bad_moves
+               (Move::VALUES - [bad_moves]).sample
+               #binding.pry
+             else
+               Move::VALUES.sample
+             end
+    self.move = Move.new(choice)
+  end
+
+  def gaster_choices(human_choice)
+    choice = Move::LOSING_MOVES[human_choice].sample
+    self.move = Move.new(choice)
+  end
+
+  def short_circut?
+    roll = rand(1..100)
+    return true if (90..100).include?(roll)
+    false
+  end
+
+  def scan_losing_moves(previous_losses)
+    binding.pry
+    #return nil if previous_losses.empty?
     Move::VALUES.each do |val|
-      return val if moves.count(val) == 2
+      return val if previous_losses.count(val) == 2
     end
     nil
   end
 end
-
-class Gaster < Computer
-  def set_name
-    self.name = 'W.D. Gaster'
-  end
-
-  def choose(human_choice)
-    choice = History::LOSING_MOVES[human_choice].sample
-    self.move = Move.new(choice)
-  end
-end
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Game Orchestration Engine #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 class RPSGame
-  attr_accessor :human, :computer, :history
+  attr_accessor :human, :computer
 
   def initialize
     @human = Human.new
-    @computer = Computer.new.set_name
-    @history = History.new(human.name, computer.name)
+    @computer = Computer.new
   end
 
   def display_welcome_message
@@ -215,16 +226,18 @@ class RPSGame
   end
 
   def determine_moves
-    history.hu_moves << human.choose
+    human.choose
 
-    history.cpu_moves << if computer.name == 'W.D. Gaster' ||
-                            computer.name == 'Johnny Number 5'
-                              computer.choose(human.move.value)
-                         elsif computer.name == 'HAL'
-                           computer.choose(history)
-                         else
-                           computer.choose
-                         end
+    if computer.name == 'W.D. Gaster' || computer.name == 'Johnny Number 5'
+      computer.choose(human.move.value)
+    else
+      computer.choose
+    end
+  end
+
+  def record_history
+    human.history << human.move
+    computer.history << computer.move
   end
 
   def display_moves
@@ -234,28 +247,34 @@ class RPSGame
 
   def determine_winner
     if human.move > computer.move
-      history.cpu_bad_moves << computer.move.value
-      :human
+      iterate_scores(:human)
+      iterate_cpu_losses
+      display_winner(:human)
     elsif human.move < computer.move
-      :computer
+      iterate_scores(:computer)
+      display_winner(:computer)
     else
-      :tie
+      display_winner(:tie)
     end
   end
 
-  def display_winner
-    case determine_winner
+  def display_winner(victor)
+    case victor
     when :human then puts "#{human.name} won!"
     when :computer then puts "#{computer.name} won!"
     when :tie then puts "It's a tie!"
     end
   end
 
-  def iterate_scores
-    case determine_winner
+  def iterate_scores(victor)
+    case victor
     when :human then human.score += 1
     when :computer then computer.score += 1
     end
+  end
+
+  def iterate_cpu_losses
+    computer.previous_losses << computer.move.value
   end
 
   def display_scores
@@ -288,17 +307,18 @@ class RPSGame
       reset_scores
       loop do
         determine_moves
+        record_history
         display_moves
         determine_winner
-        display_winner
-        iterate_scores
         display_scores
         break if human.score == 3 || computer.score == 3
       end
       break unless play_again?
     end
     display_goodbye_message
-    history.display_history
+    human.display_history
+    puts ''
+    computer.display_history
   end
 end
 
