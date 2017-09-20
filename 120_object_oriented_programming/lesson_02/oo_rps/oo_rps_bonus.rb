@@ -4,47 +4,106 @@ class Move
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
   def initialize(value)
-    @value = value
+    @choice = value
+    case value
+    when 'rock' then @value = Rock.new
+    when 'paper' then @value = Paper.new
+    when 'scissors' then @value = Scissors.new
+    when 'lizard' then @value = Lizard.new
+    when 'spock' then @value = Spock.new
+    end
   end
 
   def scissors?
-    @value == 'scissors'
+    @value.is_a?(Scissors)
   end
 
   def rock?
-    @value == 'rock'
+    @value.is_a?(Rock)
   end
 
   def paper?
-    @value == 'paper'
+    @value.is_a?(Paper)
   end
 
   def spock?
-    @value == 'spock'
+    @value.is_a?(Spock)
   end
 
   def lizard?
-    @value == 'lizard'
+    @value.is_a?(Lizard)
   end
 
   def >(other_move)
-    (rock? && (other_move.scissors? || other_move.lizard?))    ||
-      (paper? && (other_move.rock? || other_move.spock?))      ||
-      (scissors? && (other_move.paper? || other_move.lizard?)) ||
-      (lizard? && (other_move.paper? || other_move.spock?))    ||
-      (spock? && (other_move.rock? || other_move.scissors?))
+    @value > other_move
   end
 
   def <(other_move)
-    (rock? && (other_move.spock? || other_move.paper?))        ||
-      (paper? && (other_move.scissors? || other_move.lizard?)) ||
-      (scissors? && (other_move.rock? || other_move.spock?))   ||
-      (lizard? && (other_move.scissors? || other_move.rock?))  ||
-      (spock? && (other_move.lizard? || other_move.paper?))
+    @value < other_move
   end
 
   def to_s
-    @value
+    @choice
+  end
+end
+
+class Rock < Move
+  def initialize; end
+
+  def >(other_move)
+    other_move.scissors? || other_move.lizard?
+  end
+
+  def <(other_move)
+    other_move.spock? || other_move.paper?
+  end
+end
+
+class Paper < Move
+  def initialize; end
+
+  def >(other_move)
+    other_move.rock? || other_move.spock?
+  end
+
+  def <(other_move)
+    other_move.scissors? || other_move.lizard?
+  end
+end
+
+class Scissors < Move
+  def initialize; end
+
+  def >(other_move)
+    other_move.paper? || other_move.lizard?
+  end
+
+  def <(other_move)
+    other_move.spock? || other_move.rock?
+  end
+end
+
+class Lizard < Move
+  def initialize; end
+
+  def >(other_move)
+    other_move.spock? || other_move.paper?
+  end
+
+  def <(other_move)
+    other_move.scissors? || other_move.rock?
+  end
+end
+
+class Spock < Move
+  def initialize; end
+
+  def >(other_move)
+    other_move.scissors? || other_move.rock?
+  end
+
+  def <(other_move)
+    other_move.lizard? || other_move.paper?
   end
 end
 
