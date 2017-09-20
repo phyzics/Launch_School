@@ -1,114 +1,69 @@
 # oo_rps.rb - Object Oriented Rock, Paper, Scisssors
 require 'pry'
+
 class Move
+  attr_accessor :value
+
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
+  WINNING_MOVES = { 'rock' => %w(scissors lizard),
+                  'paper' => %w(rock spock),
+                  'scissors' => %w(paper lizard),
+                  'lizard' => %w(paper spock),
+                  'spock' => %w(rock scissors)
+                }
 
-  def initialize(value)
-    @choice = value
-    case value
-    when 'rock' then @value = Rock.new
-    when 'paper' then @value = Paper.new
-    when 'scissors' then @value = Scissors.new
-    when 'lizard' then @value = Lizard.new
-    when 'spock' then @value = Spock.new
-    end
-  end
-
-  def scissors?
-    @value.is_a?(Scissors)
-  end
-
-  def rock?
-    @value.is_a?(Rock)
-  end
-
-  def paper?
-    @value.is_a?(Paper)
-  end
-
-  def spock?
-    @value.is_a?(Spock)
-  end
-
-  def lizard?
-    @value.is_a?(Lizard)
+  def initialize(choice)
+    self.value = choice
   end
 
   def >(other_move)
-    @value > other_move
+    WINNING_MOVES[value].include?(other_move.value)
   end
 
   def <(other_move)
-    @value < other_move
+    WINNING_MOVES[other_move.value].include?(value)
   end
 
   def to_s
-    @choice
+    @value
   end
 end
 
-class Rock < Move
-  def initialize; end
+class History
+  attr_accessor :hu_name, :cpu_name, :hu_moves, :cpu_moves, :cpu_bad_moves
 
-  def >(other_move)
-    other_move.scissors? || other_move.lizard?
+  LOSING_MOVES = { 'rock' => %w(spock paper),
+                  'paper' => %w(scissors lizard),
+                  'scissors' => %w(rock spock),
+                  'lizard' => %w(scissors rock),
+                  'spock' => %w(paper lizard)
+                }
+
+  def initialize(human, computer)
+    self.hu_name = human
+    self.cpu_name = computer
+    self.hu_moves, self.cpu_moves = [], []
+    self.cpu_bad_moves = []
   end
 
-  def <(other_move)
-    other_move.spock? || other_move.paper?
-  end
-end
+  def display_history
+    self.hu_moves.each_with_index do |m, i|
+      puts "In round #{i + 1}, #{hu_name} chose #{m}."
+    end
 
-class Paper < Move
-  def initialize; end
+    puts ''
 
-  def >(other_move)
-    other_move.rock? || other_move.spock?
-  end
-
-  def <(other_move)
-    other_move.scissors? || other_move.lizard?
-  end
-end
-
-class Scissors < Move
-  def initialize; end
-
-  def >(other_move)
-    other_move.paper? || other_move.lizard?
-  end
-
-  def <(other_move)
-    other_move.spock? || other_move.rock?
+    self.cpu_moves.each_with_index do |m, i|
+      puts "In round #{i + 1}, #{cpu_name} chose #{m}."
+    end
   end
 end
 
-class Lizard < Move
-  def initialize; end
-
-  def >(other_move)
-    other_move.spock? || other_move.paper?
-  end
-
-  def <(other_move)
-    other_move.scissors? || other_move.rock?
-  end
-end
-
-class Spock < Move
-  def initialize; end
-
-  def >(other_move)
-    other_move.scissors? || other_move.rock?
-  end
-
-  def <(other_move)
-    other_move.lizard? || other_move.paper?
-  end
-end
-
+#~~~~~~~~~~~~~~~~~~~~~~~~#
+# Player with subclasses #
+#~~~~~~~~~~~~~~~~~~~~~~~~#
 class Player
-  attr_accessor :move, :name, :score
+  attr_accessor :move, :name, :score, :history
 
   def initialize
     set_name
@@ -120,12 +75,19 @@ class Player
 end
 
 class Human < Player
+  VALID_CHOICES = { 'r'  => 'rock',
+                    'p'  => 'paper',
+                    'sc' => 'scissors',
+                    'l'  => 'lizard',
+                    'sp' => 'spock'
+                  }
+
   def set_name
     n = ''
     puts "What's your name?"
     loop do
       n = gets.chomp
-      break unless n.empty?
+      break unless n.strip.empty?
       puts "Sorry, must enter a value."
     end
     self.name = n
@@ -145,21 +107,103 @@ end
 
 class Computer < Player
   def set_name
-    self.name = ['R2D2', 'Hal', 'Chappie', 'Sonny', 'Number 5'].sample
+    self.name = Hal.new
+
+    #[R2D2.new, NumberFive.new, Robo.new, Hal.new, Gaster.new].sample
   end
 
   def choose
-    self.move = Move.new(Move::VALUES.sample)
+    choice = Move::VALUES.sample
+    self.move = Move.new(choice)
+  end
+end
+#~~~~~~~~~~~~~~~~~~~~~#
+# Computer subclasses #
+#~~~~~~~~~~~~~~~~~~~~~#
+class R2D2 < Computer
+  def set_name
+    self.name = 'R2D2'
+  end
+
+  def choose
+    choice = 'rock'
+    self.move = Move.new(choice)
   end
 end
 
-# Game Orchestration Engine
+class NumberFive < Computer
+  def set_name
+    self.name = 'Johnny Number 5'
+  end
+
+  def short_circut?
+    roll = rand(1..100)
+    return true if (90..100).include?(roll)
+    false
+  end
+
+  def choose(human_choice)
+    if short_circut?
+      choice = Move::WINNING_MOVES[human_choice].sample
+      self.move = Move.new(choice)
+    else
+      choice = Move::VALUES.sample
+      self.move = Move.new(choice)
+    end
+  end
+end
+
+class Robo < Computer
+  def set_name
+    self.name = 'Robo'
+  end
+end
+
+class Hal < Computer
+  def set_name
+    self.name = 'HAL'
+  end
+
+  def choose(history)
+    bad_moves = scan_losing_moves(history)
+    if bad_moves
+      choice = (Move::VALUES - [bad_moves]).sample
+    else
+      choice = Move::VALUES.sample
+    end
+    self.move = Move.new(choice)
+  end
+
+  def scan_losing_moves(history)
+    moves = history.cpu_bad_moves
+    Move::VALUES.each do |val|
+      return val if moves.count(val) == 2
+    end
+    nil
+  end
+end
+
+class Gaster < Computer
+  def set_name
+    self.name = 'W.D. Gaster'
+  end
+
+  def choose(human_choice)
+    choice = History::LOSING_MOVES[human_choice].sample
+    self.move = Move.new(choice)
+  end
+end
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Game Orchestration Engine #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 class RPSGame
-  attr_accessor :human, :computer
+  attr_accessor :human, :computer, :history
 
   def initialize
     @human = Human.new
-    @computer = Computer.new
+    @computer = Computer.new.set_name
+    @history = History.new(human.name, computer.name)
   end
 
   def display_welcome_message
@@ -167,7 +211,20 @@ class RPSGame
   end
 
   def display_goodbye_message
-    puts "thanks for playing Rock, Paper, Scissors. Good bye!"
+    puts "Thanks for playing Rock, Paper, Scissors. Good bye!"
+  end
+
+  def determine_moves
+    history.hu_moves << human.choose
+
+    history.cpu_moves << if computer.name == 'W.D. Gaster' ||
+                            computer.name == 'Johnny Number 5'
+                              computer.choose(human.move.value)
+                         elsif computer.name == 'HAL'
+                           computer.choose(history)
+                         else
+                           computer.choose
+                         end
   end
 
   def display_moves
@@ -177,6 +234,7 @@ class RPSGame
 
   def determine_winner
     if human.move > computer.move
+      history.cpu_bad_moves << computer.move.value
       :human
     elsif human.move < computer.move
       :computer
@@ -229,8 +287,7 @@ class RPSGame
     loop do
       reset_scores
       loop do
-        human.choose
-        computer.choose
+        determine_moves
         display_moves
         determine_winner
         display_winner
@@ -241,6 +298,7 @@ class RPSGame
       break unless play_again?
     end
     display_goodbye_message
+    history.display_history
   end
 end
 
