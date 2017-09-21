@@ -1,23 +1,88 @@
 # oo_rps.rb - Object Oriented Rock, Paper, Scisssors
 require 'pry'
-require 'yaml'
 
-def prompt(msg)
-  puts ">> #{msg}"
+module Display
+  def prompt(msg)
+    puts ">> #{msg}"
+  end
+
+  def clear_screen
+    system('clear') || system('cls')
+  end
+
+  def display_goodbye_message
+    prompt("Thanks for playing Rock, Paper, Scissors! Below is the history of all moves made between you and your opponent.")
+    prompt("When you are ready to return to the command line, press [Enter].")
+    puts "*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*"
+    display_game_history
+    press_enter
+    exit
+  end
+
+  def display_welcome_message
+    clear_screen
+    prompt('~*~ Welcome to Rock, Paper, Scissors, Lizard, Spock! ~*~')
+    puts ''
+  end
+
+  def display_moves
+    prompt("#{human.name} chose #{human.move}.")
+    prompt("#{computer.name} chose #{computer.move}.")
+  end
+
+  def display_game_history
+    puts ''
+    human.display_history
+    puts ''
+    computer.display_history
+  end
+
+  def display_scores
+    puts "--------------------"
+    prompt("The current score is:")
+    prompt("#{human.name}: #{human.score}")
+    prompt("#{computer.name}: #{computer.score}")
+    puts "--------------------"
+  end
+
+  def display_history
+    history.each_with_index do |m, i|
+      puts "In round #{i + 1}, #{name} chose #{m}."
+    end
+  end
+
+  def end_of_round_prompt
+    if human.score == 3
+      prompt("Congratulations, you've achieved total victory! (Press [Enter] to continue)")
+    elsif computer.score == 3
+      prompt("Oh no, you've suffered a humiliating defeat! (Press [Enter] to continue)")
+    else
+      prompt("Press [Enter] when you are ready for the next round.")
+    end
+  end
 end
 
-def clear_screen
-  system('clear') || system('cls')
-end
+module GameFlow
+  def verify_choice(options)
+    choice = nil
+    loop do
+      choice = gets.chomp.strip.downcase
+      if options.include?(choice)
+        return choice
+      elsif choice == 'exit'
+        quit
+      elsif choice.empty?
+        prompt("You must enter a value and then press [Enter].")
+      else
+        prompt("Please make a valid selection and then press [Enter].")
+      end
+    end
+  end
 
-def display_goodbye_message
-  prompt("Thanks for playing Rock, Paper, Scissors. Good bye!")
-  sleep 2
-  clear_screen
-end
-
-def display_rules
-
+  def press_enter
+    gets
+    clear_screen
+  end
 end
 
 class Move
@@ -25,19 +90,19 @@ class Move
 
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
   WINNING_MOVES = {
-    'rock' => %w(scissors lizard),
-    'paper' => %w(rock spock),
-    'scissors' => %w(paper lizard),
-    'lizard' => %w(paper spock),
-    'spock' => %w(rock scissors)
-    }
+    'rock'     => %w[scissors lizard],
+    'paper'    => %w[rock spock],
+    'scissors' => %w[paper lizard],
+    'lizard'   => %w[paper spock],
+    'spock'    => %w[rock scissors]
+  }
   LOSING_MOVES = {
-    'rock' => %w(spock paper),
-    'paper' => %w(scissors lizard),
-    'scissors' => %w(rock spock),
-    'lizard' => %w(scissors rock),
-    'spock' => %w(paper lizard)
-    }
+    'rock'     => %w[spock paper],
+    'paper'    => %w[scissors lizard],
+    'scissors' => %w[rock spock],
+    'lizard'   => %w[scissors rock],
+    'spock'    => %w[paper lizard]
+  }
 
   def initialize(choice)
     self.value = choice
@@ -58,6 +123,8 @@ end
 
 class Player
   attr_accessor :move, :name, :score, :history
+  include Display
+  include GameFlow
 
   def initialize
     set_name
@@ -72,45 +139,30 @@ class Player
     display_goodbye_message
     exit
   end
-
-  def verify_choice(options)
-    choice = nil
-    loop do
-      choice = gets.chomp.strip.downcase
-      if options.include?(choice)
-        return choice
-      elsif choice == 'exit'
-        quit
-      elsif choice.empty?
-        prompt("You must enter a value and then press [Enter].")
-      else
-        prompt("Please make a valid selection and then press [Enter].")
-      end
-    end
-  end
-
-  def display_history
-    history.each_with_index do |m, i|
-      puts "In round #{i + 1}, #{name} chose #{m}."
-    end
-  end
 end
 
 class Human < Player
-  VALID_MOVES = { 'r'  => 'rock',
-                    'p'  => 'paper',
-                    'sc' => 'scissors',
-                    'l'  => 'lizard',
-                    'sp' => 'spock'
-                  }
+  VALID_MOVES = {
+    'r'  => 'rock',
+    'p'  => 'paper',
+    'sc' => 'scissors',
+    'l'  => 'lizard',
+    'sp' => 'spock'
+  }
 
   def set_name
+    clear_screen
     n = ''
     prompt("What's your name?")
     loop do
       n = gets.chomp
-      break unless n.strip.empty?
-      puts "Sorry, must enter a value."
+      if n =~ /[^a-z ']/i
+        prompt("Please enter a valid name and press [Enter].")
+      elsif n.strip.empty?
+        prompt("Please enter a value and press [Enter].")
+      else
+        break
+      end
     end
     self.name = n
   end
@@ -125,7 +177,7 @@ class Human < Player
   def choose
     prompt("Please use the keywords to select your move:")
     prompt(create_options_str)
-    choice = VALID_MOVES[verify_choice(%w(r p sc l sp))]
+    choice = VALID_MOVES[verify_choice(%w[r p sc l sp])]
     self.move = Move.new(choice)
   end
 end
@@ -156,13 +208,13 @@ class Computer < Player
     prompt("Please use the corresponding digit to select your opponent:")
     puts ''
     OPPONENTS.each_with_index do |n, i|
-      puts("          #{i+1}) #{n}")
+      puts("          #{i + 1}) #{n}")
     end
   end
 
   def select_opponent
     display_opponents
-    verify_choice(%w(1 2 3 4 5))
+    verify_choice(%w[1 2 3 4 5])
   end
 
   def choose(human_choice=nil)
@@ -181,13 +233,12 @@ class Computer < Player
   end
 
   def jn5_choices(human_choice)
-    if short_circut?
-      choice = Move::WINNING_MOVES[human_choice].sample
-      self.move = Move.new(choice)
-    else
-      choice = Move::VALUES.sample
-      self.move = Move.new(choice)
-    end
+    choice = if short_circut?
+               Move::WINNING_MOVES[human_choice].sample
+             else
+               Move::VALUES.sample
+             end
+    self.move = Move.new(choice)
   end
 
   def robo_choices
@@ -212,7 +263,7 @@ class Computer < Player
 
   def short_circut?
     roll = rand(1..100)
-    return true if (90..100).include?(roll)
+    return true if (90..100).cover?(roll)
     false
   end
 
@@ -227,15 +278,12 @@ end
 # Game Orchestration Engine #
 class RPSGame
   attr_accessor :human, :computer
+  include Display
+  include GameFlow
 
   def initialize
     @human = Human.new
     @computer = Computer.new
-  end
-
-  def display_welcome_message
-    prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
-    puts ''
   end
 
   def determine_moves
@@ -246,16 +294,13 @@ class RPSGame
     else
       computer.choose
     end
+
+    clear_screen
   end
 
   def record_history
     human.history << human.move
     computer.history << computer.move
-  end
-
-  def display_moves
-    prompt("#{human.name} chose #{human.move}.")
-    prompt("#{computer.name} chose #{computer.move}.")
   end
 
   def determine_winner
@@ -290,22 +335,11 @@ class RPSGame
     computer.previous_losses << computer.move.value
   end
 
-  def display_scores
-    puts "--------------------"
-    prompt("The current score is:")
-    prompt("#{human.name}: #{human.score}")
-    prompt("#{computer.name}: #{computer.score}")
-  end
-
   def play_again?
     answer = nil
     prompt("Would you like to play another match? (Enter 'y or 'n')")
-    loop do
-      answer = gets.chomp.downcase.strip
-      break if ['y', 'yes', 'n', 'no'].include?(answer)
-      puts "Sorry, must be 'y' or 'n'."
-    end
-
+    verify_choice(%w[y yes n no])
+    clear_screen
     return true if answer == 'y' || answer == 'yes'
     false
   end
@@ -326,15 +360,8 @@ class RPSGame
     display_moves
     determine_winner
     display_scores
-    sleep 1
-    clear_screen
-  end
-
-  def display_game_history
-    puts ''
-    human.display_history
-    puts ''
-    computer.display_history
+    end_of_round_prompt
+    press_enter
   end
 
   def play_match
@@ -347,7 +374,6 @@ class RPSGame
       end
       break unless play_again?
     end
-    display_game_history
     display_goodbye_message
   end
 end
