@@ -1,6 +1,4 @@
 # oo_rps.rb - Object Oriented Rock, Paper, Scisssors
-require 'pry'
-
 module Display
   def prompt(msg)
     puts ">> #{msg}"
