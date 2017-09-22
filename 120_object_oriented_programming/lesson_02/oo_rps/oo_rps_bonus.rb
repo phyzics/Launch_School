@@ -20,6 +20,8 @@ module Display
   def display_welcome_message
     clear_screen
     prompt('~*~ Welcome to Rock, Paper, Scissors, Lizard, Spock! ~*~')
+    prompt("If you don't know the rules, go ask Sheldon! First to win 3 rounds wins it all!")
+    prompt("(You may enter 'exit' at any time to quit the game.)")
     puts ''
   end
 
@@ -65,9 +67,9 @@ module GameFlow
     choice = nil
     loop do
       choice = gets.chomp.strip.downcase
-      if options.include?(choice)
-        return choice
-      elsif choice == 'exit'
+      return choice if options.include?(choice)
+
+      if choice == 'exit'
         quit
       elsif choice.empty?
         prompt("You must enter a value and then press [Enter].")
@@ -134,7 +136,9 @@ class Player
   end
 
   def quit
-    display_goodbye_message
+    clear_screen
+    prompt("Thanks for playing Rock, Paper, Scissors! When you are ready to return to the command line, press [Enter]")
+    press_enter
     exit
   end
 end
@@ -231,7 +235,7 @@ class Computer < Player
   end
 
   def jn5_choices(human_choice)
-    choice = if short_circut?
+    choice = if short_circuit?
                Move::WINNING_MOVES[human_choice].sample
              else
                Move::VALUES.sample
@@ -259,10 +263,9 @@ class Computer < Player
     self.move = Move.new(choice)
   end
 
-  def short_circut?
+  def short_circuit?
     roll = rand(1..100)
-    return true if (90..100).cover?(roll)
-    false
+    (90..100).cover?(roll)
   end
 
   def scan_losing_moves(previous_losses)
@@ -303,11 +306,11 @@ class RPSGame
 
   def determine_winner
     if human.move > computer.move
-      iterate_scores(:human)
-      iterate_cpu_losses
+      increment_scores(:human)
+      increment_cpu_losses
       display_winner(:human)
     elsif human.move < computer.move
-      iterate_scores(:computer)
+      increment_scores(:computer)
       display_winner(:computer)
     else
       display_winner(:tie)
@@ -322,24 +325,22 @@ class RPSGame
     end
   end
 
-  def iterate_scores(victor)
+  def increment_scores(victor)
     case victor
     when :human then human.score += 1
     when :computer then computer.score += 1
     end
   end
 
-  def iterate_cpu_losses
+  def increment_cpu_losses
     computer.previous_losses << computer.move.value
   end
 
   def play_again?
-    answer = nil
     prompt("Would you like to play another match? (Enter 'y or 'n')")
-    verify_choice(%w[y yes n no])
+    answer = verify_choice(%w[y yes n no])
     clear_screen
-    return true if answer == 'y' || answer == 'yes'
-    false
+    %w[y yes].include?(answer)
   end
 
   def reset_match
