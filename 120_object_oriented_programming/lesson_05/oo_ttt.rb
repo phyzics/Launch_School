@@ -1,5 +1,7 @@
 # oo_ttt.rb
 require 'pry'
+require 'YAML'
+
 module Display
   private
 
@@ -10,9 +12,18 @@ module Display
 
   def display_board
     clear
-    puts "You're a #{human.marker}. Computer is a #{computer.marker}."
+    puts "#{human.name} is a #{human.marker}. #{computer.name} is a #{computer.marker}."
     board.draw
-    puts ""
+    puts ''
+  end
+
+  def display_help_board
+    clear
+    help_board = {}
+    (1..9).each { |num| help_board[num] = num }
+    board.draw(help_board)
+    prompt("Enter any key when you are ready to continue.")
+    gets
   end
 
   def display_result
@@ -26,6 +37,16 @@ module Display
     else
       puts "The board is full!"
     end
+
+    display_current_scores
+  end
+
+  def display_current_scores
+    puts ''
+    puts "----------Current Score----------"
+    prompt("Human: #{human.win_count}")
+    prompt("Computer: #{computer.win_count}")
+    puts ''
   end
 
   def display_play_again_message
@@ -108,20 +129,33 @@ class Board
   end
 
   # rubocop:disable Metrics/AbcSize
-  def draw
+  def draw(keys=@squares)
     puts "     |     |"
-    puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
-    puts "     |     |"
-    puts "-----+-----+-----"
-    puts "     |     |"
-    puts "  #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}"
+    puts "  #{keys[1]}  |  #{keys[2]}  |  #{keys[3]}"
     puts "     |     |"
     puts "-----+-----+-----"
     puts "     |     |"
-    puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
+    puts "  #{keys[4]}  |  #{keys[5]}  |  #{keys[6]}"
+    puts "     |     |"
+    puts "-----+-----+-----"
+    puts "     |     |"
+    puts "  #{keys[7]}  |  #{keys[8]}  |  #{keys[9]}"
     puts "     |     |"
   end
   # rubocop:enable Metrics/AbcSize
+
+  def center_open?
+    @squares[5].unmarked?
+  end
+
+  def detect_immediate_threat(line, player_marker)
+    squares = @squares.values_at(*line)
+    if squares.select(&:marked?).map(&:marker).count(player_marker) == 2
+      selected = squares.select(&:unmarked?).first
+      return @squares.key(selected)
+    end
+    nil
+  end
 
   private
 
@@ -155,11 +189,9 @@ class Square
 end
 
 class Player
-  attr_reader :marker
-  attr_accessor :win_count
+  attr_accessor :win_count, :name, :marker
 
-  def initialize(marker)
-    @marker = marker
+  def initialize
     @win_count = 0
   end
 
@@ -180,26 +212,28 @@ end
 class TTTGame
   include Display
 
-  HUMAN_MARKER = 'X'
   COMPUTER_MARKER = 'O'
-  FIRST_TO_MOVE = HUMAN_MARKER
+  HUMAN_MARKER = 'X'
 
   attr_reader :board, :human, :computer
 
   def initialize
     @board = Board.new
-    @human = Human.new(HUMAN_MARKER)
-    @computer = Computer.new(COMPUTER_MARKER)
-    @current_marker = FIRST_TO_MOVE
+    @human = Human.new
+    @computer = Computer.new
   end
 
   def play
+    clear
     display_welcome_message
-    # game loop
+    set_player_names
+    set_player_markers
+    # match loop
     loop do
-      # match loop
+      # round loop
       loop do
         display_board
+        # turn loop
         loop do
           current_player_moves
           break if board.someone_won? || board.full?
@@ -208,7 +242,7 @@ class TTTGame
         determine_winner
         display_result
         break if grand_champion?
-        press_when_ready
+        play_next_round?
         reset
         display_play_again_message
       end
@@ -221,55 +255,135 @@ class TTTGame
 
   private
 
+  def set_player_names
+    prompt("Please type in your name and press [Enter]:")
+    prompt("(names can contain alphanumerics, spaces, periods, and apostrophes)")
+    human.name = verify_name
+    puts ''
+    prompt("Great! Now please enter the Computer's name and press [Enter]:")
+    computer.name = verify_name
+  end
+
+  def verify_name
+    name = nil
+    loop do
+      name = gets.chomp.strip
+      if name.empty?
+        prompt("Please enter a value and press [Enter]:")
+      elsif name == 'exit'
+        quit
+      elsif name =~ /[^a-z '0-9\.]/i
+        prompt ("Please enter a valid name and press [Enter]:")
+      else
+        return name
+      end
+    end
+  end
+
+  def set_player_markers
+    puts ''
+    prompt("Execellent! Now please input what character you'd like to use as your marker and press [Enter]:")
+    prompt("(one character only, please)")
+    human.marker = verify_marker
+    puts ''
+    prompt("Lastly, please input what the computer's character will be and press [Enter]:")
+    computer.marker = verify_marker
+    @current_marker = human.marker
+    @first_to_move = human.marker
+  end
+
+  def verify_marker
+    char = nil
+    loop do
+      char = gets.chomp.strip
+      if char.empty?
+        prompt("Please enter a value and press [Enter]:")
+      elsif char == 'exit'
+        quit
+      elsif char.size > 1
+        prompt("Please enter only one character and press [Enter]:")
+      else
+        return char
+      end
+    end
+  end
+
   def current_player_moves
     if human_turn?
       human_moves
-      @current_marker = COMPUTER_MARKER
+      @current_marker = computer.marker
     else
       computer_moves
-      @current_marker = HUMAN_MARKER
+      @current_marker = human.marker
     end
   end
 
   def human_turn?
-    @current_marker == HUMAN_MARKER
+    @current_marker == human.marker
   end
 
   def human_moves
     puts "Choose a square (#{joinor(board.unmarked_keys)}): "
     square = nil
     loop do
-      square = gets.chomp.to_i
-      break if board.unmarked_keys.include?(square)
-      puts "Sorry, that's not a valid choice."
+      square = gets.chomp
+      if board.unmarked_keys.include?(square.to_i)
+        break
+      elsif square == 'help'
+        display_help_board
+        display_board
+        puts "Choose a square (#{joinor(board.unmarked_keys)}): "
+      elsif square == 'exit'
+        quit
+      else
+        puts "Sorry, that's not a valid choice."
+      end
     end
 
-    board[square] = human.marker
+    board[square.to_i] = human.marker
   end
 
   def computer_moves
-    board[board.unmarked_keys.to_a.sample] = computer.marker
+    square = nil
+    # winning move
+    Board::WINNING_LINES.each do |line|
+      square = board.detect_immediate_threat(line, computer.marker)
+      break if square
+    end
+
+    # defensive move
+    if !square
+      Board::WINNING_LINES.each do |line|
+        square = board.detect_immediate_threat(line, human.marker)
+        break if square
+      end
+    end
+
+    square = 5 if !square && board.center_open?
+    square = board.unmarked_keys.to_a.sample if !square
+
+
+    board[square] = computer.marker
   end
 
   def determine_winner
     case board.winning_marker
-    when HUMAN_MARKER
+    when human.marker
       human.increment_win_count
-    when COMPUTER_MARKER
+    when computer.marker
       computer.increment_win_count
     end
   end
 
-  def press_when_ready
-    prompt("Press [Enter] when you're ready for the next match, or enter 'exit' to quit the game.")
+  def play_next_round?
+    prompt("Press [Enter] when you're ready for the next round, or enter 'exit' to quit the game.")
     answer = nil
     loop do
       answer = gets.chomp.downcase.strip
       if answer.empty?
         break
       elsif answer == 'exit'
-        display_goodbye_message
-        exit
+        quit
       end
       prompt("Please enter a valid choice")
     end
@@ -289,7 +403,7 @@ class TTTGame
 
   def reset
     board.reset
-    @current_marker = FIRST_TO_MOVE
+    @current_marker = @first_to_move
   end
 
   def grand_champion?
@@ -298,6 +412,11 @@ class TTTGame
 
   def is_human_grand_champion?
     human.win_count > computer.win_count
+  end
+
+  def quit
+    display_goodbye_message
+    exit
   end
 end
 
