@@ -1,0 +1,22 @@
+welcome_title: '~*~ Welcome to Tic-Tac-Toe! ~*~'
+rules_title: '------ Rules ------'
+rules: |
+
+enter_when_ready: 'Enter any key when you are ready to continue.'
+board_full: 'The board is full!'
+current_score_title: '---------- Current Score ----------'
+lets_play_again: "Let's play again!"
+human_grand_champ: "Congratulations, you've won it all!"
+cpu_grand_champ: 'Oh no! What a humiliating defeat...'
+goodbye: 'Thanks for playing Tic-Tac-Toe! Goodbye!'
+set_human_name_1: 'Please type in your name and press [Enter]:'
+set_human_name_2: '(names can contain alphanumerics, spaces, periods, and apostrophes)'
+set_cpu_name: "Great! Now please enter the Computer's name and press [Enter]:"
+empty_value: 'Please enter a value and press [Enter]:'
+invalid_value: 'Please enter a valid name and press [Enter]:'
+set_human_marker_1: "Execellent! Now please input what character you'd like to use as your marker and press [Enter]:"
+set_human_marker_2: '(one character only, please)'
+set_cpu_marker: "Lastly, please input what the computer's character will be and press [Enter]:"
+only_one_char: "Please enter only one character and press [Enter]:"
+next_round: "Press [Enter] when you're ready for the next round, or enter 'exit' to quit the game."
+play_again?: 'Would you like to play again?'
