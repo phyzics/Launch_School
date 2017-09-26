@@ -5,24 +5,29 @@ require 'YAML'
 module Display
   private
 
+  MESSAGES = YAML.load_file('oo_ttt.yml')
+
   def display_welcome_message
-    puts "Welcome to Tic Tac Toe!"
-    puts ""
+    puts(MESSAGES['welcome_title'].center(80))
+    puts ''
   end
 
   def display_board
     clear
-    puts "#{human.name} is a #{human.marker}. #{computer.name} is a #{computer.marker}."
+    puts "#{human.name} is a #{human.marker}. " \
+         "#{computer.name} is a #{computer.marker}."
     board.draw
     puts ''
   end
 
   def display_help_board
     clear
+    puts ''
     help_board = {}
     (1..9).each { |num| help_board[num] = num }
     board.draw(help_board)
-    prompt("Enter any key when you are ready to continue.")
+    puts ''
+    prompt(MESSAGES['enter_when_ready'])
     gets
   end
 
@@ -31,11 +36,11 @@ module Display
 
     case board.winning_marker
     when human.marker
-      puts "You won!"
+      prompt("Nice, #{human.name} won!")
     when computer.marker
-      puts "Computer won!"
+      prompt("Uh oh, #{computer.name} won this round...")
     else
-      puts "The board is full!"
+      prompt(MESSAGES['board_full'])
     end
 
     display_current_scores
@@ -43,28 +48,28 @@ module Display
 
   def display_current_scores
     puts ''
-    puts "----------Current Score----------"
-    prompt("Human: #{human.win_count}")
-    prompt("Computer: #{computer.win_count}")
+    puts(MESSAGES['current_score_title'])
+    prompt("#{human.name}: #{human.win_count}")
+    prompt("#{computer.name}: #{computer.win_count}")
     puts ''
   end
 
   def display_play_again_message
-    puts "Let's play again!"
+    prompt(MESSAGES['lets_play_again'])
     puts ''
     sleep 1
   end
 
   def display_grand_champion
     if is_human_grand_champion?
-      prompt("Congratulations, you've won it all!")
+      prompt(MESSAGES['human_grand_champ'])
     else
-      prompt("Oh no! What a humiliating defeat...")
+      prompt(MESSAGES['cpu_grand_champ'])
     end
   end
 
   def display_goodbye_message
-    puts "Thanks for playing Tic Tace Toe! Goodbye!"
+    prompt(MESSAGES['goodbye'])
   end
 
   def clear
@@ -200,20 +205,13 @@ class Player
   end
 end
 
-class Human < Player
+class Human < Player; end
 
-end
-
-class Computer < Player
-
-end
+class Computer < Player; end
 
 # Game Orchestration Engine
 class TTTGame
   include Display
-
-  COMPUTER_MARKER = 'O'
-  HUMAN_MARKER = 'X'
 
   attr_reader :board, :human, :computer
 
@@ -256,11 +254,11 @@ class TTTGame
   private
 
   def set_player_names
-    prompt("Please type in your name and press [Enter]:")
-    prompt("(names can contain alphanumerics, spaces, periods, and apostrophes)")
+    prompt(MESSAGES['set_human_name_1'])
+    prompt(MESSAGES['set_human_name_2'])
     human.name = verify_name
     puts ''
-    prompt("Great! Now please enter the Computer's name and press [Enter]:")
+    prompt(MESSAGES['set_cpu_name'])
     computer.name = verify_name
   end
 
@@ -269,11 +267,11 @@ class TTTGame
     loop do
       name = gets.chomp.strip
       if name.empty?
-        prompt("Please enter a value and press [Enter]:")
+        prompt(MESSAGES['empty_value'])
       elsif name == 'exit'
         quit
       elsif name =~ /[^a-z '0-9\.]/i
-        prompt ("Please enter a valid name and press [Enter]:")
+        prompt(MESSAGES['invalid_value'])
       else
         return name
       end
@@ -282,11 +280,11 @@ class TTTGame
 
   def set_player_markers
     puts ''
-    prompt("Execellent! Now please input what character you'd like to use as your marker and press [Enter]:")
-    prompt("(one character only, please)")
+    prompt(MESSAGES['set_human_marker_1'])
+    prompt(MESSAGES['set_human_marker_2'])
     human.marker = verify_marker
     puts ''
-    prompt("Lastly, please input what the computer's character will be and press [Enter]:")
+    prompt(MESSAGES['set_cpu_marker'])
     computer.marker = verify_marker
     @current_marker = human.marker
     @first_to_move = human.marker
@@ -297,11 +295,11 @@ class TTTGame
     loop do
       char = gets.chomp.strip
       if char.empty?
-        prompt("Please enter a value and press [Enter]:")
+        prompt(MESSAGES['empty_value'])
       elsif char == 'exit'
         quit
       elsif char.size > 1
-        prompt("Please enter only one character and press [Enter]:")
+        prompt(MESSAGES['only_one_char'])
       else
         return char
       end
@@ -323,7 +321,7 @@ class TTTGame
   end
 
   def human_moves
-    puts "Choose a square (#{joinor(board.unmarked_keys)}): "
+    prompt("Choose a square (#{joinor(board.unmarked_keys)}): ")
     square = nil
     loop do
       square = gets.chomp
@@ -332,11 +330,11 @@ class TTTGame
       elsif square == 'help'
         display_help_board
         display_board
-        puts "Choose a square (#{joinor(board.unmarked_keys)}): "
+        prompt("Choose a square (#{joinor(board.unmarked_keys)}): ")
       elsif square == 'exit'
         quit
       else
-        puts "Sorry, that's not a valid choice."
+        prompt(MESSAGES['invalid_value'])
       end
     end
 
@@ -376,7 +374,7 @@ class TTTGame
   end
 
   def play_next_round?
-    prompt("Press [Enter] when you're ready for the next round, or enter 'exit' to quit the game.")
+    prompt(MESSAGES['next_round'])
     answer = nil
     loop do
       answer = gets.chomp.downcase.strip
@@ -385,20 +383,27 @@ class TTTGame
       elsif answer == 'exit'
         quit
       end
-      prompt("Please enter a valid choice")
+      prompt(MESSAGES['invalid_value'])
     end
   end
 
   def play_again?
     answer = nil
     loop do
-      puts "Would you like to play again?"
+      prompt(MESSAGES['play_again?'])
       answer = gets.chomp.downcase.strip
-      break if %w[y n].include?(answer)
-      puts "Sorry, must be y or n"
+      if %w[y yes n no].include?(answer)
+        break
+      elsif answer == 'exit'
+        quit
+      elsif answer.empty?
+        prompt(MESSAGES['empty_value'])
+      else
+        prompt(MESSAGES['invalid_value'])
+      end
     end
 
-    answer == 'y'
+    %w[y yes].include?(answer)
   end
 
   def reset
