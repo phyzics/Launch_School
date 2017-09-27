@@ -8,14 +8,21 @@ module Display
   MESSAGES = YAML.load_file('oo_ttt.yml')
 
   def display_welcome_message
+    clear
     puts(MESSAGES['welcome_title'].center(80))
     puts ''
+    prompt(MESSAGES['rules'])
+    puts ''
+    prompt(MESSAGES['enter_when_ready'])
+    gets
   end
 
   def display_board
     clear
-    puts "#{human.name} is a #{human.marker}. " \
-         "#{computer.name} is a #{computer.marker}."
+    puts format(MESSAGES['who_is_what'], human: human.name,
+                                         human_marker: human.marker,
+                                         computer: computer.name,
+                                         computer_marker: computer.marker)
     board.draw
     puts ''
   end
@@ -36,9 +43,9 @@ module Display
 
     case board.winning_marker
     when human.marker
-      prompt("Nice, #{human.name} won!")
+      prompt format(MESSAGES['human_win'], human: human.name)
     when computer.marker
-      prompt("Uh oh, #{computer.name} won this round...")
+      prompt format(MESSAGES['cpu_win'], computer: computer.name)
     else
       prompt(MESSAGES['board_full'])
     end
@@ -54,9 +61,8 @@ module Display
     puts ''
   end
 
-  def display_play_again_message
+  def display_new_round_message
     prompt(MESSAGES['lets_play_again'])
-    puts ''
     sleep 1
   end
 
@@ -70,6 +76,8 @@ module Display
 
   def display_goodbye_message
     prompt(MESSAGES['goodbye'])
+    sleep 2
+    clear
   end
 
   def clear
@@ -222,10 +230,8 @@ class TTTGame
   end
 
   def play
-    clear
     display_welcome_message
-    set_player_names
-    set_player_markers
+    set_player_attributes
     # match loop
     loop do
       # round loop
@@ -242,10 +248,12 @@ class TTTGame
         break if grand_champion?
         play_next_round?
         reset
-        display_play_again_message
+        display_new_round_message
       end
       display_grand_champion
-      break
+      break if play_again? == false
+      total_reset
+      display_new_round_message
     end
 
     display_goodbye_message
@@ -253,7 +261,13 @@ class TTTGame
 
   private
 
+  def set_player_attributes
+    set_player_names
+    set_player_markers
+  end
+
   def set_player_names
+    clear
     prompt(MESSAGES['set_human_name_1'])
     prompt(MESSAGES['set_human_name_2'])
     human.name = verify_name
@@ -321,7 +335,7 @@ class TTTGame
   end
 
   def human_moves
-    prompt("Choose a square (#{joinor(board.unmarked_keys)}): ")
+    prompt(MESSAGES['choose_square'] + "(#{joinor(board.unmarked_keys)}):")
     square = nil
     loop do
       square = gets.chomp
@@ -330,7 +344,7 @@ class TTTGame
       elsif square == 'help'
         display_help_board
         display_board
-        prompt("Choose a square (#{joinor(board.unmarked_keys)}): ")
+        prompt(MESSAGES['choose_square'] + "(#{joinor(board.unmarked_keys)}):")
       elsif square == 'exit'
         quit
       else
@@ -409,6 +423,12 @@ class TTTGame
   def reset
     board.reset
     @current_marker = @first_to_move
+  end
+
+  def total_reset
+    reset
+    human.win_count = 0
+    computer.win_count = 0
   end
 
   def grand_champion?

@@ -1,22 +1,34 @@
-welcome_title: '~*~ Welcome to Tic-Tac-Toe! ~*~'
-rules_title: '------ Rules ------'
+welcome_title: "~*~ Welcome to Tic-Tac-Toe! ~*~"
 rules: |
+  You and your computer opponent will each take turns marking a 3x3 grid with
+  your own personal marker. The first one to line up 3 in a row wins the round,
+  and the first one to win 3 rounds will win the match!
 
-enter_when_ready: 'Enter any key when you are ready to continue.'
+  >> To mark a square, all you have to do is enter it's corresponding number and
+  press [Enter]. Running across, the first row of squares are numbers 1-3, the
+  second are numbers 4-6, and the last are numbers 7-9.
+
+  >> You may enter 'exit' at any time to quit the game, and you may enter 'help'
+  during your turn to see the numbers assigned to each square.
+enter_when_ready: 'Press [Enter] when you are ready to continue.'
+who_is_what: "%{human} is a %{human_marker}. %{computer} is a %{computer_marker}."
+choose_square: 'Choose a square '
 board_full: 'The board is full!'
 current_score_title: '---------- Current Score ----------'
 lets_play_again: "Let's play again!"
+human_win: "Nice, %{human} won!"
+cpu_win: "Uh oh, %{computer} won this round..."
 human_grand_champ: "Congratulations, you've won it all!"
 cpu_grand_champ: 'Oh no! What a humiliating defeat...'
 goodbye: 'Thanks for playing Tic-Tac-Toe! Goodbye!'
-set_human_name_1: 'Please type in your name and press [Enter]:'
+set_human_name_1: 'Please type in your name:'
 set_human_name_2: '(names can contain alphanumerics, spaces, periods, and apostrophes)'
-set_cpu_name: "Great! Now please enter the Computer's name and press [Enter]:"
-empty_value: 'Please enter a value and press [Enter]:'
-invalid_value: 'Please enter a valid name and press [Enter]:'
-set_human_marker_1: "Execellent! Now please input what character you'd like to use as your marker and press [Enter]:"
+set_cpu_name: "Great! Now please enter the Computer's name:"
+empty_value: 'Please enter a value:'
+invalid_value: 'Please enter a valid value:'
+set_human_marker_1: "Execellent! Now please enter what character you'd like to use as your marker:"
 set_human_marker_2: '(one character only, please)'
-set_cpu_marker: "Lastly, please input what the computer's character will be and press [Enter]:"
-only_one_char: "Please enter only one character and press [Enter]:"
+set_cpu_marker: "Lastly, please enter what the computer's character will be:"
+only_one_char: "Please enter only one character:"
 next_round: "Press [Enter] when you're ready for the next round, or enter 'exit' to quit the game."
-play_again?: 'Would you like to play again?'
+play_again?: "Would you like to play again? (Please enter either 'y' or 'n')"
