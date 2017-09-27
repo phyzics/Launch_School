@@ -27,6 +27,11 @@ module Display
     puts ''
   end
 
+  def display_board_with_choices
+    display_board
+    prompt(MESSAGES['choose_square'] + "(#{joinor(board.unmarked_keys)}):")
+  end
+
   def display_help_board
     clear
     puts ''
@@ -39,8 +44,6 @@ module Display
   end
 
   def display_result
-    display_board
-
     case board.winning_marker
     when human.marker
       prompt format(MESSAGES['human_win'], human: human.name)
@@ -49,8 +52,6 @@ module Display
     else
       prompt(MESSAGES['board_full'])
     end
-
-    display_current_scores
   end
 
   def display_current_scores
@@ -67,7 +68,7 @@ module Display
   end
 
   def display_grand_champion
-    if is_human_grand_champion?
+    if human_grand_champion?
       prompt(MESSAGES['human_grand_champ'])
     else
       prompt(MESSAGES['cpu_grand_champ'])
@@ -98,7 +99,6 @@ module Display
     puts ">> #{message}"
   end
 end
-
 
 class Board
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
@@ -230,26 +230,9 @@ class TTTGame
   end
 
   def play
-    display_welcome_message
-    set_player_attributes
-    # match loop
+    set_up_game
     loop do
-      # round loop
-      loop do
-        display_board
-        # turn loop
-        loop do
-          current_player_moves
-          break if board.someone_won? || board.full?
-          display_board if human_turn?
-        end
-        determine_winner
-        display_result
-        break if grand_champion?
-        play_next_round?
-        reset
-        display_new_round_message
-      end
+      play_rounds
       display_grand_champion
       break if play_again? == false
       total_reset
@@ -260,6 +243,24 @@ class TTTGame
   end
 
   private
+
+  def play_rounds
+    loop do
+      display_board_with_choices
+      play_turns
+      determine_winner
+      end_of_round_output
+      break if grand_champion?
+      play_next_round?
+      reset
+      display_new_round_message
+    end
+  end
+
+  def set_up_game
+    display_welcome_message
+    set_player_attributes
+  end
 
   def set_player_attributes
     set_player_names
@@ -335,47 +336,67 @@ class TTTGame
   end
 
   def human_moves
-    prompt(MESSAGES['choose_square'] + "(#{joinor(board.unmarked_keys)}):")
-    square = nil
+    board[human_choice.to_i] = human.marker
+  end
+
+  def human_choice
+    choice = nil
     loop do
-      square = gets.chomp
-      if board.unmarked_keys.include?(square.to_i)
-        break
-      elsif square == 'help'
+      choice = gets.chomp
+      return choice if board.unmarked_keys.include?(choice.to_i)
+
+      if choice == 'help'
         display_help_board
-        display_board
-        prompt(MESSAGES['choose_square'] + "(#{joinor(board.unmarked_keys)}):")
-      elsif square == 'exit'
+        display_board_with_choices
+      elsif choice == 'exit'
         quit
       else
         prompt(MESSAGES['invalid_value'])
       end
     end
-
-    board[square.to_i] = human.marker
   end
 
   def computer_moves
-    square = nil
-    # winning move
-    Board::WINNING_LINES.each do |line|
-      square = board.detect_immediate_threat(line, computer.marker)
-      break if square
-    end
+    square = computer_offensive_move
 
-    # defensive move
     if !square
-      Board::WINNING_LINES.each do |line|
-        square = board.detect_immediate_threat(line, human.marker)
-        break if square
-      end
+      square = computer_defensive_move
     end
 
     square = 5 if !square && board.center_open?
     square = board.unmarked_keys.to_a.sample if !square
 
-
     board[square] = computer.marker
+  end
+
+  def computer_offensive_move
+    square = nil
+
+    Board::WINNING_LINES.each do |line|
+      square = board.detect_immediate_threat(line, computer.marker)
+      break if square
+    end
+
+    square
+  end
+
+  def computer_defensive_move
+    square = nil
+
+    Board::WINNING_LINES.each do |line|
+      square = board.detect_immediate_threat(line, human.marker)
+      break if square
+    end
+
+    square
+  end
+
+  def play_turns
+    loop do
+      current_player_moves
+      break if board.someone_won? || board.full?
+      display_board_with_choices if human_turn?
+    end
   end
 
   def determine_winner
@@ -392,12 +413,13 @@ class TTTGame
     answer = nil
     loop do
       answer = gets.chomp.downcase.strip
-      if answer.empty?
-        break
-      elsif answer == 'exit'
+      break if answer.empty?
+
+      if answer == 'exit'
         quit
+      else
+        prompt(MESSAGES['invalid_value'])
       end
-      prompt(MESSAGES['invalid_value'])
     end
   end
 
@@ -406,9 +428,9 @@ class TTTGame
     loop do
       prompt(MESSAGES['play_again?'])
       answer = gets.chomp.downcase.strip
-      if %w[y yes n no].include?(answer)
-        break
-      elsif answer == 'exit'
+      break if %w[y yes n no].include?(answer)
+
+      if answer == 'exit'
         quit
       elsif answer.empty?
         prompt(MESSAGES['empty_value'])
@@ -418,6 +440,12 @@ class TTTGame
     end
 
     %w[y yes].include?(answer)
+  end
+
+  def end_of_round_output
+    display_board
+    display_result
+    display_current_scores
   end
 
   def reset
@@ -435,7 +463,7 @@ class TTTGame
     human.win_count == 3 || computer.win_count == 3
   end
 
-  def is_human_grand_champion?
+  def human_grand_champion?
     human.win_count > computer.win_count
   end
 
