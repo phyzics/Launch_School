@@ -1,0 +1,41 @@
+welcome_title: "~*~ Welcome to Twenty-One! ~*~"
+rules_title: "------------ Rules ------------"
+rules: |
+  The goal of Twenty-One is to get a hand whose value is as close to 21 as possible
+  without going over (if you do, you 'bust'). Numbered cards are worth the amount
+  they display, while face cards (King, Queen, and Jack) are worth 10 points each.
+  Aces are worth either 1 or 11 points depending upon which favors you better.
+
+  >> During your turn you may either 'hit' ('h'), which means draw another card, or
+  'stay' (s), which means you are done adding to your hand. Next the dealer goes and
+  does the same process. Afterwards the totals are added up and compared, and whoever
+  was closer to 21 wins!
+
+  >> You may enter 'help' during your turn to come back to this screen. You may also
+  enter 'exit' or 'quit' to quit the program (except at name selection).
+
+  >> Enter any key to continue.
+enter_name: "Please enter a name:"
+valid_name: "(valid characters include alphanumerics, apostrophes, spaces, and periods)"
+invalid_name: "Please enter a valid name:"
+opponent_name: "Excellent! Today, you're opponent will be..."
+h_or_s: "Hit (h) or Stay (s)?"
+hits: '%{player} hits!'
+stays: '%{player} stays!'
+empty_value: 'Please enter a value:'
+invalid_choice: 'Please enter a valid choice:'
+dealers_turn: "Now it's %{dealer}'s turn..."
+play_again?: "Would you like to play again? (Please enter 'y' or 'n')"
+wins: "%{player} won this round!"
+draw: "Looks like it was a draw..."
+hand: "%{name} has %{cards}"
+new_hand: "Now %{name} has %{cards}"
+total: "That totals to %{total}"
+hidden_string: "%{visible_card} and another card"
+join1: " and "
+join2: "and %{last_card}"
+hand_result: "%{name} had %{hand}"
+total_result: "That totaled to %{total}"
+winning: "%{player} is currently winning %{win_score} to %{lose_score}!"
+tied: "%{player} and %{dealer} are currently tied at %{score}!"
+goodbye: 'Thanks for playing Twenty-One! Have a great day!'
