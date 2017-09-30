@@ -22,7 +22,27 @@ def quit
   exit
 end
 
+module Build
+  def build_full_hand_string(participant=player)
+    cards = participant.hand
+    case cards.size
+    when 2
+      cards.join(MESSAGES['join1'])
+    else
+      cards = cards.map(&:to_s)
+      cards[-1] = format(MESSAGES['join2'], last_card: cards[-1])
+      cards.join(", ")
+    end
+  end
+
+  def build_hidden_string
+    format(MESSAGES['hidden_string'], visible_card: dealer.hand[0])
+  end
+end
+
 module Display
+  include Build
+
   def display_welcome_message
     puts(MESSAGES['welcome_title'].center(78))
     prompt(MESSAGES['rules'])
@@ -68,22 +88,6 @@ module Display
                                     cards: build_hidden_string))
   end
 
-  def build_full_hand_string(participant=player)
-    cards = participant.hand
-    case cards.size
-    when 2
-      cards.join(MESSAGES['join1'])
-    else
-      cards = cards.map(&:to_s)
-      cards[-1] = format(MESSAGES['join2'], last_card: cards[-1])
-      cards.join(", ")
-    end
-  end
-
-  def build_hidden_string
-    format(MESSAGES['hidden_string'], visible_card: dealer.hand[0])
-  end
-
   def display_winner(winner)
     puts ''
     case winner
@@ -99,8 +103,8 @@ module Display
   def display_results
     puts ''
     puts '======================='
-      display_player_results
-      display_dealer_results
+    display_player_results
+    display_dealer_results
     puts '======================='
   end
 
@@ -116,12 +120,12 @@ module Display
     prompt format(MESSAGES['total_result'], total: dealer.total)
   end
 
-  def display_score
+  def display_score(p_name, p_score, d_name, d_score)
     puts ''
-    prompt(if player.score > dealer.score
-             someone_leading(player.name, player.score, dealer.name)
-           elsif player.score < dealer.score
-             someone_leading(dealer.name, dealer.score, player.name)
+    prompt(if p_score > d_score
+             someone_leading(p_name, p_score, d_name)
+           elsif p_score < d_score
+             someone_leading(d_name, d_score, p_name)
            else
              players_tied
            end)
@@ -264,7 +268,8 @@ class Game
 
   include Display
 
-  attr_accessor :deck, :player, :dealer # accessor, or reader?
+  attr_accessor :deck, :current_player, :other_player
+  attr_reader :player, :dealer
 
   def initialize
     @deck = Deck.new
@@ -287,7 +292,7 @@ class Game
       break unless play_again?
       reset_round
     end
-    display_goodbye_message
+    quit
   end
 
   def set_up_game
@@ -431,7 +436,7 @@ class Game
     increment_scores(winner)
     display_winner(winner)
     display_results
-    display_score
+    display_score(player.name, player.score, dealer.name, dealer.score)
   end
 
   def play_again?
