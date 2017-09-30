@@ -91,10 +91,10 @@ module Display
   def display_winner(winner)
     puts ''
     case winner
-    when @current_player
-      prompt format(MESSAGES['wins'], player: @current_player.name)
-    when @other_player
-      prompt format(MESSAGES['wins'], player: @other_player.name)
+    when current_player
+      prompt format(MESSAGES['wins'], player: current_player.name)
+    when other_player
+      prompt format(MESSAGES['wins'], player: other_player.name)
     else
       prompt MESSAGES['draw']
     end
@@ -315,12 +315,12 @@ class Game
   end
 
   def hit
-    prompt(format(MESSAGES['hits'], player: @current_player.name))
-    @current_player.hand << deck.deal
+    prompt(format(MESSAGES['hits'], player: current_player.name))
+    current_player.hand << deck.deal
   end
 
   def stay
-    prompt(format(MESSAGES['stays'], player: @current_player.name))
+    prompt(format(MESSAGES['stays'], player: current_player.name))
     sleep 1
   end
 
@@ -330,7 +330,7 @@ class Game
   end
 
   def current_player_turn
-    case @current_player
+    case current_player
     when player then player_turn
     when dealer then dealer_turn
     end
@@ -383,23 +383,23 @@ class Game
   end
 
   def busted?
-    @current_player.total > POINT_LIMIT
+    current_player.total > POINT_LIMIT
   end
 
   def determine_winner
-    if @current_player.busted
-      @other_player
-    elsif @current_player.total > @other_player.total
-      @current_player
-    elsif @current_player.total < @other_player.total
-      @other_player
+    if current_player.busted
+      other_player
+    elsif current_player.total > other_player.total
+      current_player
+    elsif current_player.total < other_player.total
+      other_player
     end
   end
 
   def increment_scores(winner)
     case winner
-    when @current_player then @current_player.score += 1
-    when @other_player then @other_player.score += 1
+    when current_player then current_player.score += 1
+    when other_player then other_player.score += 1
     end
   end
 
@@ -426,8 +426,8 @@ class Game
     puts ''
     prompt(format(MESSAGES['dealers_turn'], dealer: dealer.name))
     puts ''
-    @current_player = dealer
-    @other_player = player
+    self.current_player = dealer
+    self.other_player = player
     sleep 1
   end
 
@@ -462,8 +462,8 @@ class Game
 
   def reset_round
     reset_cards
-    @current_player = player
-    @other_player = dealer
+    self.current_player = player
+    self.other_player = dealer
     player.busted = false
     dealer.busted = false
   end
