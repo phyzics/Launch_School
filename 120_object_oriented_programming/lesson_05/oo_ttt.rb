@@ -1,5 +1,4 @@
 # oo_ttt.rb
-require 'pry'
 require 'YAML'
 
 module Display
@@ -234,7 +233,7 @@ class TTTGame
     loop do
       play_rounds
       display_grand_champion
-      break if play_again? == false
+      break unless play_again?
       total_reset
       display_new_round_message
     end
