@@ -234,7 +234,7 @@ class TTTGame
       play_rounds
       display_grand_champion
       break unless play_again?
-      total_reset
+      game_reset
       display_new_round_message
     end
 
@@ -251,7 +251,7 @@ class TTTGame
       end_of_round_output
       break if grand_champion?
       play_next_round?
-      reset
+      round_reset
       display_new_round_message
     end
   end
@@ -447,13 +447,13 @@ class TTTGame
     display_current_scores
   end
 
-  def reset
+  def round_reset
     board.reset
     @current_marker = @first_to_move
   end
 
-  def total_reset
-    reset
+  def game_reset
+    round_reset
     human.win_count = 0
     computer.win_count = 0
   end
