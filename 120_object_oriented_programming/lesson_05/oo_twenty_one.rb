@@ -123,9 +123,9 @@ module Display
   def display_score(p_name, p_score, d_name, d_score)
     puts ''
     prompt(if p_score > d_score
-             someone_leading(p_name, p_score, d_name)
+             someone_leading(p_name, p_score, d_score)
            elsif p_score < d_score
-             someone_leading(d_name, d_score, p_name)
+             someone_leading(d_name, d_score, p_score)
            else
              players_tied
            end)
@@ -211,7 +211,7 @@ class Deck
   end
 
   def configure_deck
-    @cards = SUITS.product(VALUES).shuffle
+    self.cards = SUITS.product(VALUES).shuffle
     cards.map! { |card| Card.new(card[0], card[1]) }
   end
 
@@ -235,7 +235,7 @@ class Card
   }
 
   attr_accessor :pt_value
-  attr_reader :value
+  attr_reader :value, :suit
 
   def initialize(suit, value)
     @suit = SUIT_NAMES[suit]
@@ -244,20 +244,20 @@ class Card
   end
 
   def calculate_point_value
-    if @value == 'A'
+    if value == 'A'
       11
-    elsif @value.to_i == 0
+    elsif value.to_i == 0
       10
     else
-      @value.to_i
+      value.to_i
     end
   end
 
   def to_s
-    if FACE_NAMES[@value]
-      "#{FACE_NAMES[@value]} of #{@suit}"
+    if FACE_NAMES[value]
+      "#{FACE_NAMES[value]} of #{suit}"
     else
-      "#{@value} of #{@suit}"
+      "#{value} of #{suit}"
     end
   end
 end
@@ -456,8 +456,7 @@ class Game
       end
     end
 
-    return true if answer =~ /\A(y|yes)\z/
-    false
+    answer =~ /\A(y|yes)\z/
   end
 
   def reset_round
