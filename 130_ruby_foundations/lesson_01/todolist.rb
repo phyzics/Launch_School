@@ -95,6 +95,25 @@ class TodoList
     todos.all?(&:done?)
   end
 
+  def each
+    counter = 0
+
+    while counter < todos.size do
+      yield(todos[counter])
+      counter += 1
+    end
+
+    self
+  end
+
+  def select
+    results = TodoList.new(title)
+    each do |item|
+      results << item if yield(item)
+    end
+    results
+  end
+
   private
 
   attr_reader :todos
@@ -103,20 +122,14 @@ end
 todo1 = Todo.new("Buy milk")
 todo2 = Todo.new("Clean room")
 todo3 = Todo.new("Go to gym")
-list = TodoList.new("Today's Todos")
 
+list = TodoList.new("Today's Todos")
 list.add(todo1)
 list.add(todo2)
 list << todo3
 
-list.size
-list.first
-list.last
+todo1.done!
 
-list.item_at(1)
-list.mark_done_at(1)
-list.mark_undone_at(1)
+results = list.select { |todo| todo.done? }
 
-list.done!
-p list.done?
-puts list
+puts results.inspect
