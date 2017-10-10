@@ -85,10 +85,16 @@ class TodoList
     str
   end
 
+  def mark_all_done
+    each(&:done!)
+  end
+
+  def mark_all_undone
+    each(&:undone!)
+  end
+
   def done!
-    todos.each do |item|
-      item.done!
-    end
+    todos.each_index { |idx| mark_done_at(idx) }
   end
 
   def done?
@@ -114,6 +120,27 @@ class TodoList
     results
   end
 
+  def find_by_title(string)
+    select { |item| item.title == string }.first
+  end
+
+  def all_done
+    select(&:done?)
+  end
+
+  def all_not_done
+    select { |item| !item.done?}
+  end
+
+  def mark_done(string)
+    todo = find_by_title(string)
+    todo&.done!
+  end
+
+  def to_a
+    todos
+  end
+
   private
 
   attr_reader :todos
@@ -128,8 +155,4 @@ list.add(todo1)
 list.add(todo2)
 list << todo3
 
-todo1.done!
-
-results = list.select { |todo| todo.done? }
-
-puts results.inspect
+p list.mark_done("Go to gym")
