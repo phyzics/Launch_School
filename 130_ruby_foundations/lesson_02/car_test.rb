@@ -5,7 +5,7 @@ Minitest::Reporters.use!
 
 require_relative 'car'
 
-class CartTest < MiniTest::Test
+class CarTest < MiniTest::Test
   def test_wheels
     car = Car.new
     assert_equal(4, car.wheels)
