@@ -1,5 +1,5 @@
 # oo_twenty_one.rb
-require 'YAML'
+require 'yaml'
 
 MESSAGES = YAML.load_file('oo_twenty_one.yml')
 
