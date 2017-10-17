@@ -1,5 +1,5 @@
 # oo_ttt.rb
-require 'YAML'
+require 'yaml'
 
 module Display
   private
