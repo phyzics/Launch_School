@@ -19,13 +19,3 @@ class Sieve
     range_arr - multiples_arr
   end
 end
-=begin
-alg:
-- how do we "mark" the composite numbers?
-  - set up a multiples array
-  - iterate with each over an array
-    - push all multiples in the array of e into the multiples array (double it)
-  - subtract the multiples array from the range_arr
-
-
-=end
