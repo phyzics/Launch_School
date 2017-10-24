@@ -2,18 +2,18 @@
 class School
 
   def initialize
-    @roster = Hash.new
+    @roster = Hash.new { |roster, grade| roster[grade] = [] }
   end
 
   def to_h
-    @roster.sort.each { |n| n[1].sort! }.to_h
+    @roster.sort.to_h
   end
 
   def add(name, grade)
-    @roster[grade].nil? ? @roster[grade] = [name] : @roster[grade] << name
+    (@roster[grade] << name).sort!
   end
 
   def grade(grade)
-    @roster[grade].nil? ? [] : @roster[grade]
+    @roster[grade] || []
   end
 end
