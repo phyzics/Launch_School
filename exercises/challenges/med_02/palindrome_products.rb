@@ -1,39 +1,46 @@
 # palindrome_products.rb
 class Palindromes
-  attr_accessor :max_factor, :min_factor
+  attr_reader :max_factor, :min_factor, :products
 
   def initialize(values)
     @max = values[:max_factor]
     @min = values[:min_factor] || 1
+    @products = Hash.new { |hsh, v| hsh[v] = [] }
   end
 
   def generate
     range = (@min..@max).to_a
-    products = range.product(range)
-    @matches = products.select do |arr|
-      num = arr.reduce(:*).to_s
-      num == num.reverse
+    range.product(range).each do |x, y|
+      @products[x * y] << [x, y] if palindrome?(x * y) &&
+      @products[x * y].include?([x, y].sort) == false
     end
-    @matches.map!(&:sort!).uniq!
+  end
+
+  def palindrome?(value)
+    value.to_s == value.to_s.reverse
+  end
+
+  def get_largest_value
+    @products.keys.max
+  end
+
+  def get_smallest_value
+    @products.keys.min
   end
 
   def largest
-    largest_value = @matches.max_by { |arr| arr.reduce(:*) }.reduce(:*)
-    @matches.select { |arr| arr.reduce(:*) == largest_value }
+    Struct.new(:value, :factors).new(get_largest_value, @products[get_largest_value])
   end
 
   def smallest
-    smallest_value = @matches.min_by { |arr| arr.reduce(:*) }.reduce(:*)
-    @matches.select { |arr| arr.reduce(:*) == smallest_value }
+    Struct.new(:value, :factors).new(get_smallest_value, @products[get_smallest_value])
   end
-end
 
-class Array
   def value
-    self[0].class == Integer ? self.reduce(:*) : self[0].reduce(:*)
+    self.value
   end
 
   def factors
-    self[0].class == Integer ? [self] : self
+    self.factors
   end
 end
