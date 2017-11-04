@@ -1,6 +1,5 @@
 # med_107.rb - Meetup
 require 'date'
-require 'pry'
 class Meetup
 
   WEEKDAYS = {
@@ -80,3 +79,5 @@ class Meetup
     COUNT[WEEKDAYS[@weekday]] == INTERVALS[@schedule]
   end
 end
+
+p Meetup.new(4, 2013).day(:monday, :first)
