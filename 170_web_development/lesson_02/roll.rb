@@ -3,7 +3,7 @@ require "socket"
 
 def parse_request(request)
   http_method = request.scan(/\A[A-Z]+\b/)[0]
-  path        = request.scan(/\/(?=[\s\?])/)[0]
+  path        = request.scan(/(?<!HTTP)\/[^?]*/)[0]
   names       = request.scan(/\w+(?==)/)
   values      = request.scan(/(?<==)\w+/)
   params      = names.zip(values).to_h
