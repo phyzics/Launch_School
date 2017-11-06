@@ -25,9 +25,9 @@ loop do
   client.puts "<html>"
   client.puts "<body>"
   client.puts "<pre>"
-  client.puts "http_method"
-  client.puts "path"
-  client.puts "params"
+  client.puts "#{http_method}"
+  client.puts "#{path}"
+  client.puts "#{params}"
   client.puts "</pre>"
 
   client.puts "<h1>Rolls!</h1>"
