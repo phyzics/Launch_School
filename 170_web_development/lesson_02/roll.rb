@@ -13,19 +13,30 @@ end
 server = TCPServer.new("localhost", 3003)
 loop do
   client = server.accept
-  client.puts "HTTP/1.1 200 OK"
-  client.puts "Content-Type: text/plain\r\n\r\n"
 
   request_line = client.gets
   next if !request_line || request_line =~ /favicon/
   puts request_line
 
   http_method, path, params = parse_request(request_line)
+  client.puts "HTTP/1.1 200 OK"
+  client.puts "Content-Type: text/html\r\n\r\n"
+  client.puts
+  client.puts "<html>"
+  client.puts "<body>"
+  client.puts "<pre>"
+  client.puts "http_method"
+  client.puts "path"
+  client.puts "params"
+  client.puts "</pre>"
+
+  client.puts "<h1>Rolls!</h1>"
   rolls       = params['rolls'].to_i
   sides       = params['sides'].to_i
 
-  client.puts request_line
-  rolls.times { client.puts rand(sides) + 1 }
+  rolls.times { client.puts "<p>", rand(sides) + 1, "</p>" }
 
+  client.puts "</body>"
+  client.puts "</html>"
   client.close
 end
