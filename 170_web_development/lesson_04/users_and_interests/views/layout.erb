@@ -1,0 +1,11 @@
+<html>
+<title> <%= @title %></title>
+<body>
+  <div id="content">
+    <%= yield %>
+  </div>
+</body>
+<footer>
+  <p>There are <%= @users.count %> users with a total of <%= count_interests %> interests.</p>
+</footer>
+</html>

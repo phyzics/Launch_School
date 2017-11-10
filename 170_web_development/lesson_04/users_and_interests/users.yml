@@ -1,0 +1,26 @@
+# users.yml
+---
+:jamy:
+  :email: jamy.rustenburg@gmail.com
+  :interests:
+  - woodworking
+  - cooking
+  - reading
+:nora:
+  :email: nora.alnes@yahoo.com
+  :interests:
+  - cycling
+  - basketball
+  - economics
+:hiroko:
+  :email: hiroko.ohara@hotmail.com
+  :interests:
+  - politics
+  - history
+  - birding
+:garnok:
+  :email: garnok.manslayer@azeroth.net
+  :interests:
+  - sharpening axes
+  - warcry competitions
+  - zug zug
