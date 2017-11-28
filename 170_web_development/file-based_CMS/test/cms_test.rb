@@ -28,6 +28,10 @@ class CmsTest < Minitest::Test
     end
   end
 
+  def session
+    last_request.env["rack.session"]
+  end
+
   def test_index
     create_document("about.md")
     create_document("changes.txt")
@@ -54,14 +58,7 @@ class CmsTest < Minitest::Test
     get '/notafile.ext'
 
     assert_equal(302, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_equal(last_response.body, '')
-
-    get last_response["Location"]
-
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, 'notafile.ext does not exist.')
+    assert_equal('notafile.ext does not exist.', session[:message])
   end
 
   def test_viewing_markdown_document
@@ -89,15 +86,11 @@ class CmsTest < Minitest::Test
     post '/test.txt', content: "Edited information."
 
     assert_equal(302, last_response.status)
-
-    get last_response["Location"]
-
-    assert_includes(last_response.body, 'test.txt has been updated.')
+    assert_equal('test.txt has been updated.', session[:message])
 
     get '/test.txt'
 
     assert_equal(200, last_response.status)
-    assert_equal("text/plain", last_response["Content-Type"])
     assert_includes(last_response.body, "Edited information.")
   end
 
@@ -114,13 +107,11 @@ class CmsTest < Minitest::Test
     post '/create', filename: 'test.txt'
 
     assert_equal(302, last_response.status)
+    assert_equal('test.txt was created.', session[:message])
 
     get last_response['Location']
 
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, 'test.txt was created.')
-    assert_includes(last_response.body, "<a href=\"test.txt\">test.txt</a>")
+    assert_includes(last_response.body, %q(href="/test.txt"))
   end
 
   def test_attempt_create_document_with_no_name
@@ -136,13 +127,11 @@ class CmsTest < Minitest::Test
     post '/test.txt/delete'
 
     assert_equal(302, last_response.status)
+    assert_equal('test.txt was deleted.', session[:message])
 
     get last_response['Location']
 
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, "test.txt was deleted.")
-    refute_includes(last_response.body, "<a href=\"test.txt\">test.txt</a>")
+    refute_includes(last_response.body, %q(href="test.txt"))
   end
 
   def test_sign_in_page
@@ -158,12 +147,11 @@ class CmsTest < Minitest::Test
     post '/users/signin', username: 'admin', password: 'secret'
 
     assert_equal(302, last_response.status)
+    assert_equal('admin', session[:username])
+    assert_equal('Welcome!', session[:message])
 
     get last_response['Location']
 
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, 'Welcome!')
     assert_includes(last_response.body, 'Signed in as admin')
   end
 
@@ -171,26 +159,21 @@ class CmsTest < Minitest::Test
     post '/users/signin', username: 'keeper of', password: 'kookus'
 
     assert_equal(422, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_nil(session[:username])
     assert_includes(last_response.body, 'Invalid Credentials.')
   end
 
   def test_sign_out
-    post '/users/signin', username: 'admin', password: 'secret'
-
-    get last_response['Location']
-
-    assert_includes(last_response.body, 'Welcome!')
+    get '/', {}, {'rack.session' => { username: 'admin'} }
 
     post '/users/signout'
 
     assert_equal(302, last_response.status)
+    assert_equal('You have been signed out.', session[:message])
+    assert_nil(session[:username])
 
     get last_response['Location']
 
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, 'You have been signed out.')
     assert_includes(last_response.body, 'Sign In')
   end
 end

@@ -37,6 +37,17 @@ def validate_credentials(username, password)
   username == 'admin' && password == 'secret'
 end
 
+def user_signed_in?
+  !!session[:username]
+end
+
+def required_signed_in_user
+  if !user_signed_in?
+    session[:message] = 'You must be signed in to do that.'
+    redirect '/'
+  end
+end
+
 # View list of all files
 get '/' do
   pattern = File.join(data_path, "*")
@@ -46,11 +57,14 @@ end
 
 # Render 'New Document' page
 get '/new' do
+  required_signed_in_user
   erb :new
 end
 
 # Create a new document
 post '/create' do
+  required_signed_in_user
+
   if params[:filename].strip.empty?
     session[:message] = "A name is required."
     status 422
@@ -67,6 +81,8 @@ end
 
 # Delete a document
 post '/:filename/delete' do
+  required_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
 
   File.delete(file_path)
@@ -89,6 +105,8 @@ end
 
 # Edit contents of a file
 get '/:filename/edit' do
+  required_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
   @filename = params[:filename]
 
@@ -101,6 +119,8 @@ end
 
 # Save changes to a file
 post '/:filename' do
+  required_signed_in_user
+
   file_path = File.join(data_path, params[:filename])
   File.write(file_path, params[:content])
 

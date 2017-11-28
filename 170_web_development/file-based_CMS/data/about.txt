@@ -1,1 +1,3 @@
 A content management system made with Sinatra!
+
+*Sinatra is a RubyGem that is a Rack-based web development framework. More specifically, it provides us to define routes, which are how developers can match URL's with blocks of Ruby code.
