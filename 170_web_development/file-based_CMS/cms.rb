@@ -33,6 +33,10 @@ def load_file_content(path)
   end
 end
 
+def validate_credentials(username, password)
+  username == 'admin' && password == 'secret'
+end
+
 # View list of all files
 get '/' do
   pattern = File.join(data_path, "*")
@@ -102,4 +106,32 @@ post '/:filename' do
 
   session[:message] = "#{params[:filename]} has been updated."
   redirect "/"
+end
+
+# Render "Sign In" page
+get '/users/signin' do
+  erb :sign_in
+end
+
+# Sign in as Admin
+post '/users/signin' do
+  username = params[:username].downcase
+  password = params[:password]
+
+  if validate_credentials(username, password)
+    session[:username] = username
+    session[:message]  = 'Welcome!'
+    redirect '/'
+  else
+    session[:message] = 'Invalid Credentials.'
+    status 422
+    erb :sign_in
+  end
+end
+
+# Sign Out
+post '/users/signout' do
+  session.delete(:username)
+  session[:message] = 'You have been signed out.'
+  redirect '/'
 end

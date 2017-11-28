@@ -144,4 +144,53 @@ class CmsTest < Minitest::Test
     assert_includes(last_response.body, "test.txt was deleted.")
     refute_includes(last_response.body, "<a href=\"test.txt\">test.txt</a>")
   end
+
+  def test_sign_in_page
+    get '/users/signin'
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, "<input")
+    assert_includes(last_response.body, %q(<button type="submit"))
+  end
+
+  def test_sign_in_as_admin
+    post '/users/signin', username: 'admin', password: 'secret'
+
+    assert_equal(302, last_response.status)
+
+    get last_response['Location']
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, 'Welcome!')
+    assert_includes(last_response.body, 'Signed in as admin')
+  end
+
+  def test_sign_in_invalid_credentials
+    post '/users/signin', username: 'keeper of', password: 'kookus'
+
+    assert_equal(422, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, 'Invalid Credentials.')
+  end
+
+  def test_sign_out
+    post '/users/signin', username: 'admin', password: 'secret'
+
+    get last_response['Location']
+
+    assert_includes(last_response.body, 'Welcome!')
+
+    post '/users/signout'
+
+    assert_equal(302, last_response.status)
+
+    get last_response['Location']
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, 'You have been signed out.')
+    assert_includes(last_response.body, 'Sign In')
+  end
 end
