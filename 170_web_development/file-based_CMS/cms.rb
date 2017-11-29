@@ -3,6 +3,8 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'tilt/erubis'
 require 'redcarpet'
+require 'yaml'
+require 'bcrypt'
 
 configure do
   enable :sessions
@@ -33,8 +35,24 @@ def load_file_content(path)
   end
 end
 
-def validate_credentials(username, password)
-  username == 'admin' && password == 'secret'
+def load_user_credentials
+  credentials_path = if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test/users.yml", __FILE__)
+  else
+    File.expand_path("../users.yml", __FILE__)
+  end
+  YAML.load_file(credentials_path)
+end
+
+def valid_credentials?(username, password)
+  credentials = load_user_credentials
+
+  if credentials.key?(username)
+    bcrypt_password = BCrypt::Password.new(credentials[username])
+    bcrypt_password == password
+  else
+    false
+  end
 end
 
 def user_signed_in?
@@ -133,12 +151,11 @@ get '/users/signin' do
   erb :sign_in
 end
 
-# Sign in as Admin
+# Sign in as a user
 post '/users/signin' do
   username = params[:username].downcase
-  password = params[:password]
 
-  if validate_credentials(username, password)
+  if valid_credentials?(username, params[:password])
     session[:username] = username
     session[:message]  = 'Welcome!'
     redirect '/'
