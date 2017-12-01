@@ -147,6 +147,13 @@ class CmsTest < Minitest::Test
     assert_includes(last_response.body, "A name is required.")
   end
 
+  def test_attempt_create_document_with_invalid_format
+    post '/create', { filename: 'darksouls.pdf' }, admin_session
+
+    assert_equal(422, last_response.status)
+    assert_equal(last_response.body, "Only '.txt' and '.md' files are allowed.")
+  end
+
   def test_create_document_signed_out
     post '/create', filename: 'test.txt'
 

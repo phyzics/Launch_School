@@ -24,9 +24,15 @@ def render_markdown(file)
   markdown.render("#{file}")
 end
 
+def valid_extension?(extname)
+  extname.match?(/(.txt|.md)/)
+end
+
 def load_file_content(path)
   content = File.read(path)
-  case File.extname(path)
+  extension = File.extname(path)
+
+  case extension
   when '.txt'
     headers['Content-type'] = 'text/plain'
     content
@@ -82,14 +88,17 @@ end
 # Create a new document
 post '/create' do
   required_signed_in_user
+  file_path = File.join(data_path, params[:filename])
 
   if params[:filename].strip.empty?
     session[:message] = "A name is required."
     status 422
     erb :new
+  elsif !valid_extension?(File.extname(file_path))
+    session[:message] = "Only '.txt' and '.md' files are allowed." # rework to say that "ext" is invalid
+    status 422
+    erb :new
   else
-    file_path = File.join(data_path, params[:filename])
-
     File.write(file_path, '')
     session[:message] = "#{params[:filename]} was created."
 
@@ -133,6 +142,16 @@ get '/:filename/edit' do
   end
 
   erb :edit
+end
+
+get '/:filename/duplicate' do
+  required_signed_in_user
+  erb :duplicate
+end
+
+post '/:filename/duplicate' do
+  required_signed_in_user
+
 end
 
 # Save changes to a file
