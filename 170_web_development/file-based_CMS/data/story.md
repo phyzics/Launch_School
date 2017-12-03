@@ -1,4 +1,4 @@
-# The Grand Story
-###### Νικόλαος Κάλιμπη
+# My story
+## By me
 ---
-昔々の時、強い男の人がいりました。
+haha

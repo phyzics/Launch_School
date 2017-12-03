@@ -25,7 +25,7 @@ def render_markdown(file)
 end
 
 def valid_extension?(extname)
-  extname.match?(/(.txt|.md)/)
+  %w(.txt .md .jpg .gif).include?(extname)
 end
 
 def load_file_content(path)
@@ -152,6 +152,35 @@ end
 post '/:filename/duplicate' do
   required_signed_in_user
 
+  @filename = params[:new_filename]
+  file_path = File.join(data_path, params[:new_filename])
+  extension = File.extname(file_path)
+
+  files = Dir.glob(File.join(data_path, "*")).map { |path| File.basename(path) }
+  contents = File.read(File.join(data_path, params[:filename]))
+
+  if @filename.strip.empty?
+    session[:message] = "A name is required."
+    status 422
+    erb :duplicate
+  elsif extension != File.extname(File.join(data_path, params[:filename]))
+    session[:message] = "Duplicates must use the same format as the original copy."
+    status 422
+    erb :duplicate
+  elsif !valid_extension?(extension)
+    session[:message] = "Sorry, but '#{extension}' is not a valid format."
+    status 422
+    erb :duplicate
+  elsif files.include?(@filename)
+    session[:message] = "The new file name must be unique."
+    status 422
+    erb :duplicate
+  else
+    File.write(file_path, "#{contents}")
+    session[:message] = "#{@filename} was created."
+
+    redirect '/'
+  end
 end
 
 # Save changes to a file
