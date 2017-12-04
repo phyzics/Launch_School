@@ -6,6 +6,8 @@ require 'redcarpet'
 require 'yaml'
 require 'bcrypt'
 
+VALID_FORMATS = %w(.txt .md .jpg .gif)
+
 configure do
   enable :sessions
   set :session_secret, 'secret'
@@ -25,7 +27,25 @@ def render_markdown(file)
 end
 
 def valid_extension?(extname)
-  %w(.txt .md .jpg .gif).include?(extname)
+  VALID_FORMATS.include?(extname)
+end
+
+def validate_filename(filename, old_filename = nil)
+  extension = File.extname(filename)
+  old_ext = File.extname(File.join(data_path, old_filename)) if old_filename
+  files = Dir.glob("#{data_path}/*").map { |path| File.basename(path) }
+
+  if filename.strip.empty?
+    :empty_name
+  elsif !valid_extension?(extension)
+    :invalid_format
+  elsif old_filename && extension != old_ext
+    :format_changed
+  elsif files.include?(filename)
+    :duplicate_name
+  else
+    :valid
+  end
 end
 
 def load_file_content(path)
@@ -90,18 +110,22 @@ post '/create' do
   required_signed_in_user
   file_path = File.join(data_path, params[:filename])
 
-  if params[:filename].strip.empty?
+  case validate_filename(params[:filename])
+  when :empty
     session[:message] = "A name is required."
     status 422
     erb :new
-  elsif !valid_extension?(File.extname(file_path))
-    session[:message] = "Only '.txt' and '.md' files are allowed." # rework to say that "ext" is invalid
+  when :invalid_format
+    session[:message] = "Sorry, but '#{extension}' is not a valid format."
     status 422
     erb :new
-  else
+  when :duplicate_name
+    session[:message] = "The new file name must be unique."
+    status 422
+    erb :new
+  when :valid
     File.write(file_path, '')
     session[:message] = "#{params[:filename]} was created."
-
     redirect '/'
   end
 end
@@ -159,23 +183,24 @@ post '/:filename/duplicate' do
   files = Dir.glob(File.join(data_path, "*")).map { |path| File.basename(path) }
   contents = File.read(File.join(data_path, params[:filename]))
 
-  if @filename.strip.empty?
+  case validate_filename(@filename, params[:filename])
+  when :empty_name
     session[:message] = "A name is required."
     status 422
     erb :duplicate
-  elsif extension != File.extname(File.join(data_path, params[:filename]))
-    session[:message] = "Duplicates must use the same format as the original copy."
-    status 422
-    erb :duplicate
-  elsif !valid_extension?(extension)
+  when :invalid_format
     session[:message] = "Sorry, but '#{extension}' is not a valid format."
     status 422
     erb :duplicate
-  elsif files.include?(@filename)
+  when :format_changed
+    session[:message] = "Duplicates must use the same format as the original copy."
+    status 422
+    erb :duplicate
+  when :duplicate_name
     session[:message] = "The new file name must be unique."
     status 422
     erb :duplicate
-  else
+  when :valid
     File.write(file_path, "#{contents}")
     session[:message] = "#{@filename} was created."
 
