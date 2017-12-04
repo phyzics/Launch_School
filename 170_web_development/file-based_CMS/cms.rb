@@ -126,6 +126,7 @@ post '/create' do
   when :valid
     File.write(file_path, '')
     session[:message] = "#{params[:filename]} was created."
+
     redirect '/'
   end
 end
@@ -133,12 +134,12 @@ end
 # Delete a document
 post '/:filename/delete' do
   required_signed_in_user
-
   file_path = File.join(data_path, params[:filename])
 
   File.delete(file_path)
 
   session[:message] = "#{params[:filename]} was deleted."
+
   redirect '/'
 end
 
@@ -150,7 +151,8 @@ get '/:filename' do
     @file = load_file_content(file_path)
   else
     session[:message] = "#{params[:filename]} does not exist."
-    redirect "/"
+
+    redirect '/'
   end
 end
 
@@ -231,6 +233,7 @@ post '/users/signin' do
   if valid_credentials?(username, params[:password])
     session[:username] = username
     session[:message]  = 'Welcome!'
+
     redirect '/'
   else
     session[:message] = 'Invalid Credentials.'
@@ -243,5 +246,33 @@ end
 post '/users/signout' do
   session.delete(:username)
   session[:message] = 'You have been signed out.'
+
   redirect '/'
+end
+
+# Render "Sign Up" page
+get '/users/signup' do
+  erb :signup
+end
+
+# Sign Up
+post '/users/signup' do
+  @username = params[:username]
+  password = params[:password]
+  credentials = load_user_credentials
+
+  if credentials.key?(@username)
+    session[:message] = "Sorry, but that username is already taken."
+    status 422
+    erb :signup
+  else
+    password = BCrypt::Password.create(password).to_s
+    file_path = File.expand_path('../users.yml', __FILE__)
+
+    File.write(file_path, "\n#{@username}: #{password}", mode: "a")
+    session[:username] = @username
+    session[:message] = 'Account creation successful!'
+
+    redirect '/'
+  end
 end

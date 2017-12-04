@@ -1,0 +1,15 @@
+<p>Please enter the username you wish to use as well as a password.</p>
+
+<form method="post" action="/users/signup">
+  <div>
+    <label for="username">Username:
+      <input name="username" value="<%= @username %>"/>
+    </label>
+  </div>
+  <div>
+    <label for="password">Password:
+      <input name="password" type="password"/>
+    </label>
+  </div>
+  <button type="submit">Sign Up</button>
+</form>

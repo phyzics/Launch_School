@@ -1,6 +1,4 @@
-# users.yml
-{
-  admin: "$2a$10$Y5u/46AuIFNU4dQvZAJcSOy43vgZW74pSjTPCEE.fqe1YYc3v15cu",
-  nick: "$2a$10$o01wSjFhBelAbeNP.8XEDu.UGenJ4fRh1mUtPFXvYIqtTGW3NW2/y",
-  catherine: "$2a$10$af9ipOzE0ZgoGSQKfu691eBKRlVQJaQpziidM0WWUgFcBmZuETwQK"
-}
+---
+admin: "$2a$10$Y5u/46AuIFNU4dQvZAJcSOy43vgZW74pSjTPCEE.fqe1YYc3v15cu"
+nick: "$2a$10$o01wSjFhBelAbeNP.8XEDu.UGenJ4fRh1mUtPFXvYIqtTGW3NW2/y"
+catherine: "$2a$10$af9ipOzE0ZgoGSQKfu691eBKRlVQJaQpziidM0WWUgFcBmZuETwQK"
