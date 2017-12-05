@@ -135,6 +135,27 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
+  def test_duplicate_document_form
+    create_document('test.txt')
+
+    get '/test.txt/duplicate', {}, admin_session
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, "Please provide a new unique name for the duplicate document:")
+    assert_includes(last_response.body, %q(<button type="submit"))
+  end
+
+  def test_duplicate_document_form_signed_out
+    create_document('test.txt')
+
+    get '/test.txt/duplicate'
+
+    assert_equal(302, last_response.status)
+    assert_equal('You must be signed in to do that.', session[:message])
+  end
+
+  # NEW DOCUMENT TESTS
   def test_create_document
     post '/create', { filename: 'test.txt' }, admin_session
 
@@ -176,6 +197,7 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
+  # DELETE DOCUMENT TESTS
   def test_delete_document
     create_document('test.txt')
 
@@ -198,9 +220,54 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
-  # ADD DUPLICATION TESTS
+  # DUPLICATE DOCUMENT TESTS
   def test_duplicate_document
-    skip
+    create_document('test.txt', 'English to Japanese')
+
+    post '/test.txt/duplicate', { new_filename: 'tesuto.txt' }, admin_session
+
+    assert_equal(302, last_response.status)
+    assert_equal("tesuto.txt was created.", session[:message])
+
+    get '/tesuto.txt'
+
+    assert_includes(last_response.body, 'English to Japanese')
+  end
+
+  def test_attempt_duplicate_document_different_extension
+    create_document('test.txt')
+
+    post '/test.txt/duplicate', { new_filename: 'test.md' }, admin_session
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'Duplicates must use the same format as the original copy.')
+  end
+
+  def test_attempt_duplicate_document_invalid_extension
+    create_document('test.txt')
+
+    post '/test.txt/duplicate', { new_filename: 'test.pdf' }, admin_session
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, "Sorry, but '.pdf' is not a valid format.")
+  end
+
+  def test_attempt_duplicate_document_with_no_name
+    create_document('test.txt')
+
+    post '/test.txt/duplicate', { new_filename: '        ' }, admin_session
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'A name is required.')
+  end
+
+  def test_duplicate_document_signed_out
+    create_document('test.txt')
+
+    post '/test.txt/duplicate', { new_filename: 'tesuto.txt'}
+
+    assert_equal(302, last_response.status)
+    assert_equal('You must be signed in to do that.', session[:message])
   end
 
   def test_sign_in_page
