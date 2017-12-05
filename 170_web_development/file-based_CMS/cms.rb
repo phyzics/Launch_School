@@ -21,6 +21,14 @@ def data_path
   end
 end
 
+def users_path
+  if ENV["RACK_ENV"] == 'test'
+    File.expand_path("../test/users.yml", __FILE__)
+  else
+    File.expand_path("../users.yml", __FILE__)
+  end
+end
+
 def render_markdown(file)
   markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
   markdown.render("#{file}")
@@ -62,12 +70,7 @@ def load_file_content(path)
 end
 
 def load_user_credentials
-  credentials_path = if ENV["RACK_ENV"] == "test"
-    File.expand_path("../test/users.yml", __FILE__)
-  else
-    File.expand_path("../users.yml", __FILE__)
-  end
-  YAML.load_file(credentials_path)
+  YAML.load_file(users_path)
 end
 
 def valid_credentials?(username, password)
@@ -270,9 +273,8 @@ post '/users/signup' do
     erb :signup
   else
     password = BCrypt::Password.create(password).to_s
-    file_path = File.expand_path("#{data_path}/../users.yml", __FILE__)
 
-    File.write(file_path, "\n#{@username}: #{password}", mode: "a")
+    File.write(users_path, "\n#{@username}: #{password}", mode: "a")
     session[:username] = @username
     session[:message] = 'Account creation successful!'
 
