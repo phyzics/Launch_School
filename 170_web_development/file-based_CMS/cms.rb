@@ -108,10 +108,13 @@ end
 # Create a new document
 post '/create' do
   required_signed_in_user
-  file_path = File.join(data_path, params[:filename])
 
-  case validate_filename(params[:filename])
-  when :empty
+  filename = params[:filename]
+  file_path = File.join(data_path, params[:filename])
+  extension = File.extname(file_path)
+
+  case validate_filename(filename)
+  when :empty_name
     session[:message] = "A name is required."
     status 422
     erb :new
@@ -134,8 +137,8 @@ end
 # Delete a document
 post '/:filename/delete' do
   required_signed_in_user
-  file_path = File.join(data_path, params[:filename])
 
+  file_path = File.join(data_path, params[:filename])
   File.delete(file_path)
 
   session[:message] = "#{params[:filename]} was deleted."
