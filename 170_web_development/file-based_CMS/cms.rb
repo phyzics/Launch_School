@@ -270,7 +270,7 @@ post '/users/signup' do
     erb :signup
   else
     password = BCrypt::Password.create(password).to_s
-    file_path = File.expand_path('../users.yml', __FILE__)
+    file_path = File.expand_path("#{data_path}/../users.yml", __FILE__)
 
     File.write(file_path, "\n#{@username}: #{password}", mode: "a")
     session[:username] = @username

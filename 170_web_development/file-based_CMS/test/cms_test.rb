@@ -15,6 +15,12 @@ class CmsTest < Minitest::Test
   end
 
   def teardown
+    yaml_file_path = File.expand_path("#{data_path}/../users.yml", __FILE__)
+    password = "$2a$10$Y5u/46AuIFNU4dQvZAJcSOy43vgZW74pSjTPCEE.fqe1YYc3v15cu"
+
+    # Removes users added in "sign up" test
+    File.write(yaml_file_path, "admin: #{password}") if File.read(yaml_file_path).include?('gwyn')
+
     FileUtils.rm_rf(data_path)
   end
 
@@ -151,7 +157,16 @@ class CmsTest < Minitest::Test
     post '/create', { filename: 'darksouls.pdf' }, admin_session
 
     assert_equal(422, last_response.status)
-    assert_equal(last_response.body, "Only '.txt' and '.md' files are allowed.")
+    assert_includes(last_response.body, "Sorry, but '.pdf' is not a valid format.")
+  end
+
+  def test_attempt_create_document_with_duplicate_name
+    create_document('about.txt')
+
+    post '/create', { filename: 'about.txt' }, admin_session
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'The new file name must be unique.')
   end
 
   def test_create_document_signed_out
@@ -182,6 +197,8 @@ class CmsTest < Minitest::Test
     assert_equal(302, last_response.status)
     assert_equal('You must be signed in to do that.', session[:message])
   end
+
+  # ADD DUPLICATION TESTS
 
   def test_sign_in_page
     get '/users/signin'
@@ -224,5 +241,25 @@ class CmsTest < Minitest::Test
     get last_response['Location']
 
     assert_includes(last_response.body, 'Sign In')
+  end
+
+  def test_viewing_signup
+    get '/users/signup'
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, 'Please enter the username you wish to use as well as a password.')
+  end
+
+  def test_signup
+    post '/users/signup', username: 'gwyn', password: 'lordofcinder'
+
+    assert_equal(302, last_response.status)
+    assert_equal('Account creation successful!', session[:message])
+
+    get last_response['Location']
+
+    assert_includes(last_response.body, 'gwyn')
+    refute_includes(last_response.body, '<p>Not registered?')
   end
 end
