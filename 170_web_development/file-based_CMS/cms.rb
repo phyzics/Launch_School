@@ -263,12 +263,16 @@ end
 
 # Sign Up
 post '/users/signup' do
-  @username = params[:username]
+  @username = params[:username].downcase.strip
   password = params[:password]
   credentials = load_user_credentials
 
   if credentials.key?(@username)
     session[:message] = "Sorry, but that username is already taken."
+    status 422
+    erb :signup
+  elsif @username.empty?
+    session[:message] = 'You must enter an account name.'
     status 422
     erb :signup
   else

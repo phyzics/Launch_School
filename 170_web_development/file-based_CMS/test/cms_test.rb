@@ -199,6 +199,9 @@ class CmsTest < Minitest::Test
   end
 
   # ADD DUPLICATION TESTS
+  def test_duplicate_document
+    skip
+  end
 
   def test_sign_in_page
     get '/users/signin'
@@ -261,5 +264,19 @@ class CmsTest < Minitest::Test
 
     assert_includes(last_response.body, 'gwyn')
     refute_includes(last_response.body, '<p>Not registered?')
+  end
+
+  def test_attempt_signup_duplicate_name
+    post '/users/signup', username: 'admin', password: 'secret'
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'Sorry, but that username is already taken')
+  end
+
+  def test_attempt_singup_empty_name
+    post '/users/signup', username: '     ', password: 'secret'
+
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'You must enter an account name.')
   end
 end
