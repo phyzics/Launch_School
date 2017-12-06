@@ -1,4 +1,4 @@
 # My story
 ## By me
 ---
-haha
+- bullet point!

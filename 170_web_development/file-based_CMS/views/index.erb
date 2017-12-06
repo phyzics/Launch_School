@@ -1,3 +1,6 @@
+<% unless @files.empty? %>
+  <h2>Files</h2>
+<% end %>
 <div class="files">
   <ul>
     <% @files.each do |file| %>
@@ -15,7 +18,28 @@
   </ul>
 </div>
 
+<% unless @images.empty? %>
+  <h2>Images</h2>
+<% end %>
+<div class="images">
+  <ul>
+    <% @images.each do |file| %>
+      <li>
+        <a href="/<%= file %>"><%= file %></a>
+        <a href="/<%= file %>/edit">edit</a>
+        <form class="inline" method="post" action="/<%= file %>/delete">
+          <button type="submit">delete</button>
+        </form>
+          <a href="/<%= file %>/duplicate">
+          <button type="submit">duplicate</button>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
 <p><a href="/new">New Document</a></p>
+<p><a href="/upload">Upload Image</a></p>
 <% if session[:username] %>
   <form method="post" action="/users/signout">
     <p class="user_status">

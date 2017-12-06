@@ -1,0 +1,14 @@
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <label for="file">Upload an image:</label>
+  <div>
+    <input name="file" type="file"></input>
+  </div>
+  <button type="submit">Upload</button>
+</form>
+
+<p>Valid Formats:</p>
+<ul>
+  <% VALID_IMG_FORMATS.each do |ext| %>
+    <li><%= ext %></li>
+  <% end %>
+</ul>

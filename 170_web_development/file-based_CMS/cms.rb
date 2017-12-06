@@ -6,7 +6,8 @@ require 'redcarpet'
 require 'yaml'
 require 'bcrypt'
 
-VALID_FORMATS = %w(.txt .md .jpg .gif)
+VALID_TEXT_FORMATS = %w(.txt .md )
+VALID_IMG_FORMATS  = %w(.jpg .gif)
 
 configure do
   enable :sessions
@@ -18,6 +19,14 @@ def data_path
     File.expand_path("../test/data", __FILE__)
   else
     File.expand_path("../data", __FILE__)
+  end
+end
+
+def image_path
+  if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test/public/images", __FILE__)
+  else
+    File.expand_path("../public/images", __FILE__)
   end
 end
 
@@ -35,7 +44,25 @@ def render_markdown(file)
 end
 
 def valid_extension?(extname)
-  VALID_FORMATS.include?(extname)
+  VALID_TEXT_FORMATS.include?(extname) || VALID_IMG_FORMATS.include?(extname)
+end
+
+def validate_imagename(filename, old_filename = nil)
+  extension = File.extname(filename)
+  old_ext = File.extname(File.join(image_path, old_filename)) if old_filename
+  files = Dir.glob("#{image_path}/*{#{VALID_IMG_FORMATS.join(',')}}").map { |path| File.basename(path) }
+
+  if filename.strip.empty?
+    :empty_name
+  elsif !VALID_IMG_FORMATS.include?(extension)
+    :invalid_format
+  elsif old_filename && extension != old_ext
+    :format_changed
+  elsif files.include?(filename)
+    :duplicate_name
+  else
+    :valid
+  end
 end
 
 def validate_filename(filename, old_filename = nil)
@@ -97,8 +124,10 @@ end
 
 # View list of all files
 get '/' do
-  pattern = File.join(data_path, "*")
-  @files = Dir.glob(pattern).map { |path| File.basename(path) }
+  data_pattern  = File.join(data_path, "*")
+  image_pattern = File.join(image_path, "*{#{VALID_IMG_FORMATS.join(',')}}")
+  @files  = Dir.glob(data_pattern).map { |path| File.basename(path) }
+  @images = Dir.glob(image_pattern).map { |path| File.basename(path) }
   erb :index
 end
 
@@ -132,6 +161,42 @@ post '/create' do
   when :valid
     File.write(file_path, '')
     session[:message] = "#{params[:filename]} was created."
+
+    redirect '/'
+  end
+end
+
+# Render upload page
+get '/upload' do
+  required_signed_in_user
+  erb :upload
+end
+
+# Upload an image
+post '/upload' do
+  required_signed_in_user
+
+  @filename = params[:file][:filename].downcase.strip
+  file_path = File.join(image_path, @filename)
+  tempfile = params[:file][:tempfile]
+  extension = File.extname(@filename)
+
+  case validate_imagename(@filename)
+  when :empty_name
+    session[:message] = "A name is required."
+    status 422
+    erb :upload
+  when :invalid_format
+    session[:message] = "Sorry, but '#{extension}' is not a valid format."
+    status 422
+    erb :upload
+  when :duplicate_name
+    session[:message] = "The new file name must be unique."
+    status 422
+    erb :upload
+  when :valid
+    File.open(@filename, 'wb') { |file| file.write(tempfile.read) }
+    session[:message] = "#{@filename} was uploaded."
 
     redirect '/'
   end
@@ -176,11 +241,13 @@ get '/:filename/edit' do
   erb :edit
 end
 
+# Render duplicate page
 get '/:filename/duplicate' do
   required_signed_in_user
   erb :duplicate
 end
 
+# Duplicate a file
 post '/:filename/duplicate' do
   required_signed_in_user
 
