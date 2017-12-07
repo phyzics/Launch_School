@@ -38,6 +38,10 @@ def users_path
   end
 end
 
+def determine_file_path(extension)
+  VALID_IMG_FORMATS.include?(extension) ? image_path : data_path
+end
+
 def render_markdown(file)
   markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
   markdown.render("#{file}")
@@ -47,40 +51,8 @@ def valid_extension?(extname)
   VALID_TEXT_FORMATS.include?(extname) || VALID_IMG_FORMATS.include?(extname)
 end
 
-def validate_imagename(filename, old_filename = nil)
-  extension = File.extname(filename)
-  old_ext = File.extname(File.join(image_path, old_filename)) if old_filename
-  files = Dir.glob("#{image_path}/*{#{VALID_IMG_FORMATS.join(',')}}").map { |path| File.basename(path) }
-
-  if filename.strip.empty?
-    :empty_name
-  elsif !VALID_IMG_FORMATS.include?(extension)
-    :invalid_format
-  elsif old_filename && extension != old_ext
-    :format_changed
-  elsif files.include?(filename)
-    :duplicate_name
-  else
-    :valid
-  end
-end
-
-def validate_filename(filename, old_filename = nil)
-  extension = File.extname(filename)
-  old_ext = File.extname(File.join(data_path, old_filename)) if old_filename
-  files = Dir.glob("#{data_path}/*").map { |path| File.basename(path) }
-
-  if filename.strip.empty?
-    :empty_name
-  elsif !valid_extension?(extension)
-    :invalid_format
-  elsif old_filename && extension != old_ext
-    :format_changed
-  elsif files.include?(filename)
-    :duplicate_name
-  else
-    :valid
-  end
+def valid_image_files
+  VALID_IMG_FORMATS.join(',')
 end
 
 def load_file_content(path)
@@ -125,7 +97,7 @@ end
 # View list of all files
 get '/' do
   data_pattern  = File.join(data_path, "*")
-  image_pattern = File.join(image_path, "*{#{VALID_IMG_FORMATS.join(',')}}")
+  image_pattern = File.join(image_path, "*{#{valid_image_files}}")
   @files  = Dir.glob(data_pattern).map { |path| File.basename(path) }
   @images = Dir.glob(image_pattern).map { |path| File.basename(path) }
   erb :index
@@ -143,22 +115,22 @@ post '/create' do
 
   filename = params[:filename]
   file_path = File.join(data_path, params[:filename])
+  files = Dir.glob("#{data_path}/*").map { |path| File.basename(path) }
   extension = File.extname(file_path)
 
-  case validate_filename(filename)
-  when :empty_name
+  if filename.strip.empty?
     session[:message] = "A name is required."
     status 422
     erb :new
-  when :invalid_format
+  elsif !valid_extension?(extension)
     session[:message] = "Sorry, but '#{extension}' is not a valid format."
     status 422
     erb :new
-  when :duplicate_name
-    session[:message] = "The new file name must be unique."
+  elsif files.include?(filename)
+    session[:message] = 'The new file name must be unique.'
     status 422
     erb :new
-  when :valid
+  else
     File.write(file_path, '')
     session[:message] = "#{params[:filename]} was created."
 
@@ -176,27 +148,30 @@ end
 post '/upload' do
   required_signed_in_user
 
-  @filename = params[:file][:filename].downcase.strip
-  file_path = File.join(image_path, @filename)
+  filename = params[:file][:filename].downcase
+  file_path = File.join(image_path, filename)
+  files = Dir.glob("#{image_path}/*{#{valid_image_files}}").map do |path|
+    File.basename(path)
+  end
+  extension = File.extname(filename)
   tempfile = params[:file][:tempfile]
-  extension = File.extname(@filename)
 
-  case validate_imagename(@filename)
-  when :empty_name
+
+  if filename.strip.empty?
     session[:message] = "A name is required."
     status 422
     erb :upload
-  when :invalid_format
+  elsif !valid_extension?(extension)
     session[:message] = "Sorry, but '#{extension}' is not a valid format."
     status 422
     erb :upload
-  when :duplicate_name
-    session[:message] = "The new file name must be unique."
+  elsif files.include?(filename)
+    session[:message] = 'The new file name must be unique.'
     status 422
     erb :upload
-  when :valid
-    File.open(@filename, 'wb') { |file| file.write(tempfile.read) }
-    session[:message] = "#{@filename} was uploaded."
+  else
+    File.open(file_path, 'wb') { |file| file.write(tempfile.read) }
+    session[:message] = "#{filename} was uploaded."
 
     redirect '/'
   end
@@ -206,7 +181,9 @@ end
 post '/:filename/delete' do
   required_signed_in_user
 
-  file_path = File.join(data_path, params[:filename])
+  filename = params[:filename]
+  target_directory = determine_file_path(File.extname(filename))
+  file_path = File.join(target_directory, filename)
   File.delete(file_path)
 
   session[:message] = "#{params[:filename]} was deleted."
@@ -251,31 +228,32 @@ end
 post '/:filename/duplicate' do
   required_signed_in_user
 
-  @filename = params[:new_filename]
-  file_path = File.join(data_path, params[:new_filename])
-  extension = File.extname(file_path)
+  @filename = params[:new_filename].downcase
+  extension = File.extname(@filename)
+  target_directory = determine_file_path(extension)
 
-  files = Dir.glob(File.join(data_path, "*")).map { |path| File.basename(path) }
-  contents = File.read(File.join(data_path, params[:filename]))
+  file_path = File.join(target_directory, @filename)
+  files = Dir.glob(File.join(target_directory, "*")).map { |path| File.basename(path) }
 
-  case validate_filename(@filename, params[:filename])
-  when :empty_name
+  if @filename.strip.empty?
     session[:message] = "A name is required."
     status 422
     erb :duplicate
-  when :invalid_format
+  elsif !valid_extension?(extension)
     session[:message] = "Sorry, but '#{extension}' is not a valid format."
     status 422
     erb :duplicate
-  when :format_changed
-    session[:message] = "Duplicates must use the same format as the original copy."
+  elsif extension != File.extname(params[:filename])
+    session[:message] = 'Duplicates must use the same format as the original copy.'
     status 422
     erb :duplicate
-  when :duplicate_name
-    session[:message] = "The new file name must be unique."
+  elsif files.include?(@filename)
+    session[:message] = 'The new file name mus be unique.'
     status 422
     erb :duplicate
-  when :valid
+  else
+    contents = File.read(File.join(target_directory, params[:filename]))
+
     File.write(file_path, "#{contents}")
     session[:message] = "#{@filename} was created."
 
