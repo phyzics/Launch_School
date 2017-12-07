@@ -12,6 +12,7 @@ VALID_IMG_FORMATS  = %w(.jpg .gif)
 configure do
   enable :sessions
   set :session_secret, 'secret'
+  set :erb, :escape_html => true
 end
 
 def data_path
@@ -329,4 +330,8 @@ post '/users/signup' do
 
     redirect '/'
   end
+end
+
+get '/images/:image' do
+  erb params[:image]
 end

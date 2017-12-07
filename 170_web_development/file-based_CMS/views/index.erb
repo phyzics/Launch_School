@@ -23,13 +23,13 @@
 <% end %>
 <div class="images">
   <ul>
-    <% @images.each do |file| %>
+    <% @images.each do |image| %>
       <li>
-        <a href="/<%= file %>"><%= file %></a>
-        <form class="inline" method="post" action="/<%= file %>/delete">
+        <a href="/images/<%= image %>"><%= image %></a>
+        <form class="inline" method="post" action="/<%= image %>/delete">
           <button type="submit">delete</button>
         </form>
-          <a href="/<%= file %>/duplicate">
+          <a href="/<%= image %>/duplicate">
           <button type="submit">duplicate</button>
         </a>
       </li>
