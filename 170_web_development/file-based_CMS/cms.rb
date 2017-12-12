@@ -174,7 +174,13 @@ end
 post '/upload' do
   required_signed_in_user
 
-  filename = params[:file][:filename].downcase
+  filename = if params[:file].nil?
+               session[:message] = 'A name is required.'
+               status 422
+               redirect '/upload'
+             else
+               params[:file][:filename].downcase
+             end
   file_path = File.join(image_path, filename)
   extension = File.extname(filename)
   tempfile = params[:file][:tempfile]
