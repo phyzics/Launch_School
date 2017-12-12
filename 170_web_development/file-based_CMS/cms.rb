@@ -6,36 +6,36 @@ require 'redcarpet'
 require 'yaml'
 require 'bcrypt'
 
-VALID_TEXT_FORMATS = %w(.txt .md )
-VALID_IMG_FORMATS  = %w(.jpg .gif)
+VALID_TEXT_FORMATS = %w[.txt .md].freeze
+VALID_IMG_FORMATS  = %w[.jpg .gif].freeze
 
 configure do
   enable :sessions
   set :session_secret, 'secret'
-  set :erb, :escape_html => true
+  set :erb, escape_html: true
 end
 
 def data_path
-  if ENV["RACK_ENV"] == "test"
-    File.expand_path("../test/data", __FILE__)
+  if ENV['RACK_ENV'] == 'test'
+    File.expand_path('../test/data', __FILE__)
   else
-    File.expand_path("../data", __FILE__)
+    File.expand_path('../data', __FILE__)
   end
 end
 
 def image_path
-  if ENV["RACK_ENV"] == "test"
-    File.expand_path("../test/public/images", __FILE__)
+  if ENV['RACK_ENV'] == 'test'
+    File.expand_path('../test/public/images', __FILE__)
   else
-    File.expand_path("../public/images", __FILE__)
+    File.expand_path('../public/images', __FILE__)
   end
 end
 
 def users_path
-  if ENV["RACK_ENV"] == 'test'
-    File.expand_path("../test/users.yml", __FILE__)
+  if ENV['RACK_ENV'] == 'test'
+    File.expand_path('../test/users.yml', __FILE__)
   else
-    File.expand_path("../users.yml", __FILE__)
+    File.expand_path('../users.yml', __FILE__)
   end
 end
 
@@ -45,7 +45,7 @@ end
 
 def render_markdown(file)
   markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
-  markdown.render("#{file}")
+  markdown.render(file.to_s)
 end
 
 def valid_extension?(extname)
@@ -85,19 +85,44 @@ def valid_credentials?(username, password)
 end
 
 def user_signed_in?
-  !!session[:username]
+  session[:username]
 end
 
 def required_signed_in_user
-  if !user_signed_in?
-    session[:message] = 'You must be signed in to do that.'
-    redirect '/'
+  return if user_signed_in?
+
+  session[:message] = 'You must be signed in to do that.'
+  redirect '/'
+end
+
+def select_files_from_directory(extension)
+  case determine_file_path(extension)
+  when data_path
+    Dir.glob(File.join(data_path, '*')).map { |path| File.basename(path) }
+  when image_path
+    Dir.glob(File.join(image_path, "*{#{valid_image_files}}")).map do |path|
+      File.basename(path)
+    end
+  end
+end
+
+def error_for_filename(filename, extension, old_filename = nil)
+  files = select_files_from_directory(extension)
+
+  if filename.strip.empty?
+    'A name is required.'
+  elsif !valid_extension?(extension)
+    "Sorry, but '#{extension}' is not a valid format."
+  elsif old_filename && extension != File.extname(old_filename)
+    'Duplicates must use the same format as the original copy.'
+  elsif files.include?(@filename)
+    'The new file name must be unique.'
   end
 end
 
 # View list of all files
 get '/' do
-  data_pattern  = File.join(data_path, "*")
+  data_pattern  = File.join(data_path, '*')
   image_pattern = File.join(image_path, "*{#{valid_image_files}}")
   @files  = Dir.glob(data_pattern).map { |path| File.basename(path) }
   @images = Dir.glob(image_pattern).map { |path| File.basename(path) }
@@ -120,7 +145,7 @@ post '/create' do
   extension = File.extname(file_path)
 
   if filename.strip.empty?
-    session[:message] = "A name is required."
+    session[:message] = 'A name is required.'
     status 422
     erb :new
   elsif !valid_extension?(extension)
@@ -151,23 +176,12 @@ post '/upload' do
 
   filename = params[:file][:filename].downcase
   file_path = File.join(image_path, filename)
-  files = Dir.glob("#{image_path}/*{#{valid_image_files}}").map do |path|
-    File.basename(path)
-  end
   extension = File.extname(filename)
   tempfile = params[:file][:tempfile]
 
-
-  if filename.strip.empty?
-    session[:message] = "A name is required."
-    status 422
-    erb :upload
-  elsif !valid_extension?(extension)
-    session[:message] = "Sorry, but '#{extension}' is not a valid format."
-    status 422
-    erb :upload
-  elsif files.include?(filename)
-    session[:message] = 'The new file name must be unique.'
+  error = error_for_filename(filename, extension)
+  if error
+    session[:message] = error
     status 422
     erb :upload
   else
@@ -212,9 +226,7 @@ get '/:filename/edit' do
   file_path = File.join(data_path, params[:filename])
   @filename = params[:filename]
 
-  if File.file?(file_path)
-    @content = File.read(file_path)
-  end
+  @content = File.read(file_path) if File.file?(file_path)
 
   erb :edit
 end
@@ -232,30 +244,17 @@ post '/:filename/duplicate' do
   @filename = params[:new_filename].downcase
   extension = File.extname(@filename)
   target_directory = determine_file_path(extension)
-
   file_path = File.join(target_directory, @filename)
-  files = Dir.glob(File.join(target_directory, "*")).map { |path| File.basename(path) }
 
-  if @filename.strip.empty?
-    session[:message] = "A name is required."
-    status 422
-    erb :duplicate
-  elsif !valid_extension?(extension)
-    session[:message] = "Sorry, but '#{extension}' is not a valid format."
-    status 422
-    erb :duplicate
-  elsif extension != File.extname(params[:filename])
-    session[:message] = 'Duplicates must use the same format as the original copy.'
-    status 422
-    erb :duplicate
-  elsif files.include?(@filename)
-    session[:message] = 'The new file name mus be unique.'
+  error = error_for_filename(@filename, extension, params[:filename])
+  if error
+    session[:message] = error
     status 422
     erb :duplicate
   else
     contents = File.read(File.join(target_directory, params[:filename]))
 
-    File.write(file_path, "#{contents}")
+    File.write(file_path, contents.to_s)
     session[:message] = "#{@filename} was created."
 
     redirect '/'
@@ -270,7 +269,7 @@ post '/:filename' do
   File.write(file_path, params[:content])
 
   session[:message] = "#{params[:filename]} has been updated."
-  redirect "/"
+  redirect '/'
 end
 
 # Render "Sign In" page
@@ -314,7 +313,7 @@ post '/users/signup' do
   credentials = load_user_credentials
 
   if credentials.key?(@username)
-    session[:message] = "Sorry, but that username is already taken."
+    session[:message] = 'Sorry, but that username is already taken.'
     status 422
     erb :signup
   elsif @username.empty?
@@ -324,7 +323,7 @@ post '/users/signup' do
   else
     password = BCrypt::Password.create(password).to_s
 
-    File.write(users_path, "\n#{@username}: #{password}", mode: "a")
+    File.write(users_path, "\n#{@username}: #{password}", mode: 'a')
     session[:username] = @username
     session[:message] = 'Account creation successful!'
 
