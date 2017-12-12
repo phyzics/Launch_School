@@ -25,7 +25,7 @@ end
 
 def image_path
   if ENV['RACK_ENV'] == 'test'
-    File.expand_path('../test/public/images', __FILE__)
+    File.expand_path('../test/images', __FILE__)
   else
     File.expand_path('../public/images', __FILE__)
   end
@@ -115,7 +115,7 @@ def error_for_filename(filename, extension, old_filename = nil)
     "Sorry, but '#{extension}' is not a valid format."
   elsif old_filename && extension != File.extname(old_filename)
     'Duplicates must use the same format as the original copy.'
-  elsif files.include?(@filename)
+  elsif files.include?(filename)
     'The new file name must be unique.'
   end
 end
@@ -141,19 +141,11 @@ post '/create' do
 
   filename = params[:filename]
   file_path = File.join(data_path, params[:filename])
-  files = Dir.glob("#{data_path}/*").map { |path| File.basename(path) }
   extension = File.extname(file_path)
 
-  if filename.strip.empty?
-    session[:message] = 'A name is required.'
-    status 422
-    erb :new
-  elsif !valid_extension?(extension)
-    session[:message] = "Sorry, but '#{extension}' is not a valid format."
-    status 422
-    erb :new
-  elsif files.include?(filename)
-    session[:message] = 'The new file name must be unique.'
+  error = error_for_filename(filename, extension)
+  if error
+    session[:message] = error
     status 422
     erb :new
   else
