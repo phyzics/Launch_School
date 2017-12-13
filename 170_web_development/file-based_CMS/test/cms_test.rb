@@ -195,7 +195,7 @@ class CmsTest < Minitest::Test
   def test_attempt_create_document_with_invalid_format
     post '/create', { filename: 'darksouls.pdf' }, admin_session
 
-    assert_equal(422, last_response.status)
+    assert_equal(415, last_response.status)
     assert_includes(last_response.body, "Sorry, but '.pdf' is not a valid format.")
   end
 
@@ -264,7 +264,7 @@ class CmsTest < Minitest::Test
 
     post '/test.txt/duplicate', { new_filename: 'test.pdf' }, admin_session
 
-    assert_equal(422, last_response.status)
+    assert_equal(415, last_response.status)
     assert_includes(last_response.body, "Sorry, but '.pdf' is not a valid format.")
   end
 
