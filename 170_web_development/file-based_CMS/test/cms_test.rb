@@ -10,18 +10,29 @@ require_relative "../cms"
 class CmsTest < Minitest::Test
   include Rack::Test::Methods
 
+  def upload_path
+    File.expand_path('../uploads')
+  end
+
+  def yaml_file_path
+    File.expand_path("#{data_path}/../users.yml", __FILE__)
+  end
+
   def setup
     FileUtils.mkdir_p(data_path)
+    FileUtils.mkdir_p(image_path)
+    FileUtils.mkdir_p(upload_path)
   end
 
   def teardown
-    yaml_file_path = File.expand_path("#{data_path}/../users.yml", __FILE__)
     password = "$2a$10$Y5u/46AuIFNU4dQvZAJcSOy43vgZW74pSjTPCEE.fqe1YYc3v15cu"
 
     # Removes users added in "sign up" test
     File.write(yaml_file_path, "admin: #{password}") if File.read(yaml_file_path).include?('gwyn')
 
     FileUtils.rm_rf(data_path)
+    FileUtils.rm_rf(image_path)
+    FileUtils.rm_rf(upload_path)
   end
 
   def app
@@ -32,6 +43,14 @@ class CmsTest < Minitest::Test
     File.open(File.join(data_path, name), "w") do |file|
       file.write(content)
     end
+  end
+
+  def create_image(name)
+    File.write(File.join(image_path, name), "wb")
+  end
+
+  def create_upload(name)
+    File.write(File.join(upload_path, name), "wb")
   end
 
   def session
@@ -155,7 +174,6 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
-  # NEW DOCUMENT TESTS
   def test_create_document
     post '/create', { filename: 'test.txt' }, admin_session
 
@@ -197,7 +215,6 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
-  # DELETE DOCUMENT TESTS
   def test_delete_document
     create_document('test.txt')
 
@@ -220,7 +237,6 @@ class CmsTest < Minitest::Test
     assert_equal('You must be signed in to do that.', session[:message])
   end
 
-  # DUPLICATE DOCUMENT TESTS
   def test_duplicate_document
     create_document('test.txt', 'English to Japanese')
 
@@ -345,5 +361,62 @@ class CmsTest < Minitest::Test
 
     assert_equal(422, last_response.status)
     assert_includes(last_response.body, 'You must enter an account name.')
+  end
+
+  def test_viewing_image_upload
+    get '/upload', {}, admin_session
+
+    assert_equal(200, last_response.status)
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    assert_includes(last_response.body, "<label for=\"file\">Upload")
+  end
+
+  def test_attempt_viewing_image_upload
+    get '/upload'
+
+    assert_equal(302, last_response.status)
+    assert_equal('You must be signed in to do that.', session[:message])
+  end
+
+  def test_uploading_image
+    create_upload('test.jpg')
+    path = File.join(upload_path, 'test.jpg')
+    file = Rack::Test::UploadedFile.new(path, 'image/jpeg')
+
+    post '/upload', { file: file }, admin_session
+
+    files = Dir.glob("#{image_path}/*").map { |file| File.basename(file) }
+
+    assert_includes(files, 'test.jpg')
+    assert_equal(302, last_response.status)
+    assert_equal('test.jpg was uploaded.', session[:message])
+
+    get last_response['Location']
+
+    assert_includes(last_response.body, 'test.jpg</a>')
+  end
+
+  def test_attempt_uploading_image
+    create_upload('test.jpg')
+    path = File.join(upload_path, 'test.jpg')
+    file = Rack::Test::UploadedFile.new(path, 'image/jpeg')
+
+    post '/upload', { file: file }
+
+    assert_equal(302, last_response.status)
+    assert_equal('You must be signed in to do that.', session[:message])
+  end
+
+  def test_view_image
+    create_upload('test.jpg')
+    path = File.join(upload_path, 'test.jpg')
+    file = Rack::Test::UploadedFile.new(path, 'image/jpeg')
+
+    post '/upload', { file: file }, admin_session
+
+    get '/images/test.jpg'
+
+    assert_equal(200, last_response.status)
+    assert_equal('image/jpeg', last_response['Content-Type'])
   end
 end
