@@ -48,8 +48,12 @@ def render_markdown(file)
   markdown.render(file.to_s)
 end
 
-def valid_extension?(extname)
-  VALID_TEXT_FORMATS.include?(extname) || VALID_IMG_FORMATS.include?(extname)
+def valid_extension?(extname, filetype)
+  if filetype == 'doc'
+    VALID_TEXT_FORMATS.include?(extname)
+  else
+    VALID_IMG_FORMATS.include?(extname)
+  end
 end
 
 def valid_image_files
@@ -106,17 +110,25 @@ def select_files_from_directory(extension)
   end
 end
 
-def error_for_filename(filename, extension, old_filename = nil)
+def error_for_filename(filename, extension, filetype, old_filename = nil)
   files = select_files_from_directory(extension)
 
   if filename.strip.empty?
     'A name is required.'
-  elsif !valid_extension?(extension)
+  elsif !valid_extension?(extension, filetype)
     "Sorry, but '#{extension}' is not a valid format."
   elsif old_filename && extension != File.extname(old_filename)
     'Duplicates must use the same format as the original copy.'
   elsif files.include?(filename)
     'The new file name must be unique.'
+  end
+end
+
+def determine_error_number(error_text)
+  if error_text.include?('Sorry, but')
+    status 415
+  else
+    status 422
   end
 end
 
@@ -143,10 +155,10 @@ post '/create' do
   file_path = File.join(data_path, params[:filename])
   extension = File.extname(file_path)
 
-  error = error_for_filename(filename, extension)
+  error = error_for_filename(filename, extension, 'doc')
   if error
     session[:message] = error
-    status 422
+    status determine_error_number(error)
     erb :new
   else
     File.write(file_path, '')
@@ -177,10 +189,10 @@ post '/upload' do
   extension = File.extname(filename)
   tempfile = params[:file][:tempfile]
 
-  error = error_for_filename(filename, extension)
+  error = error_for_filename(filename, extension, 'image')
   if error
     session[:message] = error
-    status 422
+    status determine_error_number(error)
     erb :upload
   else
     File.open(file_path, 'wb') { |file| file.write(tempfile.read) }
@@ -244,10 +256,10 @@ post '/:filename/duplicate' do
   target_directory = determine_file_path(extension)
   file_path = File.join(target_directory, @filename)
 
-  error = error_for_filename(@filename, extension, params[:filename])
+  error = error_for_filename(@filename, extension, 'doc', params[:filename])
   if error
     session[:message] = error
-    status 422
+    status determine_error_number(error)
     erb :duplicate
   else
     contents = File.read(File.join(target_directory, params[:filename]))
