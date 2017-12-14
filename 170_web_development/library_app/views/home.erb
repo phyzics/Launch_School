@@ -1,0 +1,30 @@
+<% content_for :title do %>
+  <title>MyLibrary | Home </title>
+<% end %>
+
+<h1>Welcome to MyLibrary!</h1>
+<div>
+  <p>Browse by...</p>
+  <ul>
+    <li><a href="/search/title">Title</a></li>
+    <li><a href="/search/author">Author</a></li>
+    <li><a href="/search/genre">Genre</a></li>
+  </ul>
+</div>
+
+<div>
+  <form action="/search/tags" method="get">
+    <input type="text" name="query" value="<%= @tags %>"></input>
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<% if session[:username] %>
+  <p>Logged in as <%= session[:username] %></p>
+  <%== "<p><a href=\"/admin\">control panel</a></p>" if session[:username] == 'admin' %>
+<% else %>
+  <p>Not Registed? <a href="/signup">Sign up!</a></p>
+  <p>Otherwise, log in <a href="/signin">here</a></p>
+<% end %>
+
+<!-- add admin/login -->

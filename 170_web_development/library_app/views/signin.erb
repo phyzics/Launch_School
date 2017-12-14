@@ -1,0 +1,15 @@
+<% content_for :title do%>
+  <title>MyLibrary | Sign In</title>
+<% end %>
+
+<form action="/signin" method="post">
+  <label for="username">Username</label>
+  <div>
+    <input type="text" name="username"></input>
+  </div>
+  <label for="password">Password</label>
+  <div>
+    <input type="password" name="password"></input>
+  </div>
+  <button type="submit">Submit</button>
+</form>

@@ -1,0 +1,14 @@
+<% content_for :title do %>
+  <title>MyLibrary | Authors </title>
+<% end %>
+
+<h1>Books by Author</h1>
+<% @authors.each_pair do |author, books| %>
+  <h2><%= author %></h2>
+  <ul>
+    <% books.each do |book| %>
+      <li><a href="/book/<%= book[:id] %>"><%= book[:title] %></a></li>
+    <% end %>
+  </ul>
+<% end %>
+<p><a href="/">Home</a></p>

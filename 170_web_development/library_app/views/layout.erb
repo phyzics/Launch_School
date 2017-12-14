@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <%== yield_content :title %>
+    <link rel="stylesheet" href="/stylesheets/library_app.css" type="text/css" />
+  </head>
+  <header>
+    <% if session[:error] %>
+      <p class="error_message"><%= session.delete(:error) %></p>
+    <% elsif session[:success] %>
+      <p class="success_message"><%= session.delete(:success) %></p>
+    <% end %>
+  </header>
+  <body>
+    <%== yield %>
+
+    <% if session[:username] %>
+      <p><a href='/signout'>Sign out</a></p>
+    <% end %>
+  </body>
+  <footer>
+  </footer>
+</html>

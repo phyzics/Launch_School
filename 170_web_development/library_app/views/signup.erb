@@ -1,0 +1,19 @@
+<% content_for :title do%>
+  <title>MyLibrary | Sign Up</title>
+<% end %>
+
+<form action="/signup" method="post">
+  <label for="username">Username</label>
+  <div>
+    <input type="text" name="username" value="<%= @username %>"></input>
+  </div>
+  <label for="password">Password</label>
+  <div>
+    <input type="password" name="password"></input>
+  </div>
+  <label for="verify_password">Verify Password</label>
+  <div>
+    <input type="password" name="verify_password"></input>
+  </div>
+  <button type="submit">Submit</button>
+</form>

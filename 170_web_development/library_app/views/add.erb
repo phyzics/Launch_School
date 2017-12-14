@@ -1,0 +1,23 @@
+<% content_for :title do%>
+  <title>MyLibrary | Add Book</title>
+<% end %>
+
+<form action="/admin/add" method="post">
+  <label for="title">Title</label>
+  <div>
+    <input name="title" value="<%= @title %>" type="text"></input>
+  </div>
+  <label for="author">Author</label>
+  <div>
+    <input name="author" value="<%= @author %>" type="text"></input>
+  </div>
+  <label for="genre">Genre</label>
+  <div>
+    <input name="genre" value="<%= @genre %>" type="text"></input>
+  </div>
+  <label for="tags">tags</label>
+  <div>
+    <input name="tags" value="<%= @tags %>" type="text"></input>
+  </div>
+  <button type="submit">add book</button>
+</form>

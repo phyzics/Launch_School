@@ -1,0 +1,11 @@
+<% @tags.each_pair do |tag, books| %>
+<div>
+  <h3><%= tag %></h3>
+  <ul>
+    <% books.each do |book| %>
+    <li><a href="/books/<%= book[:id] %>"><%= book[:title] %></a>
+    by <%= book[:author] %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>

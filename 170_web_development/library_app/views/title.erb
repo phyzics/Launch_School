@@ -1,0 +1,13 @@
+<% content_for :title do %>
+  <title>MyLibrary | Titles </title>
+<% end %>
+
+<h1>Books by Title</h1>
+<ul>
+<% sort_books(:title).each do |book| %>
+  <li>
+    <a href="/book/<%= book[:id] %>"><%= book[:title]%></a>
+     by <%= book[:author] %>
+   </li>
+<% end %>
+</ul>

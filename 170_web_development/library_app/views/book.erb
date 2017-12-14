@@ -1,0 +1,32 @@
+<% content_for :title do %>
+  <title>MyLibrary | <%= @book[:title] %></title>
+<% end %>
+
+<ul>
+  <li>Title: <%= @book[:title] %></li>
+  <li>Author: <%= @book[:author] %></li>
+  <li>Genre: <%= @book[:genre] %></li>
+  <li>tags: <%= @book[:tags].join(', ') %></li>
+</ul>
+
+<% if !@book[:checked_out] %>
+  <p>This book is currently available!</p>
+  <form action="/book/<%= @book[:id] %>/checkout" method="post">
+    <button type="submit">check out?</button>
+  </form>
+  </p>
+<% elsif session[:username] == "admin" %>
+  <p>Book is currently checked out.</p>
+  <form action="/book/<%= @book[:id] %>/checkin" method="post">
+    <button type="submit">check in</button>
+  </form>
+<% else %>
+  <p>Sorry, but this book is currently checked out.</p>
+<% end %>
+
+<% if session[:username] == 'admin' %>
+  <p><a href="/book/<%= @book[:id] %>/edit">edit</a></p>
+  <form action="/book/<%= @book[:id] %>/delete" method="post">
+    <button type="sumbit">delete</button>
+  </form>
+<% end %>
