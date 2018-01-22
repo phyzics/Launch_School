@@ -7,3 +7,11 @@ p {
   font-size: 24px;
   text-align: justify;
 }
+
+#intro {
+  font-size: 24px;
+}
+
+strong.highlight {
+  background-color: #f0f099;
+}
