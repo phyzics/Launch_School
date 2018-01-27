@@ -8,11 +8,14 @@
   <body>
     <form>
       <fieldset>
-        <label for="search">Search for</label>
-        <input type="text" name="search" id="search" />
+        <label for="query">Search for</label>
+        <input type="search" name="query" id="query" />
 
-        <input type="radio" name="tv" id="tv" />
-        <label for="tv">TV</label>
+        <label><input type="radio" name="filter" value="tv" />TV</label>
+        <label><input type="radio" name="filter" value="movies" />Movies</label>
+        <label><input type="radio" name="filter" value="music" />Music</label>
+
+        <button type="button">Search</button>
       </fieldset>
     </form>
   </body>
