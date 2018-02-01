@@ -1,0 +1,42 @@
+h1, h2 {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 24px;
+  color: #BA3925;
+}
+
+body {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  line-height: 30px;
+}
+
+figcaption {
+  font: italic 14px/24px Georgia, serif;
+  text-align: center;
+}
+
+blockquote {
+  font-style: italic;
+  border-left: 1px dotted #bfbfbf;
+  padding-left: 12px;
+  margin-left: 0;
+}
+
+header p {
+  font-size: 14px;
+  font-style: italic;
+}
+
+header a {
+  font-family: Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+}
+
+main {
+  width: 696px;
+}
