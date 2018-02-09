@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en-US">
+    <title>Practice Problems: Positioning</title>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background-color: #ccc;
+      }
+
+      section {
+        background-color: #fff;
+      }
+
+      #positioned {
+        background-color: #ffffcc;
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 400px;
+        padding: 30px 15px;
+        z-index: 2;
+      }
+
+      #fixed {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        background: rgba(0, 0, 0, .6);
+        z-index: 1;
+      }
+
+      #offset {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #fcfc99;
+        top: -10px;
+        left: -10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus efficitur lorem quis pharetra faucibus. Sed id finibus nisl, at malesuada augue. Duis nulla sem, cursus eget metus non, tincidunt lobortis odio. Vestibulum placerat, eros sagittis varius fermentum, mauris nulla posuere diam, ut consectetur diam urna sit amet leo. Donec libero odio, consectetur iaculis purus tincidunt, gravida efficitur lorem. Ut nec elit ex. Nam vitae dignissim diam. In eu dictum erat, nec pellentesque mauris. Duis tristique ipsum vel neque efficitur ultricies. Nunc ligula libero, ornare ut dui hendrerit, luctus posuere risus. Nunc pretium leo id massa ornare, eu dignissim magna efficitur. Nulla in sem eget eros euismod mattis. Morbi rutrum enim quis laoreet euismod.</p>
+
+      <p>Donec rutrum hendrerit velit dapibus pharetra. Mauris nec dolor ac ex maximus efficitur vitae vel ipsum. Aliquam lacinia id purus dapibus tincidunt. Praesent tristique non nunc vitae ultricies. Nullam lorem elit, condimentum at congue porta, dictum sit amet odio. Nam vel tempus augue. Cras quis sagittis tellus, in pharetra arcu.</p>
+
+      <p>Suspendisse orci velit, tristique sit amet elementum sit amet, efficitur vitae sem. Suspendisse vitae lorem at est porta ultrices vel sit amet diam. Sed efficitur efficitur sollicitudin. Nulla imperdiet tellus eu quam fermentum, vitae molestie tellus ultrices. Phasellus ut vulputate purus. Mauris malesuada nibh turpis, id ornare dui vulputate sit amet. Maecenas ornare lobortis dolor sed sodales. Sed ipsum velit, commodo porttitor lobortis sodales, pretium sit amet eros. Vivamus arcu nibh, efficitur in elementum a, fermentum ut erat.</p>
+
+    </section>
+
+    <div id="positioned">
+      I'm positioned!
+      <div id="offset"></div>
+    </div>
+    <div id="fixed"></div>
+  </body>
+</html>
