@@ -1,0 +1,326 @@
+/*
+=============================
+Reset
+=============================
+http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*
+=============================
+Styles
+=============================
+*/
+
+html {
+  font: normal 16px Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 8px;
+  display: block;
+}
+
+#lesson {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  border: solid 2px #777;
+  background-color: #fff;
+}
+
+#lesson * {
+  box-sizing: border-box;
+}
+
+h1, h2 {
+  color: #ce4a4a;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+p {
+  color: #555;
+  margin-bottom: 25px;
+  line-height: 35px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+  color: #444;
+}
+
+div { display: block; }
+
+.inline-container {
+  width: 650px;
+  border: 2px #444 dashed;
+  margin: 45px;
+  padding: 30px;
+}
+
+.inline-margin a {
+  margin: 30px;
+}
+
+.inline-padding a {
+  padding: 30px;
+  background-color: green;
+  color: #fff;
+}
+
+.inline-float:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.inline-float a {
+  float: left;
+  border: 3px solid darkgreen;
+  width: 120px;
+  text-align: center;
+  padding: 25px;
+  background-color: green;
+  color: #fff;
+  margin: 15px;
+}
+
+.wrapper {
+  margin-bottom: 35px;
+}
+
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.box-1 {
+  background: dodgerblue;
+  color: #fff;
+}
+
+.box-2 {
+  background: green;
+  color: #fff;
+  height: 60px;
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid green;
+}
+
+.box-3 {
+  background: tomato;
+  color: #fff;
+  width: 90px;
+}
+
+.float-1 {
+  background-color: dodgerblue;
+  float: left;
+  color: #fff;
+  border: 1px solid red;
+}
+
+.float-2 {
+  background-color: tomato;
+  float: right;
+  color: #fff;
+  border: 1px solid red;
+}
+
+.float-3 {
+  background-color: dodgerblue;
+  float: left;
+  color: #fff;
+  width: 400px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+}
+
+.float-4 {
+  background-color: tomato;
+  float: right;
+  color: #fff;
+  width: 500px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+}
+
+.bl-a {
+  display: block;
+  color: #fff;
+  background-color: dodgerblue;
+  text-align: center;
+  margin: 10px;
+  padding: 10px;
+}
+
+nav {
+  text-align: center;
+}
+
+.inbl-a {
+  display: inline-block;
+  color: #fff;
+  background-color: dodgerblue;
+  margin: 20px 8px 25px 8px;
+  padding: 20px 30px;
+  width: 180px;
+}
+
+#inline-blocks:after {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 30px;
+  border-bottom: 2px dashed #555;
+}
+
+.title {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.fl-1 {
+  background-color: tomato;
+  color: #fff;
+  text-align: center;
+  float: left;
+  width: 450px;
+  height: 100px;
+  line-height: 100px;
+  font-weight: bold;
+}
+
+.fl-2{
+  background-color: dodgerblue;
+  color: #fff;
+  text-align: center;
+  float: left;
+  width: 505px;
+  height: 100px;
+  line-height: 100px;
+  font-weight: bold;
+}
+
+.fl-3 {
+  background-color: seagreen;
+  color: #fff;
+  text-align: center;
+  clear: both;
+  line-height: 50px;
+  height: 50px;
+  width: 955px;
+  margin:0 0 35px 25px;
+  font-weight: bold;
+}
+
+code {
+  font-family: monospace;
+}
+
+ul {
+  list-style: disc;
+  font-style: italic;
+  color: #555;
+  margin: 0 0 45px 80px;
+}
+
+li {
+  display: list-item;
+  margin-bottom: 10px;
+}
+
+.fixed {
+  background: dodgerblue;
+  color: #fff;
+  position: fixed;
+  bottom: 50px;
+  left: 35px;
+  width: 225px;
+  border-radius: 10px;
+  padding: 25px 35px;
+  text-align: center;
+}
+
+.rel {
+  background: tomato;
+  color: #fff;
+  position: relative;
+  width: 325px;
+  border-radius: 10px;
+  padding: 25px 35px;
+  text-align: center;
+  top: 50px;
+  right: 90px;
+}
+
+.abs {
+  background: green;
+  color: #fff;
+  position: absolute;
+  text-align: center;
+  width: 200px;
+  border-radius: 10px;
+  padding: 25px 35px;
+  left: 230px;
+  top: -30px;
+}
+
+.relative {
+  position: relative;
+}
