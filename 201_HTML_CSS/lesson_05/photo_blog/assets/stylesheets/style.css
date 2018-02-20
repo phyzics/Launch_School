@@ -40,9 +40,7 @@ nav {
   padding: 75px 0 0 0;
 }
 
-nav li {
-  display: inline-block;
-}
+nav li { display: inline-block; }
 
 nav li a {
   display: block;
@@ -72,9 +70,7 @@ main:after {
   clear: right;
 }
 
-p {
-  margin-bottom: 20px;
-}
+p { margin-bottom: 20px; }
 
 .masthead {
   margin-bottom: 40px;
