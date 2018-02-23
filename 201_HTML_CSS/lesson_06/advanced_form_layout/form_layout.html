@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Contact Forms</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+
+    <main>
+      <h1>Create Your Profile</h1>
+      <form action="#" method="post">
+        <fieldset>
+          <h2>Personal Info</h2>
+          <dl>
+            <dt>
+              <label for="name">Your Name</label>
+            </dt>
+            <dd>
+              <input type="text" name="first-name" id="name" class="name" placeholder="First" /><!--
+              --><input type="text" name="last-name" class="name" placeholder="Last" />
+            </dd>
+            <dt>
+              <label for="email">Email</label>
+            </dt>
+            <dd>
+              <input type="email" name="email" id="email" />
+            </dd>
+          </dl>
+        </fieldset>
+
+        <fieldset>
+          <h2>Social Media Accounts</h2>
+          <dl>
+            <div class="social-media">
+              <dt>
+                <label for="facebook">Facebook</label>
+              </dt>
+              <dd>
+                <input type="text" name="facebook" id="facebook" />
+              </dd>
+            </div><!--
+            --><div class="social-media">
+              <dt>
+                <label for="twitter">Twitter</label>
+              </dt>
+              <dd>
+                <input type="text" name="twitter" id="twitter" />
+              </dd>
+            </div><!--
+            --><div class="social-media" id="linkedin-div">
+              <dt>
+                <label for="linkedin">Linkedin</label>
+              </dt>
+              <dd>
+                <input type="text" name="linkedin" id="linkedin" />
+              </dd>
+            </div>
+          </dl>
+        </fieldset>
+
+        <fieldset>
+          <h2>Account Info</h2>
+          <dl>
+            <div>
+              <dt>
+                <label for="profile-name">Profile Name</label>
+              </dt>
+              <dd>
+                <input type="text" name="profile-name" id="profile-name" />
+              </dd>
+            </div>
+            <div class="password">
+              <dt>
+                <label for="password">Password</label>
+              </dt>
+              <dd>
+                <input type="password" name="password" id="password" />
+              </dd>
+            </div><!--
+            --><div class="confirm-password">
+              <dt>
+                <label for="confirm-password">Confirm Password</label>
+              </dt>
+              <dd>
+                <input type="password" name="confirm-password" id="confirm-password" />
+              </dd>
+            </div>
+          </dl>
+        </fieldset>
+
+        <fieldset>
+          <h2>Bio</h2>
+          <textarea rows="5" cols="80" name="bio" id="bio"></textarea>
+        </fieldset>
+
+        <fieldset>
+          <label class="checkbox">
+            <input type="checkbox" name="agreement" />
+            I agree to treat other users with respect, and will not say anything at all if I have nothing nice to say.
+          </label>
+
+          <button type="submit" name="submit">
+            Create Account
+          </button>
+        </fieldset>
+
+      </form>
+    </main>
+
+  </body>
+</html>
