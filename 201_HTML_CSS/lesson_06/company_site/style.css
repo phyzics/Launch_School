@@ -49,23 +49,6 @@ article {
   margin: 0 110px;
 }
 
-article.project {
-  margin: 0 0 10px 0;
-}
-
-article.project img {
-  width: 940px;
-  margin-bottom: .75rem;
-}
-
-article.project p {
-  margin: 0 5.5rem 5.5rem 5.5rem;
-}
-
-article.map p {
-  margin-bottom: -3rem;
-}
-
 h2 {
   font-size: 1.8rem;
   margin-bottom: 2rem;
@@ -83,9 +66,44 @@ h3 {
   padding: 0 .7rem;
 }
 
+/*
+============================
+  Home
+============================
+*/
+
 .about-us {
   margin-bottom: 5rem;
 }
+
+/*
+============================
+  Projects
+============================
+*/
+
+article.project {
+  margin: 0 0 10px 0;
+}
+
+article.project img {
+  width: 940px;
+  margin-bottom: .75rem;
+}
+
+article.project p {
+  margin: 0 5.5rem 5.5rem 5.5rem;
+}
+
+article.map p {
+  margin-bottom: -3rem;
+}
+
+/*
+============================
+  Footer
+============================
+*/
 
 footer {
   background-color: #E6E6E6;
@@ -116,3 +134,30 @@ footer a {
 .email { background-position: 0 66.66%; }
 
 .instagram { background-position: 0 100%; }
+
+/*
+============================
+  Team Page
+============================
+*/
+
+article.team ul li {
+  display: inline-block;
+  margin-top: 5rem;
+  margin-bottom: 5.25rem;
+}
+
+article.team img, article.team a { display: block; }
+
+article.team a {
+  text-decoration: none;
+  color: #4059B1;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+li.img-left { margin-right: 1.5rem; }
+
+li.img-right { margin-left: 1.5rem; }
+
+li.img-middle { margin: 0 1.5rem; }
