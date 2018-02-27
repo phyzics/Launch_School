@@ -40,20 +40,41 @@ main {
   text-align: center;
 }
 
-article {
-  width: 775px;
+div.column {
+  width: 1000px;
   margin: 0 auto;
+}
+
+article {
+  margin: 0 110px;
+}
+
+article.project {
+  margin: 0 0 10px 0;
+}
+
+article.project img {
+  width: 940px;
+  margin-bottom: .75rem;
+}
+
+article.project p {
+  margin: 0 5.5rem 5.5rem 5.5rem;
+}
+
+article.map p {
+  margin-bottom: -3rem;
 }
 
 h2 {
   font-size: 1.8rem;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
 }
 
 h3 {
   color: #4059b1;
   font-size: 1.2rem;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
 .bullet {
@@ -62,24 +83,24 @@ h3 {
   padding: 0 .7rem;
 }
 
-#about-us {
+.about-us {
   margin-bottom: 5rem;
 }
 
 footer {
   background-color: #E6E6E6;
   text-align: center;
-  padding: 75px 0 80px 0;
+  padding: 3.75rem 0 4rem 0;
 }
 
 footer p {
   color: #b1b1b1;
-  margin: 0 auto 40px auto;
+  margin: 0 auto 2rem auto;
 }
 
 footer ul li {
   display: inline-block;
-  margin: 0 62px;
+  margin: 0 3.1rem;
 }
 
 footer a {
