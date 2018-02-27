@@ -1,0 +1,97 @@
+@import url('whitespace-reset.css');
+
+html { font: normal 20px "Avenir", Helvetica, Arial, sans-serif; }
+
+body {
+  color: #515559;
+  background: transparent url('images/bg_body.gif') 50% 0 repeat;
+  margin: 75px auto 0 auto;
+}
+
+header {
+  text-align: center;
+}
+
+header nav {
+  margin: 5rem 0 3rem 0;
+}
+
+header nav li {
+  display: inline-block;
+  margin: 0 2.13rem 0 2.13rem;
+}
+
+header nav a {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #c9c9c9;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.active {
+  font-weight: bold;
+  color: #6db8ff;
+}
+
+main {
+  background-color: #fff;
+  padding: 5rem 5.6rem;
+  text-align: center;
+}
+
+article {
+  width: 775px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+}
+
+h3 {
+  color: #4059b1;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.bullet {
+  font-size: 1.1rem;
+  vertical-align: 5px;
+  padding: 0 .7rem;
+}
+
+#about-us {
+  margin-bottom: 5rem;
+}
+
+footer {
+  background-color: #E6E6E6;
+  text-align: center;
+  padding: 75px 0 80px 0;
+}
+
+footer p {
+  color: #b1b1b1;
+  margin: 0 auto 40px auto;
+}
+
+footer ul li {
+  display: inline-block;
+  margin: 0 62px;
+}
+
+footer a {
+  background: transparent url('images/icons_social-media.png') 0 0 no-repeat;
+  display: block;
+  width: 46px;
+  height: 46px;
+  text-indent: -9000px;
+}
+
+.facebook { background-position: 0 33.33%; }
+
+.email { background-position: 0 66.66%; }
+
+.instagram { background-position: 0 100%; }
