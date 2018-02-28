@@ -8,9 +8,7 @@ body {
   margin-top: 5.1rem;
 }
 
-header {
-  text-align: center;
-}
+header { text-align: center; }
 
 header h1 a {
   display: block;
@@ -49,13 +47,9 @@ div.column {
   margin: 0 auto;
 }
 
-article {
-  padding: 0 5.5rem 5.95rem 5.5rem;
-}
+article { padding: 0 5.5rem 5.95rem 5.5rem; }
 
-main p {
-  text-align: justify;
-}
+main p { text-align: justify; }
 
 h2 {
   font-size: 1.8rem;
@@ -124,17 +118,11 @@ footer a {
   height: 100%;
 }
 
-#projects article {
-  padding: 0 0 50px 0;
-}
+#projects article { padding: 0 0 50px 0; }
 
-#projects article figure {
-  padding: 0 30px 43px 30px;
-}
+#projects article figure { padding: 0 30px 43px 30px; }
 
-#projects article p {
-  padding: 0 110px;
-}
+#projects article p { padding: 0 110px; }
 
 #projects article + article {
   padding-top: 60px;
@@ -147,10 +135,7 @@ footer a {
 ============================
 */
 
-#team article{
-  padding: 0 0 5.96rem 0;
-
-}
+#team article{ padding: 0 0 5.96rem 0; }
 
 #team li {
   display: inline-block;
@@ -158,9 +143,7 @@ footer a {
   padding: 0 1.5rem;
 }
 
-#team p {
-  margin: 0 110px 120px 110px;
-}
+#team p { margin: 0 110px 120px 110px; }
 
 #team li img {
   display: block;
@@ -178,9 +161,7 @@ footer a {
     padding: 0 0 30px 0;
   }
 
-  #team li img {
-    margin: 0 auto;
-  }
+  #team li img { margin: 0 auto; }
 }
 
 /*
@@ -195,25 +176,15 @@ footer a {
     margin-top: 72px;
   }
 
-  header h1 img{
-    height: 182px;
-  }
+  header h1 img{ height: 182px; }
 
-  header nav li {
-    margin: 1.15rem 2.125rem 1.2rem 2.125rem;
-  }
+  header nav li { margin: 1.15rem 2.125rem 1.2rem 2.125rem; }
 
-  main {
-    padding: 2rem 0 0 0;
-  }
+  main { padding: 2rem 0 0 0; }
 
-  article {
-    padding: 0 2rem 3.5rem 2rem;
-  }
+  article { padding: 0 2rem 3.5rem 2rem; }
 
-  footer {
-    padding: 36px 0 40px 0;
-  }
+  footer { padding: 36px 0 40px 0; }
 
   footer p {
     color: #b1b1b1;
@@ -233,9 +204,7 @@ footer a {
 
 @media (max-width: 480px) {
 
-  body {
-    margin: 16px 0 0 0;
-  }
+  body { margin: 16px 0 0 0; }
 
   header { margin-bottom: 14px; }
 
@@ -254,26 +223,63 @@ footer a {
     color: #fff;
   }
 
-  header ul {
-    float:right;
-  }
+  header ul { float:right; }
 
   header nav li {
     display: block;
     text-align: right;
     margin: 0 20px 5px 0;
-  }
-
-  header nav a {
     text-decoration: none;
     text-transform: uppercase;
     color: #c9c9c9;
-    font-size: .8rem;
   }
+
+  header nav a { font-size: .8rem; }
 
   header:after {
     content: "";
     display: block;
     clear: both;
   }
+
+  main {
+    background-color: #fff;
+    text-align: center;
+    padding: 40px 0 0 0;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin: 22px 0;
+  }
+
+  h3 {
+    color: #4059b1;
+    font-size: 1.1rem;
+    margin-bottom: 1em;
+  }
+
+  article { padding: 0 2rem 3.3rem 2rem; }
+
+  main p { font-size: .8rem; }
+
+  .bullet {
+    font-size: 1.1rem;
+    vertical-align: 0;
+    padding: 0 1.2rem;
+  }
+
+  footer { padding: 15px 0 20px 0; }
+
+  footer p {
+    font-size: .8rem;
+    padding-bottom: 1.8rem;
+  }
+
+  footer ul li {
+    display: inline-block;
+    margin: 0 18px;
+  }
+
+  #team p { margin: 0 30px 56px 30px; }
 }
