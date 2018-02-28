@@ -3,22 +3,27 @@
 html { font: normal 20px "Avenir", Helvetica, Arial, sans-serif; }
 
 body {
-  color: #515559;
-  background: transparent url('images/bg_body.gif') 50% 0 repeat;
-  margin: 75px auto 0 auto;
+  color: #45494D;
+  background: #2F2840 url('images/bg_body.gif') 50% 0 repeat;
+  margin-top: 5.1rem;
 }
 
 header {
   text-align: center;
 }
 
-header nav {
-  margin: 5rem 0 3rem 0;
+header h1 a {
+  display: block;
+  width: 298px;
+  height: 243px;
+  background: transparent url('images/logo.png') 0 0 no-repeat;
+  text-indent: -9999px;
+  margin: 0 auto;
 }
 
 header nav li {
   display: inline-block;
-  margin: 0 2.13rem 0 2.13rem;
+  margin: 2.5rem 2.125rem 2.95rem 2.125rem;
 }
 
 header nav a {
@@ -26,7 +31,6 @@ header nav a {
   text-transform: uppercase;
   color: #c9c9c9;
   font-size: 1.2rem;
-  font-weight: 500;
 }
 
 .active {
@@ -36,67 +40,38 @@ header nav a {
 
 main {
   background-color: #fff;
-  padding: 5rem 5.6rem;
   text-align: center;
+  padding: 3.75rem 0 0 0;
 }
 
 div.column {
-  width: 1000px;
+  max-width: 50rem;
   margin: 0 auto;
 }
 
 article {
-  margin: 0 110px;
+  padding: 0 5.5rem 5.95rem 5.5rem;
+}
+
+main p {
+  text-align: justify;
 }
 
 h2 {
   font-size: 1.8rem;
-  margin-bottom: 2rem;
+  margin: 1.5rem 0;
 }
 
 h3 {
   color: #4059b1;
   font-size: 1.2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
 }
 
 .bullet {
   font-size: 1.1rem;
   vertical-align: 5px;
-  padding: 0 .7rem;
-}
-
-/*
-============================
-  Home
-============================
-*/
-
-.about-us {
-  margin-bottom: 5rem;
-}
-
-/*
-============================
-  Projects
-============================
-*/
-
-article.project {
-  margin: 0 0 10px 0;
-}
-
-article.project img {
-  width: 940px;
-  margin-bottom: .75rem;
-}
-
-article.project p {
-  margin: 0 5.5rem 5.5rem 5.5rem;
-}
-
-article.map p {
-  margin-bottom: -3rem;
+  padding: 0 1.2rem;
 }
 
 /*
@@ -108,12 +83,13 @@ article.map p {
 footer {
   background-color: #E6E6E6;
   text-align: center;
-  padding: 3.75rem 0 4rem 0;
+  padding: 75px 0 4rem 0;
 }
 
 footer p {
   color: #b1b1b1;
-  margin: 0 auto 2rem auto;
+  margin: 1rem auto;
+  padding-bottom: 2rem;
 }
 
 footer ul li {
@@ -127,6 +103,7 @@ footer a {
   width: 46px;
   height: 46px;
   text-indent: -9000px;
+  overflow: hidden;
 }
 
 .facebook { background-position: 0 33.33%; }
@@ -137,27 +114,166 @@ footer a {
 
 /*
 ============================
+  Projects Page
+============================
+*/
+
+#projects article img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#projects article {
+  padding: 0 0 50px 0;
+}
+
+#projects article figure {
+  padding: 0 30px 43px 30px;
+}
+
+#projects article p {
+  padding: 0 110px;
+}
+
+#projects article + article {
+  padding-top: 60px;
+  border-top: 1px solid #ccc;
+}
+
+/*
+============================
   Team Page
 ============================
 */
 
-article.team ul li {
-  display: inline-block;
-  margin-top: 5rem;
-  margin-bottom: 5.25rem;
+#team article{
+  padding: 0 0 5.96rem 0;
+
 }
 
-article.team img, article.team a { display: block; }
+#team li {
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 0 1.5rem;
+}
 
-article.team a {
+#team p {
+  margin: 0 110px 120px 110px;
+}
+
+#team li img {
+  display: block;
+  margin-bottom: 20px;
+}
+
+#team a {
   text-decoration: none;
   color: #4059B1;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
 }
 
-li.img-left { margin-right: 1.5rem; }
+@media (max-width: 875px) {
+  #team li {
+    width: 48%;
+    padding: 0 0 30px 0;
+  }
 
-li.img-right { margin-left: 1.5rem; }
+  #team li img {
+    margin: 0 auto;
+  }
+}
 
-li.img-middle { margin: 0 1.5rem; }
+/*
+============================
+  Resizes
+============================
+*/
+
+@media (max-width: 768px) {
+  body {
+    background: #2F2840 url('images/bg_body.gif') 50% 0 repeat;
+    margin-top: 72px;
+  }
+
+  header h1 img{
+    height: 182px;
+  }
+
+  header nav li {
+    margin: 1.15rem 2.125rem 1.2rem 2.125rem;
+  }
+
+  main {
+    padding: 2rem 0 0 0;
+  }
+
+  article {
+    padding: 0 2rem 3.5rem 2rem;
+  }
+
+  footer {
+    padding: 36px 0 40px 0;
+  }
+
+  footer p {
+    color: #b1b1b1;
+    margin: 1rem auto;
+    padding-bottom: 2rem;
+  }
+
+  footer ul li {
+    display: inline-block;
+    margin: 0 32px;
+  }
+
+  #projects article p {
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  body {
+    margin: 16px 0 0 0;
+  }
+
+  header { margin-bottom: 14px; }
+
+  header h1 { float: left; }
+
+  header h1 a {
+    text-indent: 0;
+    background-position: -20px 0;
+    background-size: 90px auto;
+    width: auto;
+    height: 45px;
+    text-decoration: none;
+    padding: 10px 0 0 55px;
+    margin: 19px 0 0 20px;
+    font-size: 22px;
+    color: #fff;
+  }
+
+  header ul {
+    float:right;
+  }
+
+  header nav li {
+    display: block;
+    text-align: right;
+    margin: 0 20px 5px 0;
+  }
+
+  header nav a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #c9c9c9;
+    font-size: .8rem;
+  }
+
+  header:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
