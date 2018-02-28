@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Liquid Layout</title>
+    <meta charset="utf-8" />
+    <style>
+      #content,
+      #sidebar {
+        padding: 20px 30px;
+      }
+
+      #content {
+        float: left;
+        width: 70%;
+        box-sizing: border-box;
+      }
+
+      #sidebar {
+        overflow: hidden;
+      }
+
+      main {
+        min-width: 600px;
+        max-width: 1400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div id="content">
+        <p>Bearer of the Curse... Seek Souls, larger and more powerful Souls... Seek the King, that is the only way... Lest this land swallow you whole, as it has so many others.</p>
+      </div>
+
+      <div id="sidebar">
+        <p>
+          There is no path.
+          Beyond the scope of light, beyond the reach of Dark…
+          …what could possibly await us?
+          And yet, we seek it, insatiably…
+          Such is our fate.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
