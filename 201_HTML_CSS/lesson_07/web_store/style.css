@@ -2,27 +2,26 @@
 
 html { font: normal 16px Helvetica, Arial, sans-serif; }
 
-body {
-  background: #ffd505;
-}
+body { background: #ffd505; }
 
 header, main {
-  box-sizing: border-box;
   margin: 0 auto;
-  width: 900px;
+  width: 850px;
   padding: 0 25px;
 }
 
 header {
   background: #057ec1;
   border-radius: 0 0 16px 16px;
+  padding-top: 30px;
   margin-bottom: 30px;
 }
+
+main { padding-bottom: 25px; }
 
 h1 {
   font-size: 2.4rem;
   padding-bottom: 30px;
-  margin-top: -5px;
 }
 
 h1 a {
@@ -30,14 +29,17 @@ h1 a {
   text-decoration: none;
 }
 
-main {
-  background: #ececec;
+h2 {
+  font-size: 2rem;
+  padding: 25px 0;
 }
+
+main { background: #ececec; }
 
 img {
   display: block;
   height: 140px;
-  width: auto;
+  margin: 0 auto;
 }
 
 .row::before,
@@ -52,21 +54,55 @@ label {
   cursor: pointer;
 }
 
-input[type="checkbox"] {
-  display: none;
+input[type="checkbox"] { display: none; }
+
+input[type="checkbox"]:checked ~ .price-padding::before {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, .4);
+  content: "";
 }
+
+input[type="checkbox"]:checked ~ img {
+  position: absolute;
+  width: 400px;
+  height: auto;
+  top: 100px;
+  left: 50%;
+  margin-left: -200px;
+  z-index: 2;
+}
+
+input[type="checkbox"]:checked ~ .bold { padding-top: 160px; }
 
 li {
+  box-sizing: border-box;
   float: left;
   background: #fff;
-  padding: 15px 30px;
-  margin: 0 9px 18px 9px;
+  width: 23.5%;
+  padding: 15px;
+  margin: 0 1% 2% 1%;
 }
 
-li:first-of-type {
-  margin-left: 0;
+li:first-of-type { margin-left: 0; }
+
+li:last-of-type { margin-right: 0; }
+
+.item-padding {
+  display: inline-block;
+  padding-top: 20px;
 }
 
 .bold {
   font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.price-padding {
+  display: inline-block;
+  padding-top: 5px;
 }
