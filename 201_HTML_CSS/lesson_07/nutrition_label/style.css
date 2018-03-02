@@ -1,0 +1,140 @@
+@import url('../whitespace-reset.css');
+
+html { font: normal 28px Helvetica, Arial, sans-serif; }
+
+#column {
+  box-sizing: border-box;
+  width: 680px;
+  padding: 10px 15px;
+  border: 2px solid #000;
+  background-color: #fff;
+  margin: 8px;
+}
+
+h1 { font-size: 2rem; }
+
+h2 {
+  margin-top: 5px;
+  border-top: 30px solid #000;
+  padding: 10px 0;
+  border-bottom: 1px solid #000;
+}
+
+div::before,
+div::after {
+  display:block;
+  content: "";
+  clear: both;
+}
+
+.group dl { float: left; }
+
+.group dl + dl { float: right; }
+
+.group dl { padding: 5px 0; }
+
+dt, dd, dl { display: inline-block; }
+
+dl { padding: 2px 0; }
+
+section ~ section {
+  border-top: 15px solid #000;
+  margin-bottom: 5px;
+}
+
+section > table:first-of-type {
+  margin-top: 10px;
+}
+
+table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+table th { font-weight: normal }
+
+td, th {
+  padding: 0;
+  border-top: 1px solid #000;
+}
+
+thead tr th:only-child {
+  text-align: right;
+  padding: 1px;
+  border-top: none;
+  font-weight: bold;
+}
+
+tbody tr th:first-of-type { text-align: left; }
+
+tr td:last-child {
+  text-align: right;
+  font-weight: bold;
+}
+
+tr th:last-child {
+  text-align: right;
+}
+
+.main-category {
+  font-weight: bold;
+}
+
+.indent {
+  width: 1rem;
+  border-top: none;
+}
+
+table + table { border-top: 20px solid #000; }
+
+table + table tr:first-of-type td { border-top: none; }
+
+table + table tr:last-of-type td { border-bottom: 1px solid #000; }
+
+table + table tr td:last-child { font-weight: normal; }
+
+table + table td { padding: 2px 0; }
+
+table + p {
+  font-size: .9rem;
+  margin-top: 14px;
+  text-indent: -.7rem;
+  margin-left: 19px;
+  margin-bottom: 12px;
+}
+
+table:last-of-type td,
+table:last-of-type th {
+  font-size: .8rem;
+  text-align: left;
+  padding: 2px 0;
+}
+
+table:last-of-type td {
+  border-top: none;
+  font-weight: normal;
+}
+
+table:last-of-type th {
+  border-top: none;
+  font-weight: normal;
+  width: 37%;
+}
+
+table:last-of-type thead th { border-bottom: 1px solid #000; }
+
+table:last-of-type th + th {
+  padding-top: 3px;
+  padding-bottom: 1px;
+  padding-left: 1px;
+  width: 21%;
+}
+
+table:last-of-type .indent {
+  text-indent: 1.2rem;
+  width: auto;
+}
+
+.trans-fat { font-style: italic; }
+
+sup { vertical-align: 3px; }
