@@ -27,11 +27,12 @@ div::after {
   clear: both;
 }
 
-.group dl { float: left; }
+.group dl {
+  float: left;
+  padding: 5px 0;
+}
 
 .group dl + dl { float: right; }
-
-.group dl { padding: 5px 0; }
 
 dt, dd, dl { display: inline-block; }
 
@@ -42,16 +43,14 @@ section ~ section {
   margin-bottom: 5px;
 }
 
-section > table:first-of-type {
-  margin-top: 10px;
-}
+section > table:first-of-type { margin-top: 10px; }
 
 table {
   border-spacing: 0;
   width: 100%;
 }
 
-table th { font-weight: normal }
+th { font-weight: normal }
 
 td, th {
   padding: 0;
@@ -76,9 +75,7 @@ tr th:last-child {
   text-align: right;
 }
 
-.main-category {
-  font-weight: bold;
-}
+.main-category { font-weight: bold; }
 
 .indent {
   width: 1rem;
