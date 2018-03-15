@@ -59,42 +59,40 @@ main {
   background: #fff;
   max-width: 1000px;
   margin: 0 auto;
+  padding: 80px 0 0 0;
 }
 
 #content {
+  margin-top: 7px;
   float: left;
   max-width: 65%;
   padding-right: 11.5%;
-  margin-top: 7px;
   margin-bottom: 9px;
 }
 
-article + article { margin-top: 87px; }
+.post { padding-bottom: 72px; }
 
-article p {
-  margin-top: 15px;
-  text-align: justify;
-  line-height: 30px;
-}
+.post:last-of-type { padding-bottom: 64px;}
 
-article header p {
-  margin-top: 20px;
-}
-
-article p + p {
-  margin-top: 16px;
-  line-height: 30px;
-}
-
-article p a { color: #50c3af;}
-
-h2 a {
+h2 {
   font-size: 1.8rem;
-  color: #45494d;
+  margin-bottom: 26px;
 }
+
+h2 a { color: #45494d; }
+
+h2 a:hover { color: #50c3af; }
+
+.post p {
+  text-align: justify;
+  line-height: 1.5rem;
+  padding-bottom: 15px;
+}
+
+.post p a { color: #50c3af; }
 
 #content nav {
-  margin: 79px auto 80px auto;
+  margin: 0 auto 80px auto;
   font-size: .7rem;
 }
 
@@ -125,7 +123,6 @@ h2 a {
 #sidebar {
   overflow: hidden;
   background-color: #f6f7f8;
-  margin-top: 80px;
   box-sizing: border-box;
   padding: 40px;
 }
