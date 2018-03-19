@@ -74,6 +74,8 @@ main {
 
 .post:last-of-type { padding-bottom: 64px;}
 
+.post:only-of-type { padding-bottom: 72px;}
+
 h2 {
   font-size: 1.8rem;
   margin-bottom: 26px;
@@ -83,13 +85,14 @@ h2 a { color: #45494d; }
 
 h2 a:hover { color: #50c3af; }
 
-.post p {
+article p {
   text-align: justify;
   line-height: 1.5rem;
   padding-bottom: 15px;
 }
 
-.post p a { color: #50c3af; }
+p a,
+h3 a { color: #50c3af; }
 
 #content nav {
   margin: 0 auto 80px auto;
@@ -127,7 +130,7 @@ h2 a:hover { color: #50c3af; }
   padding: 40px;
 }
 
-h3 {
+#sidebar h3 {
   text-transform: uppercase;
   font-size: .8rem;
   line-height: .9rem;
@@ -176,4 +179,77 @@ footer {
   font-size: .6rem;
   padding: 10px 0 25px 0;
   color: #7e8287;
+}
+
+/*
+============================
+  Post Page
+============================
+*/
+
+#comments h3 {
+  text-transform: none;
+  font-weight: normal;
+  font-size: 1rem;
+  display: inline-block;
+  vertical-align: 16px;
+  padding: 0 0 32px 0;
+}
+
+img {
+  border-radius: 100%;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+#comments p {
+  padding-bottom: 24px;
+}
+
+#comments article {
+  padding-bottom: 21px;
+}
+
+fieldset {
+  padding-top: 32px;
+}
+
+fieldset h2 {
+  margin-bottom: 24px;
+}
+
+dt {
+  font-weight: bold;
+}
+
+input {
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #7f7f7f;
+  height: 38px;
+  width: 450px;
+  padding: 10px;
+  font-size: 15px;
+  margin: 2px 0 13px 0;
+}
+
+textarea {
+  box-sizing: border-box;
+  margin-top: 1px;
+  width: 650px;
+  height: 140px;
+  border-radius: 4px;
+  resize: none;
+}
+
+#comments .button {
+  width: 96px;
+  height: 27px;
+  border: none;
+  font-size: .7rem;
+}
+
+button {
+  margin: 13px 0 81px 0;
 }
