@@ -248,6 +248,12 @@ button.button {
   margin: 13px 0 81px 0;
 }
 
+/*
+============================
+  768 Pixels
+============================
+*/
+
 @media (max-width: 768px) {
   body > header {
     background-color: #3d3d3d;
@@ -284,4 +290,105 @@ button.button {
   fieldset { padding-top: 25px; }
 
   fieldset h2 { margin-bottom: 18px; }
+}
+
+/*
+============================
+  600 pixels
+============================
+*/
+
+@media (max-width: 600px) {
+  header nav {
+    line-height: 23px;
+    margin-top: 55px;
+  }
+
+  body > header { padding-bottom: 20px }
+
+  #content {
+    max-width: 100%;
+    padding: 0 25px;
+  }
+
+  #content .post p { text-align: justify; }
+
+  #content nav { margin: 0 auto 40px auto; }
+
+  #sidebar section {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+  }
+
+  #sidebar section:last-of-type { margin-top: 0; }
+
+  footer {
+    clear: both;
+    border-top: 1px solid #d0d0d0;
+    max-width: 1000px;
+    margin: 90px auto 0 auto;
+    font-size: .6rem;
+    padding: 10px 0 25px 0;
+    color: #7e8287;
+  }
+
+  /*
+  ============================
+    480 pixels
+  ============================
+  */
+
+  @media (max-width: 480px) {
+
+    body > header {
+      padding-top: 45px;
+      padding-bottom: 10px;
+    }
+
+    header h1 {
+      background-size: 90% auto;
+      line-height: 2.25rem;
+    }
+
+    header nav {
+      margin-top: -63px;
+    }
+
+    header nav ul {
+      text-align: center;
+    }
+
+    header nav li {
+      padding-bottom: 20px;
+      width: 49%;
+      margin: 0;
+    }
+
+    header nav li:last-of-type {
+      padding-bottom: 0;
+    }
+
+    #sidebar section {
+      box-sizing: border-box;
+      width: 100%;
+      display: block;
+      background-color: #f6f7f8;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    #sidebar {
+      background-color: #fff;
+      padding: 25px;
+    }
+
+    #sidebar section:first-of-type nav {
+      padding-bottom: 7px;
+    }
+
+    #content nav { margin: 0 auto 15px auto; }
+
+    footer { margin: 65px auto 0 auto; }
+  }
 }
