@@ -322,16 +322,6 @@ button.button {
 
   textarea { margin-top: 2px; }
 
-  footer {
-    clear: both;
-    border-top: 1px solid #d0d0d0;
-    max-width: 1000px;
-    margin: 90px auto 0 auto;
-    font-size: .6rem;
-    padding: 10px 0 25px 0;
-    color: #7e8287;
-  }
-
   button.button { margin: 12px 0 41px 0; }
 
   /*
