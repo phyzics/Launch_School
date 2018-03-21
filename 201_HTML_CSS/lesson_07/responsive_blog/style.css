@@ -18,9 +18,10 @@ body > header {
 }
 
 header h1 {
-  background: url('images/logo.png') center no-repeat;
-  padding-bottom: 225px;
+  background: url('images/logo.png') 50% 100% no-repeat;
+  padding-bottom: 133px;
   text-align: center;
+  margin-bottom: 133px;
 }
 
 header h1 a {
@@ -38,8 +39,6 @@ header h1 a {
 */
 
 header nav li { display: inline-block; }
-
-header nav { margin-top: 41px; }
 
 header nav ul { text-align: center; }
 
@@ -261,8 +260,7 @@ button.button {
   }
 
   header h1 {
-    background: url('images/logo.png') center no-repeat;
-    padding-bottom: 208px;
+    padding-bottom: 128px;
     text-align: center;
   }
 
@@ -299,10 +297,9 @@ button.button {
 */
 
 @media (max-width: 600px) {
-  header nav {
-    line-height: 23px;
-    margin-top: 55px;
-  }
+  header h1 { margin-bottom: 135px; }
+
+  header nav { line-height: 23px; }
 
   body > header { padding-bottom: 20px }
 
@@ -323,6 +320,8 @@ button.button {
 
   #sidebar section:last-of-type { margin-top: 0; }
 
+  textarea { margin-top: 2px; }
+
   footer {
     clear: both;
     border-top: 1px solid #d0d0d0;
@@ -332,6 +331,8 @@ button.button {
     padding: 10px 0 25px 0;
     color: #7e8287;
   }
+
+  button.button { margin: 12px 0 41px 0; }
 
   /*
   ============================
@@ -349,15 +350,11 @@ button.button {
     header h1 {
       background-size: 90% auto;
       line-height: 2.25rem;
+      padding-bottom: 85px;
+      margin-bottom: 60px;
     }
 
-    header nav {
-      margin-top: -63px;
-    }
-
-    header nav ul {
-      text-align: center;
-    }
+    header nav ul { text-align: center; }
 
     header nav li {
       padding-bottom: 20px;
@@ -365,9 +362,9 @@ button.button {
       margin: 0;
     }
 
-    header nav li:last-of-type {
-      padding-bottom: 0;
-    }
+    header nav li:last-of-type { padding-bottom: 0; }
+
+    #content { box-sizing: border-box; }
 
     #sidebar section {
       box-sizing: border-box;
@@ -383,11 +380,11 @@ button.button {
       padding: 25px;
     }
 
-    #sidebar section:first-of-type nav {
-      padding-bottom: 7px;
-    }
+    #sidebar section:first-of-type nav { padding-bottom: 7px; }
 
     #content nav { margin: 0 auto 15px auto; }
+
+    button.button { margin-bottom: 16px; }
 
     footer { margin: 65px auto 0 auto; }
   }
