@@ -1,0 +1,519 @@
+@import url("whitespace-reset.css");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
+
+html { font-family: "Open Sans", Arial, sans-serif; }
+
+body {
+  background-color: #fff;
+  font-size: 13px;
+}
+
+body > header {
+  text-align: center;
+  margin-top: 55px;
+}
+
+body > header nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 10px solid #efefef;
+  border-bottom: 1px solid #efefef;
+  background-color: #fff;
+  z-index: 1;
+}
+
+body > header nav li {
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 13px 0;
+  margin: 0 25px;
+  vertical-align: -2px;
+}
+
+a { text-decoration: none; }
+
+body > header nav a { color: #000; }
+
+#header-image {
+  box-sizing: border-box;
+  padding-top: 150px;
+  background: #ddd url('images/front.jpg') no-repeat 50% 0;
+  height: 428px;
+  color: #fff;
+}
+
+#header-image img {
+  width: 80px;
+  height: auto;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, .5);
+}
+
+#header-image p {
+  text-transform: uppercase;
+  font-size: 31px;
+}
+
+#header-image h1 {
+  font-size: 72px;
+  font-weight: 400;
+}
+
+#content {
+  text-align: center;
+  margin: 0 30px;
+}
+
+main section {
+  padding: 59px 0 69px 0;
+  border-bottom: 1px solid #efefef;
+  font-weight: 300;
+  margin: 0 30px;
+  text-align: center;
+}
+
+#tickets { padding-top: 60px; }
+
+main section p {
+  margin-top: 31px;
+  font-size: 16px;
+}
+
+h2 {
+  font-size: 48px;
+  font-weight: 300;
+  color: #444;
+}
+
+.button {
+  display: inline-block;
+  color: #fff;
+  background-color: green;
+  font-weight: 700;
+  padding: 10px 30px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #006000;
+}
+
+/*
+=====================
+  Speakers
+=====================
+*/
+
+#speaker-portraits {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.speaker-description {
+  box-sizing: border-box;
+  display: none;
+  background-color: rgba(0, 0, 0, .9);
+  color: #fff;
+  height: 378px;
+  width: 280px;
+  padding: 14px 10px 20px 10px;
+  font-size: 13px;
+}
+
+#speakers figure h3 {
+  color: green;
+  font-size: 24px;
+}
+
+.speaker-description h3:hover { text-decoration: underline; }
+
+#speakers figure p {
+  margin: 4px 10px 0 10px;
+  line-height: 1.6em;
+}
+
+#speakers figure img {
+  padding-bottom: 30px;
+}
+
+#speakers .speaker-description p {
+  margin-top: 4px;
+  font-size: 13px;
+  margin-bottom: 17px;
+  line-height: 1.2;
+}
+
+.speaker-description a {
+  color: green;
+  font-weight: 700;
+}
+
+#speakers {
+  padding-top: 59px;
+  padding-bottom: 55px;
+}
+
+#speakers figure {
+  box-sizing: border-box;
+  position: relative;
+  height: 380px;
+  width: 282px;
+  border: 1px solid #efefef;
+  text-align: center;
+  margin: 0 .5em;
+}
+
+#speakers figure:hover .speaker-description {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#speakers ul { padding-top: 35px; }
+
+#speakers li {
+  display: inline-block;
+  margin-bottom: 10px;
+  vertical-align: middle;
+}
+
+/*
+=====================
+  Schedule
+=====================
+*/
+
+#schedule {
+  padding-top: 59px;
+  padding-bottom: 60px;
+}
+
+#schedule h2 { padding-bottom: 30px; }
+
+table {
+  text-align: left;
+  font-weight: 400;
+  color: #444;
+  max-width: 960px;
+  margin: 0 auto;
+  border-bottom: 1px solid #efefef;
+}
+
+table img {
+  width: 130px;
+  height: auto;
+}
+
+table h3 {
+  font-weight: normal;
+  display: inline-block;
+  margin: 0 10px 0 0;
+  vertical-align: middle;
+  font-size: 24px;
+}
+
+td.schedule-time { font-size: 24px; }
+
+table h4 a {
+  color: green;
+  font-size: 18px;
+}
+
+table h4 { margin-top: 8px; }
+
+.tags { display: inline-block; }
+
+td {
+  border-top: 1px solid #efefef;
+  padding: 10px;
+}
+
+.tags {
+  font-size: 7px;
+  background-color: #eee;
+  border: 1px solid #aaa;
+  padding: 1px 4px;
+}
+
+/*
+=====================
+  Call for Papers
+=====================
+*/
+
+#papers {
+  text-align: left;
+  padding-bottom: 60px;
+}
+
+#papers-wrapper {
+  margin: 0 auto;
+  max-width: 960px;
+}
+
+#papers h2,
+#sponsors h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#papers p {
+  margin-top: 0;
+  margin-bottom: 17px;
+  line-height: 1.6em;
+}
+
+#papers p:nth-of-type(5) { margin-bottom: 8px; }
+
+#papers a.button {
+  margin-top: 0;
+  margin-bottom: 9px;
+}
+
+#papers p a {
+  color: green;
+  font-weight: 700;
+}
+
+/*
+=====================
+  Sponsors
+=====================
+*/
+
+#sponsors {
+  text-align: left;
+  padding-bottom: 47px;
+  font-size: 16px;
+}
+
+#sponsor-listings {
+  margin: 0 auto;
+  max-width: 960px;
+  font-size: 16px;
+}
+
+#sponsors h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#sponsors img {
+  width: 300px;
+  height: auto;
+}
+
+#sponsors ul {
+  padding: 5px 0 30px 0;
+}
+
+#sponsors li {
+  display: inline-block;
+  margin-right: 4px;
+  margin-bottom: 2px;
+}
+
+#sponsors-gold-list li,
+#sponsors-silver-list li {
+  margin-right: 44px;
+}
+
+#sponsors-support-list a {
+  margin-right: 40px;
+}
+
+#sponsors-silver-list img {
+  width: 240px;
+  height: auto;
+}
+
+#sponsors-support-list img { width: 180px; }
+
+/*
+=====================
+  Footer
+=====================
+*/
+
+footer {
+  height: 340px;
+  box-sizing: border-box;
+  background: transparent url('http://2014.jsconfbr.org/images/people.jpg') 50% 23% no-repeat;
+  background-size: cover;
+  text-align: center;
+  padding: 30px 0 28px 0;
+}
+
+footer,
+footer h2 { color: #fff; }
+
+footer h3 {
+  font-size: 31px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+footer p {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 25px;
+}
+
+footer p + p { margin-top: 17px; }
+
+#black-overlay {
+  text-align: left;
+  box-sizing: border-box;
+  margin: 29px 0 0 0;
+  background-color: rgba(0, 0, 0, .7);
+  padding: 10px 0px 19px 0;
+}
+
+#black-overlay-margin { margin: 0 10px; }
+
+#black-overlay-text-box {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+footer a {
+  color: green;
+  font-weight: 700;
+}
+
+footer .button { margin-top: 8px; }
+
+/*
+=====================
+  868px
+=====================
+*/
+@media (max-width: 868px) {
+
+  footer { padding-top: 29px; }
+
+  #black-overlay { margin-top: 30px; }
+
+}
+/*
+=====================
+  654px
+=====================
+*/
+
+@media (max-width: 654px) {
+
+  body > header { margin-top: 0; }
+
+  #header-image {
+    padding-top: 90px;
+    height: 300px;
+    background-position: 50% -64px;
+  }
+
+  #header-image h1 { font-size: 40px; }
+
+  #header-image p { font-size: 1.25rem; }
+
+  nav { display: none; }
+
+  #speakers figure { margin: 0 .55em; }
+
+  td.schedule-time {
+    display: block;
+    border: none;
+    text-align: right;
+    padding: 20px;
+  }
+
+  td.schedule-event {
+    display: block;
+    text-align: left;
+    border-top: none;
+  }
+
+  td.schedule-empty-cell {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  table tr {
+    position: relative;
+    display: block;
+    border-top: 1px solid #efefef;
+  }
+
+  td.schedule-photo {
+    position: absolute;
+    border: none;
+    top: 0;
+  }
+
+  table img {
+    width: 80px;
+    height: auto;
+  }
+
+  #papers { margin: 0 30px; }
+
+  #sponsors { margin: 0 7px 0 10px; }
+
+  #sponsors h2 {
+    position: relative;
+    right: 1.5px;
+  }
+
+  #sponsors-support-list li:nth-of-type(3) a { margin-right: 0; }
+
+  footer { padding-top: 21px; }
+
+  footer h2 { font-size: 35px; }
+
+  #black-overlay { margin-top: 22px; }
+
+}
+
+/*
+=====================
+  648px
+=====================
+*/
+
+@media (max-width: 648px) {
+  #sponsors-support-list li:nth-of-type(3) a {
+    margin-right: 40px;
+  }
+}
+
+/*
+=====================
+  544px
+=====================
+*/
+
+@media (max-width: 544px) {
+  footer {
+    padding-top: 22px;
+  }
+
+  #black-overlay {
+    margin-top: 22px;
+  }
+}
+
+/*
+=====================
+  424px
+=====================
+*/
+
+@media (max-width: 424px) {
+
+  footer { padding-top: 21px; }
+  
+}
