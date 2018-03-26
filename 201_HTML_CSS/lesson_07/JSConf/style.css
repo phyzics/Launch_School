@@ -485,9 +485,11 @@ footer .button { margin-top: 8px; }
 */
 
 @media (max-width: 648px) {
+
   #sponsors-support-list li:nth-of-type(3) a {
     margin-right: 40px;
   }
+  
 }
 
 /*
@@ -515,5 +517,5 @@ footer .button { margin-top: 8px; }
 @media (max-width: 424px) {
 
   footer { padding-top: 21px; }
-  
+
 }
