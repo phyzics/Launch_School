@@ -1,0 +1,129 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font: normal 24px Helvetica, Arial, sans-serif;
+  background: white;
+  color: black;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-auto-rows: min-content;
+  grid-template-areas:
+    "header  header    header"
+    "nav     nav       nav"
+    "aside-1 article-1 aside-2"
+    "aside-3 article-2 article-2"
+    "footer  footer    footer"
+}
+
+header, h1 {
+  background-color: blue;
+  color: white;
+}
+
+header {
+  padding: 1rem;
+  text-align: center;
+  grid-area: header;
+}
+
+nav {
+  background-color: cyan;
+  grid-area: nav;
+}
+
+ul {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+li {
+  text-align: center;
+  width: auto;
+}
+
+a {
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 1rem 0;
+  text-decoration: none;
+  width: 100%;
+}
+
+a:active,
+a:hover {
+  background-color: blue;
+  color: yellow;
+}
+
+article,
+aside {
+  padding: 0 1rem;
+}
+
+aside {
+  background-color: lightgreen;
+  grid-area: aside;
+}
+
+article {
+  grid-area: article;
+}
+
+#aside-1 {
+  grid-area: aside-1;
+}
+
+#aside-2 {
+  grid-area: aside-2;
+}
+
+#aside-3 {
+  background-color: pink;
+  grid-area: aside-3;
+}
+
+#article-1 {
+  grid-area: article-1;
+}
+
+#article-2 {
+  background-color: skyblue;
+  grid-area: article-2;
+}
+
+p {
+  margin: 1rem 0;
+}
+
+footer {
+  background-color: yellow;
+  grid-area: footer;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-areas: "logo copyright";
+}
+
+#copyright {
+  margin: 0 1rem;
+  grid-area: copyright;
+  align-self: center;
+  text-align: right;
+}
+
+#logo {
+  background-color: orange;
+  grid-area: logo;
+
+}
+
+img {
+  display: block;
+  width: 100%;
+}
