@@ -8,6 +8,8 @@ while (failedAttempts < 3) {
   if (input === 'password') {
     break;
   }
+
+  failedAttempts++;
 }
 
 input === 'password' ? console.log('You have successfully logged in.') : console.log('You have been denied access.');

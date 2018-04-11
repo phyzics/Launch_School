@@ -1,10 +1,16 @@
 // prime_check.js
 function isPrime(number) {
-  if (number === 2 || number === 3) {
-    return true;
-  } else if (number === 1 || number % 2 === 0 || number % 3 === 0) {
+  if (number < 2) {
     return false;
-  } else {
-    return true;
   }
+
+  var root = Math.sqrt(number);
+
+  for (var i = 2; i < root; i += 1) {
+    if (root % i === 0) {
+      return false;
+    }
+  }
+
+  return true;
 }
