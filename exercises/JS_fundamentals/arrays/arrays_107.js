@@ -11,3 +11,19 @@ function shift(array) {
   array.length -= 1;
   return shiftedElement;
 }
+
+function unshift(array) {
+  var i;
+  var j;
+  var totalLength = 0;
+
+  for (i = 0; i < arguments.length; i++) {
+    totalLength += arguments[i].length;
+  }
+
+  array.length = totalLength;
+
+  for (i = 0; i < arguments.length; i++) {
+    
+  }
+}
