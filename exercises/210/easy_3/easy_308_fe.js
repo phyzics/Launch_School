@@ -1,7 +1,6 @@
 // easy_308_fe.js - Letter Swap Further Exploration
 function swap(words) {
   var wordsArray = words.split(' ');
-  var i;
 
   wordsArray = wordsArray.map(function (word) {
     if (word.length === 1) return word;
