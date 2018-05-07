@@ -17,12 +17,10 @@ function generateClassrecodSummary(scores) {
 }
 
 function sumScores(scores) {
-  return scores.reduce(function (acc, cv) {
-    return acc + cv;
-  });
+  return scores.reduce(function (acc, val) { return acc + val; });
 }
 
-function formatScore(score) {
+function formatStudentScore(score) {
   var scoreString = String(score);
   if (score >= 93) {
     return scoreString + ' (A)';
@@ -43,11 +41,41 @@ function getStudentScore(scoreObj) {
   var examsScore = sumScores(scoreObj.exams) / scoreObj.exams.length;
   var exercisesScore = sumScores(scoreObj.exercises);
   var totalScore = Math.round(examsScore * 0.65 + exercisesScore * 0.35);
-  return formatScore(totalScore);
+  return formatStudentScore(totalScore);
+}
+
+function transpose(array) {
+  return array[0].map(function (col, columnIdx) {
+    return array.map(function (row) {
+      return row[columnIdx];
+    });
+  });
+}
+
+function sortScores(scores) {
+  scores.sort(function (a, b) { return a - b; });
+}
+
+function formatAverageToOneDigit(average) {
+  return Math.round(average * 10) / 10;
 }
 
 function getExamSummary(examData) {
+  var examScores = transpose(examData);
 
+  sortScores(examScores);
+
+  return examScores.map(function (exam) {
+    var max = exam[exam.length - 1];
+    var min = exam[0];
+    var avg = formatAverageToOneDigit(sumScores(exam) / exam.length);
+
+    return {
+      average: avg,
+      minimum: min,
+      maximum: max,
+    };
+  });
 }
 
 var studentScores = {
@@ -87,3 +115,5 @@ var studentScores = {
     },
   },
 };
+
+console.log(generateClassrecodSummary(studentScores));
