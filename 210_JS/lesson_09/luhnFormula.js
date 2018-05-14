@@ -22,13 +22,16 @@ function isValidLuhnFormula(string) {
 
 function makeValidLuhnFormula(number) {
   var i;
+  var newDigit;
+
+  if (isValidLuhnFormula(number)) return number;
 
   for (i = 0; i < 10; i += 1) {
-    if (isValidLuhnFormula(number + String(i))) return number + String(i);
+    newDigit = String(i);
+    if (isValidLuhnFormula(number + newDigit)) return number + newDigit;
   }
 }
 
-/*
 // isValidLuhnFormula Test Cases
 console.log(isValidLuhnFormula('1111'));  // false
 console.log(isValidLuhnFormula('8763'));  // true
@@ -40,7 +43,7 @@ console.log(isValidLuhnFormula('2323 2005 7766 3554'));  // true
 // makeValidLuhnFormula Test Cases
 console.log(makeValidLuhnFormula('2323 2005 7766 355'));
 console.log(makeValidLuhnFormula('1111'));
-
+/*
 P:
   - lunh formula, starting from rightmost digit, doubles every second digit
     - if doubled digit is >= 10, -9 from it
