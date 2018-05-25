@@ -87,7 +87,7 @@ encryptRailCipher("Hello Everyone!", 2);
 console.log();
 encryptRailCipher("WE ARE DISCOVERED FLEE AT ONCE", 1);
 console.log();
-decryptRailCipher("WECRLTEERDSOEEFEAOCAIVDEN", 3);
+decryptRailCipher("WECRLTEERDSOEEFEAOCAIVDEN  ", 3);
 console.log();
 decryptRailCipher("WECRLTEERDSOEEFEAOCAIVDEN", 2);
 
