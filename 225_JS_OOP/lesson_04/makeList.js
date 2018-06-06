@@ -4,6 +4,13 @@ function makeList() {
   var index;
 
   return {
+    add: function(item) {
+      index = items.indexOf(item);
+      if (index === -1) {
+        items.push(item);
+        console.log(item + ' added!');
+      }
+    },
     list: function() {
       if (items.length === 0) {
         console.log('The list is empty.')
@@ -11,12 +18,9 @@ function makeList() {
         items.forEach(function(item) { console.log(item); });
       }
     },
-    add: function(item) {
-      index = items.indexOf(item);
-      if (index === -1) {
-        items.push(item);
-        console.log(item + ' added!');
-      }
+    clear: function() {
+      items = [];
+      console.log('all items deleted!');
     },
     remove: function(item) {
       index = items.indexOf(item);
