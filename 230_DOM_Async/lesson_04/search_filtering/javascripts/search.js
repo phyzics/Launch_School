@@ -42,9 +42,9 @@ $(function () {
   }];
 
   $('aside form').on('click', 'input', function (e) {
-    var input = e.currentTarget.value;
+    var category = e.currentTarget.value;
     var ids = CATALOG.filter(function (game) {
-      return game.category === input;
+      return game.category === category;
     }).map(function (game) { return game.id; });
 
     ids.forEach(function (id) { $('[data-id=' + String(id) + ']').toggle(); });
