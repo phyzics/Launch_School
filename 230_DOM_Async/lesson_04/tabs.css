@@ -1,0 +1,10 @@
+ul {
+  padding: 0;
+}
+
+ul li {
+  display: inline;
+  list-style: none;
+}
+
+article + article { display: none; }
