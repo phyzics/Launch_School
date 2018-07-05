@@ -30,21 +30,20 @@ var _ = function (element) {
       return idx;
     },
 
-    sample: function (values) {
-      var array = [];
+    sample: function (qty) {
+      var sampled = [];
+      var copy = element.slice();
       var index;
 
-      values = values || 1;
+      qty = qty || 1;
 
-      while (array.length !== values) {
-        index = Math.floor(Math.random() * values);
+      while (sampled.length !== qty) {
+        index = Math.floor(Math.random() * qty);
 
-        if (array.indexOf(element[index]) === -1) {
-          array.push(element[index]);
-        }
+        sampled.push(copy.splice(index, 1)[0]);
       }
 
-      return values === 1 ? array[0] : array;
+      return qty === 1 ? sampled[0] : sampled;
     },
 
     findWhere: function (obj) {
