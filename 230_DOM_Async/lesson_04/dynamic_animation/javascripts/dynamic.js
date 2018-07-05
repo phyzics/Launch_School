@@ -1,17 +1,21 @@
 $(function () {
-  function createShape(submitData) {
-    var $shape = $('<div></div>');
+  function getFormObject($f) {
+    var obj = {};
 
-    $shape.addClass(submitData[0].value);
-    $shape.data('startX', submitData[1].value || '0');
-    $shape.data('startY', submitData[2].value || '0');
-    $shape.data('endX', submitData[3].value || '0');
-    $shape.data('endY', submitData[4].value || '0');
-
-    $shape.css({
-      top: $shape.data('startX') + 'px',
-      left: $shape.data('startY') + 'px'
+    $f.serializeArray().forEach(function (input) {
+      obj[input.name] = input.value;
     });
+
+    return obj;
+  }
+
+  function createShape(data) {
+    var $shape = $('<div />', {
+      'class': data.shapeType,
+      data: data
+    });
+
+    resetPosition($shape);
 
     return $shape;
   }
@@ -19,18 +23,24 @@ $(function () {
   function resetPosition($shape) {
     $shape.stop();
     $shape.css({
-      top: $shape.data('startX') + 'px',
-      left: $shape.data('startY') + 'px'
+      top: Number($shape.data('startX')),
+      left: Number($shape.data('startY'))
     });
   }
 
-  function animateShape($shape) {
+  function animateShape() {
+    var $shape = $(this);
+
     resetPosition($shape);
-    
+
     $shape.animate({
-      top: $shape.data('endX') + 'px',
-      left: $shape.data('endY') + 'px'
+      top: Number($shape.data('endX')),
+      left: Number($shape.data('endY'))
     }, 1000);
+  }
+
+  function stopAnimations() {
+    $('#canvas div').stop();
   }
 
   $form = $('form');
@@ -39,29 +49,25 @@ $(function () {
 
   $form.on('submit', function (e) {
     var shape;
+    var data;
 
     e.preventDefault();
 
-    $shape = createShape($form.serializeArray());
+    data = getFormObject($form);
+    $shape = createShape(data);
     $('#canvas').append($shape);
   });
 
   $startAnimationLink.on('click', function (e) {
-    var $animations;
-
     e.preventDefault();
 
-    $animations = $('#canvas div');
-
-    $animations.each(function (i) {
-      animateShape($animations.eq(i));
-    });
+    $('#canvas div').each(animateShape);
   });
 
   $endAnimationLink.on('click', function (e) {
     e.preventDefault();
 
-    $('#canvas div').stop();
+    stopAnimations();
   })
 
 });
