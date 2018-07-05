@@ -17,13 +17,17 @@ var _ = function (element) {
     },
 
     lastIndexOf: function (value) {
+      var idx = -1;
       var i;
 
       for (i = element.length - 1; i >= 0; i -= 1) {
         if (element[i] === value) {
-          return i;
+          idx = i;
+          break;
         }
       }
+
+      return idx;
     },
 
     sample: function (values) {
@@ -132,7 +136,7 @@ _.range = function (start, stop) {
     start = 0;
   }
 
-  for (i = start; i < end; i += 1) {
+  for (i = start; i < stop; i += 1) {
     range.push(i);
   }
 
