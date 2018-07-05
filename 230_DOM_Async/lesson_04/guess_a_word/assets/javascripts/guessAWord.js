@@ -13,28 +13,18 @@ $(function () {
     return indexes;
   }
 
-  function loseGame() {
-    $(document).off('keypress');
-    $(document.body).addClass('lose');
-    $('#message + p a').text('Play another');
-  }
-
-  function winGame() {
-    $(document).off('keypress');
-    $(document.body).addClass('win');
-    $('#message + p a').text('Play another');
-  }
-
   function setResults(win) {
+    var $message = $('#message');
+
     $(document).off('keypress');
     $('#message + p a').text('Play another');
 
     if (win) {
       $(document.body).addClass('win');
-      $('#message').text('You win!');
+      $message.text('You win!');
     } else {
       $(document.body).addClass('lose');
-      $('#message').text("Sorry! You're out of guesses");
+      $message.text("Sorry! You're out of guesses");
     }
   }
 
@@ -45,6 +35,36 @@ $(function () {
 
     if ($('#spaces span').text() === game.currentWord) {
       setResults(true);
+    }
+  }
+
+  function guessWord(e) {
+    var keyCode = e.which;
+    var key;
+    var guessed = game.lettersGuessed;
+    var indexes;
+
+    if (keyCode >= 97 && keyCode <= 122) {
+      key = String.fromCharCode(keyCode);
+
+      if (!guessed.includes(key)) {
+        guessed.push(key);
+        $('#guesses').append('<span>' + key + '</span>');
+
+        if (game.currentWord.indexOf(key) !== -1) {
+          indexes = getLetterIndexes(key);
+          $('#spaces span').each(function (i, span) {
+            if (indexes.includes(i)) {
+              $(span).text(key);
+            }
+          });
+        } else {
+          game.wrongGuesses += 1;
+          $('#apples').removeClass().addClass('guess_' + Number(game.wrongGuesses));
+        }
+      }
+
+      checkVictoryStatus();
     }
   }
 
@@ -67,14 +87,14 @@ $(function () {
       },
 
       newGame: function () {
-        this.wrongGuesses = 0;
-        this.lettersGuessed = [];
-        this.maxWrongAllowed = 6;
         this.currentWord = this.getWord();
 
         if (this.currentWord === undefined) {
           this.outOfWords();
         } else {
+          this.wrongGuesses = 0;
+          this.lettersGuessed = [];
+          this.maxWrongAllowed = 6;
           this.createBlanks();
         }
 
@@ -104,35 +124,7 @@ $(function () {
 
   // Event Handlers
 
-  $(document).on('keypress', function (e) {
-    var keyCode = e.which;
-    var key;
-    var guessed = game.lettersGuessed;
-    var indexes;
-
-    if (keyCode >= 97 && keyCode <= 122) {
-      key = String.fromCharCode(keyCode);
-
-      if (!guessed.includes(key)) {
-        guessed.push(key);
-
-        if (game.currentWord.indexOf(key) !== -1) {
-          indexes = getLetterIndexes(key);
-          $('#spaces span').each(function (i, span) {
-            if (indexes.includes(i)) {
-              $(span).text(key);
-            }
-          });
-        } else {
-          $('#guesses').append('<span>' + key + '</span>');
-          game.wrongGuesses += 1;
-          $('#apples').removeClass().addClass('guess_' + Number(game.wrongGuesses));
-        }
-      }
-
-      checkVictoryStatus();
-    }
-  });
+  $(document).on('keypress', guessWord);
 
   $('p a').on('click', function (e) {
     e.preventDefault();
@@ -144,6 +136,8 @@ $(function () {
       $('#apples').removeClass();
       $('p a').text('');
       $('#message').text('');
+      $('#guesses span').remove();
+      $(document).on('keypress', guessWord);
     }
   });
 });
