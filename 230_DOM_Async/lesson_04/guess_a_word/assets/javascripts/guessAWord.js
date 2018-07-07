@@ -13,12 +13,16 @@ $(function () {
     return indexes;
   }
 
+  function disableGameplay() {
+    $(document).off('keypress');
+    $('#message + p a').text('Play another');
+  }
+
   function setResults(win) {
     var $message = $('#message');
 
-    $(document).off('keypress');
-    $('#message + p a').text('Play another');
-
+    disableGameplay();
+    
     if (win) {
       $(document.body).addClass('win');
       $message.text('You win!');
@@ -28,7 +32,7 @@ $(function () {
     }
   }
 
-  function checkVictoryStatus() {
+  function setVictoryStatus() {
     if (game.wrongGuesses === game.maxWrongAllowed) {
       setResults(false);
     }
@@ -38,34 +42,67 @@ $(function () {
     }
   }
 
+  function isValidKey(keyCode) {
+    return keyCode >= 97 && keyCode <= 122;
+  }
+
+  function addGuess(key) {
+    game.lettersGuessed.push(key);
+    $('#guesses').append('<span>' + key + '</span>');
+  }
+
+  function correctGuess(key) {
+    var indexes = getLetterIndexes(key);
+    $('#spaces span').each(function (i, span) {
+      if (indexes.includes(i)) {
+        $(span).text(key);
+      }
+    });
+  }
+
+  function incorrectGuess(key) {
+    game.wrongGuesses += 1;
+    $('#apples').removeClass().addClass('guess_' + Number(game.wrongGuesses));
+  }
+
+  function doesWordHaveKey (key) {
+    return game.currentWord.indexOf(key) !== -1;
+  }
+
+  function isNewGuess(key) {
+    return !game.lettersGuessed.includes(key);
+  }
+
   function guessWord(e) {
     var keyCode = e.which;
     var key;
-    var guessed = game.lettersGuessed;
-    var indexes;
 
-    if (keyCode >= 97 && keyCode <= 122) {
+    if (isValidKey(keyCode)) {
       key = String.fromCharCode(keyCode);
 
-      if (!guessed.includes(key)) {
-        guessed.push(key);
-        $('#guesses').append('<span>' + key + '</span>');
+      if (isNewGuess(key)) {
+        addGuess(key);
 
-        if (game.currentWord.indexOf(key) !== -1) {
-          indexes = getLetterIndexes(key);
-          $('#spaces span').each(function (i, span) {
-            if (indexes.includes(i)) {
-              $(span).text(key);
-            }
-          });
-        } else {
-          game.wrongGuesses += 1;
-          $('#apples').removeClass().addClass('guess_' + Number(game.wrongGuesses));
-        }
+        doesWordHaveKey(key) ? correctGuess(key) : incorrectGuess(key);
       }
 
-      checkVictoryStatus();
+      setVictoryStatus();
     }
+  }
+
+  function newGameSetup() {
+    $(document.body).removeClass();
+    $('#apples').removeClass();
+    $('p a').text('');
+    $('#message').text('');
+    $('#guesses span').remove();
+    $(document).on('keypress', guessWord);
+  }
+
+  function startNewGame() {
+    game.newGame();
+
+    if (game.currentWord !== undefined) newGameSetup();
   }
 
   // Game Object and Protected Data
@@ -129,15 +166,6 @@ $(function () {
   $('p a').on('click', function (e) {
     e.preventDefault();
 
-    game.newGame();
-
-    if (game.currentWord !== undefined) {
-      $(document.body).removeClass();
-      $('#apples').removeClass();
-      $('p a').text('');
-      $('#message').text('');
-      $('#guesses span').remove();
-      $(document).on('keypress', guessWord);
-    }
+    startNewGame();
   });
 });
