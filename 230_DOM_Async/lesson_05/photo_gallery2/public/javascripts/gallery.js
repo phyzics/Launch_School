@@ -20,6 +20,10 @@ $(function () {
     $("input[name='photo_id']").attr('value', id);
   }
 
+  function resetForm() {
+    $('form')[0].reset();
+  }
+
   var templates = {};
   var render = {
     photos: function () {
@@ -109,6 +113,7 @@ $(function () {
         data: $('form').serialize(),
         success: function (commentJson) {
           render.comment(commentJson);
+          resetForm();
         }
       })
     },
