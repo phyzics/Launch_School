@@ -1,7 +1,4 @@
 # README.md
-Nicholas Calibey - Contact Manage Application
----
-## General Thoughts and Assumptions
 So, I should have listened to Launch School's advice more and not gotten caught up on trying to replicate the UI to a dot. Firstly, I was unsuccessful in doing so; while I was able to get the page to slide up, it's still choppy as the other page is not simultaneously fading out. I tried to get it to do so, but after close to 1.5~2 hours of trying, I looked at another student's submission where he just had the pieces of the UI `fadeIn()` and `fadeOut()`, at which point I gave up because I knew I was focusing too much on the UI.
 
 Overall, working with CSS is still frustrating and my least favorite thing about the project, but I found working with the API to be very easy. My entire app is built from rendering templates, i.e., there aren't `div`s that are layered on top of one another, but rather the page is rendered from a template every time a user clicks on a link taking him to a new page. Again, I did this in an attempt to replicate the original page (as I thought it was a single page app), but if I could do this over again I would have just layered the `div`s as the route I chose made it significantly harder.
