@@ -1,5 +1,6 @@
 # README.md
 Nicholas Calibey - Contact Manage Application
+
 ---
 ## General Thoughts and Assumptions
 So, I should have listened to Launch School's advice more and not gotten caught up on trying to replicate the UI to a dot. Firstly, I was unsuccessful in doing so; while I was able to get the page to slide up, it's still choppy as the other page is not simultaneously fading out. I tried to get it to do so, but after close to 1.5~2 hours of trying, I looked at another student's submission where he just had the pieces of the UI `fadeIn()` and `fadeOut()`, at which point I gave up because I knew I was focusing too much on the UI.
