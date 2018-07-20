@@ -1,0 +1,379 @@
+/*
+----------------------------------------
+Tantek Celik's Whitespace Reset
+     Author:    Tantek Celik, Shane Riley
+    Version:    (CC) 2010 Some Rights Reserved - http://creativecommons.org/licenses/by/2.0
+Description:  Resets default styling of browsers to a common base
+----------------------------------------
+*/
+
+ul, ol { list-style: none; }
+h1, h2, h3, h4, h5, h6, pre, code { font-size: 1em; }
+ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, body, html, p, blockquote,
+fieldset, input, dl, dt, dd, figure, figcaption {
+  margin: 0;
+  padding: 0;
+}
+a img, :link img, :visited img, fieldset { border: none; }
+address { font-style: normal; }
+header, section, article, nav, footer, hgroup, details, summary, figure, main {
+  display: block;
+}
+mark {
+  color: inherit;
+  background-color: transparent;
+}
+abbr { border: none; }
+summary::-webkit-details-marker { display: none; }
+
+/*
+======================
+  CSS
+======================
+*/
+
+html {
+  font: normal 18px Helvetica, Arial, sans-serif;
+  font-weight: 200;
+}
+
+footer {
+  width: 1170px;
+  margin: 0 auto;
+}
+
+body > header {
+  background: linear-gradient(to bottom, #56407b, #6d5696);
+  color: #FFF;
+  height: 137px;
+}
+
+body > header h1 {
+  font-weight: 500;
+  font-size: 36px;
+  padding: 28px 0 10px 0;
+}
+
+body > header h1 a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+body > header p {
+  color: #cdc0e2;
+}
+
+/*
+======================
+  Content Divs
+======================
+*/
+
+.wrapper {
+  position: relative;
+  width: 1170px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+#main_page {
+  background: #FFF;
+  width: 1170px;
+}
+
+div.user_actions {
+  height: 85px;
+  padding: 25px 30px 30px 30px;
+  margin-bottom: 30px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+div.empty_contacts {
+  background-color: #f5f5f5;
+  text-align: center;
+  height: 140px;
+  margin: 0 16px;
+  padding: 40px 0 0 0;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+div.empty_contacts p {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+div.create_contact {
+  background-color: #FFF;
+  /* height: 340px; */
+  width: 1170px;
+  box-sizing: border-box;
+}
+
+#new_contact_placeholder {
+  height: 60px;
+}
+
+div.tag_bank {
+  width: 1170px;
+  background: #FFF;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.tag_bank p {
+  margin: 10px 0 30px 0;
+}
+
+.tag_bank input {
+  height: 30px;
+  width: 200px;
+  padding-left: 10px;
+  border: 1px solid #E3E3E3;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.tag_bank h3 {
+  margin: 30px auto 20px auto;
+  width: 400px;
+  padding-top: 10px;
+  border-top: 1px solid #E3E3E3;
+}
+
+.tag_bank ul {
+  margin-bottom: 20px;
+}
+
+.tag_list li {
+  display: inline-block;
+}
+
+#current_tags li {
+  margin-right: 5px;
+}
+
+p.error_message {
+  color: #b74b4a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tag_bank .error_message {
+  margin-top: 30px;
+}
+
+#no_contacts.visible {
+  margin: 30px 15px 0 15px;
+  height: 95px;
+  padding-top: 30px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  background: #f5f5f5;
+  border: 1px solid #E3E3E3;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/*
+======================
+  Form
+======================
+*/
+
+.create_contact h2,
+.tag_bank h2 {
+  text-align: center;
+  margin: 40px 0 10px 0;
+  font-size: 28px;
+}
+
+form {
+  border-top: 1px solid #EEE;
+  box-sizing: border-box;
+  padding: 20px 0;
+}
+
+dl {
+  margin: 0 0 25px 245px;
+}
+
+dt,
+dd { display: inline-block; }
+
+dt {
+  text-align: right;
+  width: 130px;
+  margin-right: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+dd {
+  width: 555px;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+
+dd input {
+  width: 100%;
+  height: 31px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  font-size: 14px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.invalid {
+  color: #b74b4a;
+}
+
+dd input.invalid {
+  border-color: #b74b4a;
+}
+
+/*
+======================
+  Links
+======================
+*/
+
+.button {
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 18px;
+  color: #553f7a;
+  border: 1px solid #553f7a;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.button:hover,
+.button:focus {
+  color: #FFF;
+  background-color: #553f7a;
+}
+
+.user_actions a.add_contact {
+  margin-left: 200px;
+}
+
+.create_contact a,
+.create_contact button {
+  width: 262px;
+  height: 45px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.add_tags { margin-left: 170px; }
+
+.create_contact button {
+  margin-left: 400px;
+}
+
+.create_contact a {
+  display: inline-block;
+  margin-left: 27px;
+  vertical-align: top;
+}
+
+#searchbar {
+  font-size: 14px;
+  margin-left: 175px;
+  color: #999;
+  height: 34px;
+  width: 267px;
+  padding: 10px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+}
+
+/*
+======================
+  Contacts
+======================
+*/
+
+li.contact {
+  display: inline-block;
+  border-bottom: 1px solid #EEE;
+  margin: 0 13px 15px 15px;
+  width: 260px;
+}
+
+div.tag_placeholder { height: 21px; }
+
+.contact h2 {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
+
+.contact p {
+  font-size: 14px;
+}
+
+.contact .contact_category {
+  font-weight: 600;
+}
+
+.contact_options {
+  margin: 30px 0;
+}
+
+.contact li {
+  display: inline-block;
+}
+
+.contact a {
+  font-size: 14px;
+  display: inline-block;
+  text-align: center;
+  padding: 8px 15px;
+}
+
+span.tag,
+span.display_tag {
+  font-size: 12px;
+  font-weight: 400;
+  color: #FFF;
+  background: #56407b;
+  padding: 1px 3px;
+  border: 1px solid #56407b;
+  border-radius: 4px;
+}
+
+span.tag:hover,
+span.display_tag:hover {
+  background: #FFF;
+  color: #56407b;
+  cursor: pointer;
+}
+
+/*
+======================
+  Footer
+======================
+*/
+
+#page_header,
+footer {
+  text-align: center;
+}
+
+footer {
+  font-size: 14px;
+  border-top: 1px solid #EEE;
+  padding-top: 26px;
+  z-index: 5;
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Contact Manager using Backbone</title>
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/javascripts/handlebars.js"></script>
+
+    <script id="contactTemplate" type="text/x-handlebars">
+      <li class="contact">
+        <h2>{{full_name}}</h2>
+        <p class="contact_category">Phone Number:</p>
+        <p>{{phone_number}}</p>
+        <p class="contact_category">Email:</p>
+        <p>{{email}}</p>
+        <p class="contact_category">Tags:</p>
+        <ul>
+        {{#if tags}}
+        {{#each (parseTags tags)}}
+          <li><span class="tag">{{tag}}</span></li>
+        {{/each}}
+        {{else}}
+          <div class="tag_placeholder"><div>
+        {{/if}}
+        </ul>
+        <div class="contact_options">
+          <a href="/#contacts/edit/{{id}}" class="button edit_button">Edit</a>
+          <a href="/#home" class="button delete_button" data-id="{{id}}">Delete</a>
+        </div>
+      </li>
+    </script>
+
+    <script id="searchbarTemplate" type="text/x-handlebars">
+      <div class="user_actions">
+        <a href="/#contacts/new" class="add_contact button">Add Contact</a>
+        <a href="/#tags" class="add_tags button">Add Tags</a>
+        <input type="text" placeholder="Search" name="searchbar" id="searchbar" />
+      </div>
+    </script>
+
+    <script id="tagsTemplate" type="text/x-handlebars">
+      <div class="tag_bank">
+        <h2>Tags</h2>
+        <p>Enter your tag below and press Enter</p>
+        <input type="text" name="tag_input" id="tag_input" placeholder="Tag goes here" />
+        <p class="error_message"></p>
+        <h3>Current Tags</h3>
+        <ul class="tag_list">
+        {{> tagsPartial}}
+        </ul>
+      </div>
+    </script>
+
+    <script id="tagsPartial" type="text/x-handlebars">
+      {{#each tags}}
+      <li><span class="display_tag">{{tag}}</span></li>
+      {{/each}}
+    </script>
+
+    <script id="userActionsTemplate" type="text/x-handlebars">
+      <div id="main_page">
+        {{#if contacts}}
+        <ul id="contacts_list">
+          {{#each contacts}}
+          {{> contactTemplate}}
+          {{/each}}
+        </ul>
+        {{else}}
+        {{#if (noContacts)}}
+        <div class="empty_contacts">
+          <p>There are no contacts.</p>
+          <a href="/#contacts/new" class="add_contact button">Add Contact</a>
+        </div>
+        {{/if}}
+        {{/if}}
+        <div id="no_contacts"></div>
+        <div id="new_contact_placeholder"></div>
+      </div>
+    </script>
+
+    <script id="newContactTemplate" type="text/x-handlebars">
+      <div class="create_contact">
+        <h2>Create Contact</h2>
+        <form action="/api/contacts/" method="post">
+          <fieldset>
+            <dl>
+              <dt>
+                <label for="full_name">Full name:</label>
+              </dt>
+              <dd>
+                <input type="text" name="full_name" id="full_name" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                <label for="email">Email address:</label>
+              </dt>
+              <dd>
+                <input type="email" name="email" id="email" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                <label for="phone_number">Telephone number:</label>
+              </dt>
+              <dd>
+                <input type="text" name="phone_number" id="phone_number" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                Current Tags:
+              </dt>
+              <dd id="current_tags">
+                <ul class="tag_list">
+                </ul>
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>All Tags:</dt>
+              <dd id="all_tags">
+                <ul class="tag_list">
+                </ul>
+              </dd>
+            </dl>
+            <button class="button" type="submit">Submit</button>
+            <a href="#home" class="button">Cancel</a>
+          </fieldset>
+        </form>
+      </div>
+    </script>
+    <script src="/javascripts/application.js"></script>
+
+    <script id="editContactTemplate" type="text/x-handlebars">
+      <div class="create_contact">
+        <h2>Edit Contact</h2>
+        <form action="/api/contacts/{{id}}" method="put" data-id="{{id}}">
+          <fieldset>
+            <dl>
+              <dt>
+                <label for="full_name">Full name:</label>
+              </dt>
+              <dd>
+                <input type="text" name="full_name" id="full_name" value="{{full_name}}" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                <label for="email">Email address:</label>
+              </dt>
+              <dd>
+                <input type="email" name="email" id="email" value="{{email}}" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                <label for="phone_number">Telephone number:</label>
+              </dt>
+              <dd>
+                <input type="text" name="phone_number" id="phone_number" value="{{phone_number}}" />
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                Current Tags:
+              </dt>
+              <dd id="current_tags">
+                <ul class="tag_list">
+                  {{#if tags}}
+                  {{#each (parseTags tags)}}
+                    <li><span class="display_tag">{{tag}}</span></li>
+                  {{/each}}
+                  {{/if}}
+                </ul>
+                <p class="error_message"></p>
+              </dd>
+            </dl>
+            <dl>
+              <dt>All Tags:</dt>
+              <dd id="all_tags">
+                <ul class="tag_list">
+                {{> tagsPartial}}
+                </ul>
+              </dd>
+            </dl>
+            <button class="button" type="submit">Submit</button>
+            <a href="#home" class="button">Cancel</a>
+          </fieldset>
+        </form>
+      </div>
+    </script>
+  </head>
+
+
+  <body>
+    <header id="page_header">
+      <h1><a href="#home">Contact Manager</a></h1>
+      <p>Using Backbone.js, Localstorage, RequireJS, Handlebar and Bootstrap</p>
+    </header>
+    <main>
+      <div class="wrapper">
+      </div>
+    </main>
+    <footer>
+      <p>Developed by <a href="http://www.devsaran.com/">Devsaran.com</a> and <a href="http://www.239listing.com/">239 Listing Real Estate</a>.</p>
+    </footer>
+  </body>
+</html>
