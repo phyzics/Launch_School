@@ -1,0 +1,15 @@
+# README.md
+Nicholas Calibey - Contact Manage Application
+---
+## General Thoughts and Assumptions
+So, I should have listened to Launch School's advice more and not gotten caught up on trying to replicate the UI to a dot. Firstly, I was unsuccessful in doing so; while I was able to get the page to slide up, it's still choppy as the other page is not simultaneously fading out. I tried to get it to do so, but after close to 1.5~2 hours of trying, I looked at another student's submission where he just had the pieces of the UI `fadeIn()` and `fadeOut()`, at which point I gave up because I knew I was focusing too much on the UI.
+
+Overall, working with CSS is still frustrating and my least favorite thing about the project, but I found working with the API to be very easy. My entire app is built from rendering templates, i.e., there aren't `div`s that are layered on top of one another, but rather the page is rendered from a template every time a user clicks on a link taking him to a new page. Again, I did this in an attempt to replicate the original page (as I thought it was a single page app), but if I could do this over again I would have just layered the `div`s as the route I chose made it significantly harder.
+
+I assumed that we did not have to have a blink-comparison with the original site in terms of design, so some of the things are off and certain icons are missing, but it's still pretty close to the original design. Likewise, I took the liberty of changing the search bar UI, namely if the user searches with a query that no contacts match and then presses backspace, in the original program the div that said there were no matching contacts would remain. I removed this as I thought it was kind of clumsy, and so the div will only show if the user has an active query that doesn't match a contact.
+
+There is one active bug that I know of, which if the user uses the `back` or `forward` buttons in the URL address bar, the page will not re-render (unlike the original app) and subsequent calls can mess up the UI. If you press refresh, everything will reset as to normal -- I was thinking of somehow tracking if the user pressed the back button, but then I realized that this was probably something outside the scope of what is required, and so I did not handle the bug.
+
+If a user filters contacts by a tag, note there is no built in way to reset to cancel the filtered results. The user has to go into the search bar and press `SPACE` (which will start a search query which will override the tag results), or go to another page and then go back to the home page. Since the assignment did not say we had to provide a way to reset the tag search, I didn't add one (though I don't think it'd be hard to do so).
+
+Please leave any feedback and thoughts, especially if you find another bug (or know how to solve my current one!). Note that while I did try to refactor the JavaScript, I didn't try to do so with the CSS.
