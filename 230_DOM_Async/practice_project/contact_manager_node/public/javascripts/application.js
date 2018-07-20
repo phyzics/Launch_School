@@ -3,24 +3,17 @@ $(() => {
   let contacts;
   let tagBank = [];
 
-  $('script[type="text/x-handlebars"]').each((i, template) => {
-    const $template = $(template);
-    Templates[$template.attr('id')] = Handlebars.compile($template.html());
-  });
-
   Handlebars.registerPartial('contactTemplate', $('#contactTemplate').html());
   Handlebars.registerPartial('tagsPartial', $('#tagsPartial').html());
   Handlebars.registerHelper('parseTags', tags => {
-    if (tags) {
-      let tagsArr = tags.split(',').map(tag => {
-        return {tag: tag};
-      });
-
-      return tagsArr;
-    }
+    if (tags) return tags.split(',').map(tag => ({ tag: tag }));
   });
-  Handlebars.registerHelper('noContacts', () => {
-    return contacts.length === 0;
+  Handlebars.registerHelper('noContacts', () => contacts.length === 0);
+
+  $('script[type="text/x-handlebars"]').each((i, template) => {
+    const $template = $(template).remove();
+
+    Templates[$template.attr('id')] = Handlebars.compile($template.html());
   });
 
   const UI = {
@@ -88,6 +81,11 @@ $(() => {
       this.$wrapper.hide()
       this.determineTemplate(document.URL);
       this.$wrapper.slideDown(this.duration);
+    },
+
+    renderHomeAfterDelete () {
+      this.$wrapper.empty();
+      this.determineTemplate('#home');
     },
 
     renderTagErrorMessage (error) {
@@ -240,6 +238,7 @@ $(() => {
 
 
   const Application = {
+    homeURL: 'http://localhost:3000/#home',
     getAllContacts () {
       $.ajax({
         url: '/api/contacts',
@@ -249,6 +248,10 @@ $(() => {
           contacts = json;
         },
       });
+    },
+
+    redirectToHome () {
+      window.location = this.homeURL;
     },
 
     parseTags () {
@@ -266,7 +269,7 @@ $(() => {
     },
 
     filterByTag (e) {
-      const tagValue = $(e.target).val();
+      const tagValue = $(e.target).text();
       const matches = contacts.filter(contact => {
         if (contact.tags) {
           return contact.tags.indexOf(tagValue) !== -1;
@@ -427,7 +430,7 @@ $(() => {
             Application.updateContact(id, json);
           }
           UI.renderHome();
-          window.location = 'http://localhost:3000/#home';
+          Application.redirectToHome();
         },
       });
     },
@@ -458,14 +461,15 @@ $(() => {
             const idx = Application.getContactIndex(contact);
 
             contacts.splice(idx, 1);
-            UI.removeUser($target.parents('.contact'));
+            UI.renderHomeAfterDelete();
+            Application.redirectToHome();
           }
         });
       }
     },
 
     bindEvents () {
-      $('body').on('click', 'span.tag', this.filterByTag.bind(this));
+      $('body').on('click', '#main_page span.tag', this.filterByTag.bind(this));
       $('body').on('input', '#searchbar', this.searchByName.bind(this));
       $('body').on('keydown', '#tag_input', this.addTag.bind(this));
       $('body').on('click', '#all_tags li', this.addTagToUser.bind(this));

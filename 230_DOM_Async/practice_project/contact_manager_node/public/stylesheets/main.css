@@ -110,7 +110,6 @@ div.empty_contacts p {
 
 div.create_contact {
   background-color: #FFF;
-  /* height: 340px; */
   width: 1170px;
   box-sizing: border-box;
 }
@@ -342,8 +341,7 @@ div.tag_placeholder { height: 21px; }
   padding: 8px 15px;
 }
 
-span.tag,
-span.display_tag {
+span.tag {
   font-size: 12px;
   font-weight: 400;
   color: #FFF;
@@ -353,8 +351,7 @@ span.display_tag {
   border-radius: 4px;
 }
 
-span.tag:hover,
-span.display_tag:hover {
+span.tag:hover {
   background: #FFF;
   color: #56407b;
   cursor: pointer;

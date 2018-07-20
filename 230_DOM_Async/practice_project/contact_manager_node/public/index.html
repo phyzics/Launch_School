@@ -28,7 +28,7 @@
         </ul>
         <div class="contact_options">
           <a href="/#contacts/edit/{{id}}" class="button edit_button">Edit</a>
-          <a href="/#home" class="button delete_button" data-id="{{id}}">Delete</a>
+          <a href="/#contacts/delete/{{id}}" class="button delete_button" data-id="{{id}}">Delete</a>
         </div>
       </li>
     </script>
@@ -56,7 +56,7 @@
 
     <script id="tagsPartial" type="text/x-handlebars">
       {{#each tags}}
-      <li><span class="display_tag">{{tag}}</span></li>
+      <li><span class="tag">{{tag}}</span></li>
       {{/each}}
     </script>
 
@@ -178,7 +178,7 @@
                 <ul class="tag_list">
                   {{#if tags}}
                   {{#each (parseTags tags)}}
-                    <li><span class="display_tag">{{tag}}</span></li>
+                    <li><span class="tag">{{tag}}</span></li>
                   {{/each}}
                   {{/if}}
                 </ul>
