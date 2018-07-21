@@ -59,9 +59,8 @@ $(() => {
     },
 
     determineTemplate (url) {
-      if (/#home/.test(url)) {
-        this.appendToWrapper(Templates.searchbarTemplate());
-        this.appendToWrapper(Templates.userActionsTemplate({ contacts: contacts }));
+      if (/#tags/.test(url)) {
+        this.appendToWrapper(Templates.tagsTemplate(this.formatTags()));
       } else if (/#contacts\/new/.test(url)) {
         this.appendToWrapper(Templates.newContactTemplate(this.formatTags()));
         this.appendTemplate($('#all_tags .tag_list'), Templates.tagsPartial(this.formatTags()))
@@ -69,7 +68,8 @@ $(() => {
         this.appendToWrapper(Templates.editContactTemplate(this.getContact(url)));
         this.appendTemplate($('#all_tags .tag_list'), Templates.tagsPartial(this.formatTags()))
       } else {
-        this.appendToWrapper(Templates.tagsTemplate(this.formatTags()));
+        this.appendToWrapper(Templates.searchbarTemplate());
+        this.appendToWrapper(Templates.userActionsTemplate({ contacts: contacts }));
       }
     },
 
