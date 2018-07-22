@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Programming Languages</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+    <script src="languages.js"></script>
+    <script id="languages" type="text/x-handlebars">
+      {{#each languages}}
+      {{> languageTemplate}}
+      {{/each}}
+    </script>
+    <script id="languageTemplate" type="text/x-handlebars">
+      <h2 id={{name}}>{{name}}</h2>
+      <p>{{description}}</p>
+      <button class="show_more">Show More</button>
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Programming Languages</h1>
+    </header>
+    <main>
+
+    </main>
+  </body>
+</html>
