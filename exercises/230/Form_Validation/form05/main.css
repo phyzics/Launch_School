@@ -1,0 +1,62 @@
+body {
+  background: #eee9cf;
+}
+
+main {
+  font-size: 18px;
+  width: 620px;
+  margin: 0 auto;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 20px auto 0 auto;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0 0;
+}
+
+input[type="radio"] {
+  vertical-align: top;
+  margin-right: 5px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+p {
+  height: 35px;
+  padding: 5px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.incorrect {
+  border: 1px solid red;
+}
+
+.correct {
+  border: 1px solid #0e7e12;
+}
+
+button {
+  font: normal 18px Times, Helvetica, serif;
+  height: 30px;
+  padding: 10px 15px 10px 15px;
+  line-height: 9px;
+  background: #5be846;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button:disabled {
+  background: #cbcbcb;
+  color: #000;
+}
