@@ -21,6 +21,10 @@ $(() => {
         return ERROR_MSGS[1];
       case 'password':
         return ERROR_MSGS[3];
+      case 'first_name':
+        return ERROR_MSGS[4];
+      case 'last_name':
+        return ERROR_MSGS[5];
     }
   }
 
@@ -50,7 +54,9 @@ $(() => {
     ' is a required field.',
     'Please Enter a valid Email.',
     'Please Enter a valid Phone Number.',
-    'Password must be at least 10 characters long.'
+    'Password must be at least 10 characters long.',
+    'Please Enter a valid First Name',
+    'Please Enter a valid Last Name'
   ];
 
   $form.on('blur', 'input', validateInput);
