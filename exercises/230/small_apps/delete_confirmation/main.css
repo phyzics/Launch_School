@@ -1,0 +1,120 @@
+body {
+  background: #256444;
+  font-size: 18px;
+  margin: 0px;
+  padding: 32px 30px 30px 28px;
+}
+
+h1 {
+  color: #FFF;
+  font-size: 27px;
+  margin-bottom: 23px;
+}
+
+ul {
+  padding-left: 40px;
+}
+
+li {
+  background: #FFF;
+  position: relative;
+  width: 600px;
+  height: 50px;
+  padding: 0 20px;
+  margin-top: 20px;
+  list-style: none;
+  line-height: 50px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+span.delete {
+  position: absolute;
+  top: 16px;
+  display: inline-block;
+  overflow: hidden;
+  right: 20px;
+  height: 20px;
+  width: 20px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+span.delete::before,
+span.delete::after {
+  background: #EC5555;
+  content: "";
+  position: absolute;
+}
+
+span.delete::before {
+  height: 3px;
+  top: 50%;
+  right: 0;
+  left: 0;
+  margin-top: -1px;
+}
+
+span::after {
+  width: 3px;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+}
+
+span:hover {
+  width: 24px;
+  height: 24px;
+}
+
+#overlay {
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.3);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+}
+
+#modal {
+  display: none;
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  width: 500px;
+  height: 150px;
+  padding: 10px 20px;
+  margin-left: -200px;
+  background: #EEE;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+#modal p { margin-top: 28px; }
+
+a.button {
+  display: inline-block;
+  width: 60px;
+  height: 33px;
+  margin-top: 28px;
+  padding: 0 18px;
+  line-height: 33px;
+  text-decoration: none;
+  color: #FFF;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+a.confirm {
+  background: #9d1734;
+  margin-left: 333px;
+}
+
+a.deny {
+  background: #2f9d3d;
+}
