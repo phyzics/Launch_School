@@ -1,0 +1,46 @@
+body {
+  font: normal 48px Helvetica, Arial, sans-serif;
+  background: #a0902f;
+  color: #FFF;
+}
+
+main {
+  width: 540px;
+  margin: 0 auto;
+}
+
+#stopwatch {
+  font-size: 78px;
+  font-weight: 600;
+  margin-top: 200px;
+}
+
+span {
+  margin: 0 10px;
+}
+
+#buttons {
+  margin-left: 160px;
+  margin-top: -2px;
+}
+
+button {
+  height: 35px;
+  padding: 13px 30px;
+  line-height: 8px;
+  background: transparent;
+  color: #FFF;
+  border: 1px solid #FFF;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
+}
+
+button:last-child {
+  margin-left: 12px;
+}
+
+button:hover {
+  background: #94873a;
+}
