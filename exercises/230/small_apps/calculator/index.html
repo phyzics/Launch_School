@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Calculator</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body>
+    <main>
+      <div id="screen">
+        <div id="operations">
+          <p></p>
+        </div>
+        <div id="current_number">
+          <p></p>
+        </div>
+      </div>
+      <div id="buttons">
+        <button id="ce">CE</button>
+        <button id="c">C</button>
+        <button id="neg">NEG</button>
+        <button id="/" class="op" data-id="/">/</button>
+        <button class="num" data-id="7">7</button>
+        <button class="num" data-id="8">8</button>
+        <button class="num" data-id="9">9</button>
+        <button id="x" class="op" data-id="x">x</button>
+        <button class="num" data-id="5">5</button>
+        <button class="num" data-id="4">4</button>
+        <button class="num" data-id="6">6</button>
+        <button id="-" class="op" data-id="-">-</button>
+        <button class="num" data-id="1">1</button>
+        <button class="num" data-id="2">2</button>
+        <button class="num" data-id="3">3</button>
+        <button id="+" class="op" data-id="+">+</button>
+        <button class="num" data-id="0">0</button>
+        <button id="decimal" data-id=".">.</button>
+        <button id="%" class="op" data-id="%">%</button>
+        <button id="equals">=</button>
+      </div>
+    </main>
+  </body>
+</html>

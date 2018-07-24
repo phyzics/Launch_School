@@ -1,0 +1,62 @@
+body {
+  background: #25596d;
+}
+
+main {
+  background: #FFF;
+  width: 350px;
+  height: 430px;
+  padding: 5px;
+  margin: 50px auto 0 auto;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#screen {
+  height: 119px;
+  box-sizing: border-box;
+}
+
+#buttons {
+  height: 300px;
+  padding-top: 10px;
+  border-top: 1px solid #CCC;
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+  text-align: right;
+}
+
+#operations,
+#current_number {
+  margin-right: 10px;
+}
+
+#operations {
+  height: 44px;
+  padding-top: 26px;
+  box-sizing: border-box;
+}
+
+#current_number p {
+  font-size: 36px;
+  padding-top: 23px;
+}
+
+button {
+  font: normal 18px "Times New Roman", Helvetica, serif;
+  width: 82px;
+  height: 53px;
+  margin-top: 5px;
+  background: #CCC;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
