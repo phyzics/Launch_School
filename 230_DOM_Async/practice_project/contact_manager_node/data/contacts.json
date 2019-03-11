@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "full_name": "Nicholas Calibey",
+    "phone_number": "8605390595",
+    "email": "nick.calibey@gmail.com",
+    "tags": "friend,self,co-worker",
+    "id": 1
+  },
+  {
+    "full_name": "Elliot Giese",
+    "phone_number": "1",
+    "email": "egiese@darksouls.net",
+    "tags": "friend,co-worker",
+    "id": 2
+  }
+]
