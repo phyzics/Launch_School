@@ -1,0 +1,37 @@
+package main
+
+import "fmt"
+
+func main() {
+	repeat("Hello", 3)
+	fmt.Println("---")
+	fmt.Println(isOdd(2) == false)
+	fmt.Println(isOdd(5) == true)
+	fmt.Println(isOdd(-17) == true)
+	fmt.Println(isOdd(-8) == false)
+	fmt.Println(isOdd(0) == false)
+	fmt.Println(isOdd(7) == true)
+	fmt.Println("---")
+	fmt.Println(digitList(12345))
+	fmt.Println(digitList(7))
+	fmt.Println(digitList(375290))
+	fmt.Println(digitList(444))
+	fmt.Println("---")
+	countOccurrences([]string{"car", "car", "truck", "car", "SUV", "truck", "motorcycle", "motorcycle", "car", "truck"})
+	fmt.Println("---")
+	fmt.Println(reverseSentence(""))
+	fmt.Println(reverseSentence("Hello World"))
+	fmt.Println(reverseSentence("Reverse these words"))
+	fmt.Println("---")
+	fmt.Println(reverseWords("Professional"))
+	fmt.Println(reverseWords("Walk around the block"))
+	fmt.Println(reverseWords("Launch School"))
+	fmt.Println("---")
+	fmt.Println(stringy(6))
+	fmt.Println(stringy(9))
+	fmt.Println(stringy(4))
+	fmt.Println(stringy(7))
+	fmt.Println("---")
+	fmt.Println(average([]int{1, 5, 87, 45, 8, 8}) == 25)
+	fmt.Println(average([]int{9, 47, 23, 95, 16, 52}) == 40)
+}
