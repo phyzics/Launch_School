@@ -6,17 +6,19 @@ fn main() {
     let mut bill_str = String::new();
     let _ = stdout().flush();
     stdin()
-        .read_line(&bill_str)
+        .read_line(&mut bill_str)
         .expect("Could not read line");
+    bill_str = bill_str.trim().to_string();
     let bill = bill_str.parse::<f64>().unwrap();
 
     println!("What is the tip percentage? ");
     let mut tip_percent_str = String::new();
     let _ = stdout().flush();
     stdin()
-        .read_line(&bill_str)
+        .read_line(&mut tip_percent_str)
         .expect("Could not read line");
-    let mut tip_percent = tip_str.parse::<f64>().unwrap();
+    tip_percent_str = tip_percent_str.trim().to_string();
+    let mut tip_percent = tip_percent_str.parse::<f64>().unwrap();
     tip_percent = tip_percent / 100.00;
 
     let tip = bill * tip_percent;
